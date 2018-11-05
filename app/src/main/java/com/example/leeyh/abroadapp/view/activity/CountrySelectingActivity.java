@@ -1,4 +1,4 @@
-package com.example.leeyh.abroadapp.activity;
+package com.example.leeyh.abroadapp.view.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

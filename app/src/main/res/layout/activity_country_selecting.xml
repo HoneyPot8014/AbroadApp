@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    tools:context="com.example.leeyh.abroadapp.activity.CountrySelectingActivity">
+    tools:context=".view.activity.CountrySelectingActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"

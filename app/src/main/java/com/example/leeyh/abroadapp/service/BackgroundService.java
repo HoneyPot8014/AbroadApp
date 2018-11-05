@@ -84,7 +84,7 @@ public class BackgroundService extends Service {
     }
 
     public void setOnEvent(Socket socket, final String event) {
-        socket.on(CHECK_SIGNED, new Emitter.Listener() {
+        socket.on(event, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 Intent broadCast = new Intent(BROADCAST);

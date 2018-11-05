@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.leeyh.abroadapp">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".constants.Statistical"
@@ -24,7 +23,7 @@
             android:windowSoftInputMode="adjustResize"
         </activity>
         <activity android:name=".prototype.ProtoSignInActivity" />
-        <activity android:name=".prototype.ProtoSignUpActivity"></activity>
+        <activity android:name=".prototype.ProtoSignUpActivity" />
         <activity android:name=".prototype.ProtoChatListActivity" />
 
         <service
@@ -33,14 +32,15 @@
             android:exported="true" />
 
         <activity android:name=".prototype.Test_Activity" />
-        <activity android:name=".activity.SignInActivity">
+        <activity android:name=".view.activity.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SignUpActivity"></activity>
+        <activity android:name=".view.activity.SignUpActivity" />
+        <activity android:name=".view.activity.TabBarMainActivity"></activity>
     </application>
 
 </manifest>

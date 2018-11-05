@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import static com.example.leeyh.abroadapp.constants.NameSpacing.ROUTING;
 import static com.example.leeyh.abroadapp.constants.StaticString.BROADCAST;

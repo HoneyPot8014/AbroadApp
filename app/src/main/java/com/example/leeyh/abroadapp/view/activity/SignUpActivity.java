@@ -1,4 +1,4 @@
-package com.example.leeyh.abroadapp.activity;
+package com.example.leeyh.abroadapp.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -41,6 +41,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
 
     private ServiceEventInterface mSocketListener;
     private Statistical mAppStatic;
+    private Bitmap mProfileBitmap;
     private ImageView mProfileImageView;
     private EditText mIdEditEditTextView;
     private EditText mPasswordEditTextView;
@@ -54,8 +55,10 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         setContentView(R.layout.activity_sign_up);
 
         mSocketListener = new ServiceEventInterface(getApplicationContext());
+        //Routing namespace to '/signUp'
         mSocketListener.socketRouting(ROUTE_SIGN_UP);
         mSocketListener.setResponseListener(this);
+        //set socket on event listener
         mSocketListener.socketOnEvent(SIGN_UP_SUCCESS);
         mSocketListener.socketOnEvent(SIGN_UP_FAILED);
         mSocketListener.socketOnEvent(SQL_ERROR);
@@ -100,6 +103,12 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
             case SIGN_UP_SUCCESS:
                 //sign up success handle here
                 Toast.makeText(mAppStatic, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                String id = mIdEditEditTextView.getText().toString();
+                mAppStatic.addBitmapToMemoryCache(id, mProfileBitmap);
+                Intent setResultToSignIn = new Intent();
+                setResultToSignIn.putExtra(USER_Id, id);
+                setResult(RESULT_OK, setResultToSignIn);
+                finish();
                 break;
             case SIGN_UP_FAILED:
                 //sign up failed handle here
@@ -121,9 +130,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         if (requestCode == CAMERA_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    Bitmap profileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                    mProfileByteArray = DataConverter.getByteArrayFromBitmap(profileBitmap);
-                    mProfileImageView.setImageBitmap(profileBitmap);
+                    mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                    mProfileByteArray = DataConverter.getByteArrayFromBitmap(mProfileBitmap);
+                    mProfileImageView.setImageBitmap(mProfileBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
