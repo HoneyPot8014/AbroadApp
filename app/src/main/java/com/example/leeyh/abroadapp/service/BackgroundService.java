@@ -88,7 +88,7 @@ public class BackgroundService extends Service {
             @Override
             public void call(Object... args) {
                 Intent broadCast = new Intent(BROADCAST);
-                broadCast.putExtra(EMIT_EVENT, event);
+                broadCast.putExtra(ON_EVENT, event);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadCast);
             }
         });

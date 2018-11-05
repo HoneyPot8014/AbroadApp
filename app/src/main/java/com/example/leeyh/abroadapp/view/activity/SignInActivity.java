@@ -24,6 +24,7 @@ import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_IN_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.NameSpacing.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
+import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
@@ -80,14 +81,19 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
 
     @Override
     public void onResponseReceived(Intent intent) {
-        String event = intent.getStringExtra(EMIT_EVENT);
+        String event = intent.getStringExtra(ON_EVENT);
         switch (event) {
             case SIGN_IN_SUCCESS:
                 //signInSuccess handle
                 SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
                 SharedPreferences.Editor preferenceEditor = sharedPreferences.edit();
-                preferenceEditor.putString(USER_Id, mIdEditTextView.getText().toString());
+                String id = mIdEditTextView.getText().toString();
+                //save userInfo in system environment
+                preferenceEditor.putString(USER_Id, id);
                 preferenceEditor.putString(PASSWORD, mPasswordEditTextView.getText().toString());
+                Intent goToMainActivity = new Intent(getApplicationContext(), TabBarMainActivity.class);
+                goToMainActivity.putExtra(USER_Id, id);
+                startActivity(goToMainActivity);
 
                 break;
             case SIGN_IN_FAILED:

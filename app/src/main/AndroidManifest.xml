@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name=".constants.Statistical"
@@ -40,7 +42,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.SignUpActivity" />
-        <activity android:name=".view.activity.TabBarMainActivity"></activity>
+        <activity android:name=".view.activity.TabBarMainActivity" />
+
+        <service
+            android:name=".service.GpsService"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

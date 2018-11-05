@@ -17,4 +17,6 @@ public class StaticString {
     public static final int CAMERA_CODE = 1111;
     public static final int SIGN_UP_CODE = 1112;
 
+    public static final long MIN_DISTANCE_FOR_UPDATE = 1000;
+    public static final long MIN_TIME_FOR_UPDATE = 1000 * 60 * 10;
 }

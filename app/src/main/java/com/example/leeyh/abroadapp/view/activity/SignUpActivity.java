@@ -3,10 +3,10 @@ package com.example.leeyh.abroadapp.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,8 +31,8 @@ import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_UP_FAILED;
 import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_UP_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.NameSpacing.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
-import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
+import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_Id;
@@ -98,7 +98,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
 
     @Override
     public void onResponseReceived(Intent intent) {
-        String event = intent.getStringExtra(EMIT_EVENT);
+        String event = intent.getStringExtra(ON_EVENT);
         switch (event) {
             case SIGN_UP_SUCCESS:
                 //sign up success handle here

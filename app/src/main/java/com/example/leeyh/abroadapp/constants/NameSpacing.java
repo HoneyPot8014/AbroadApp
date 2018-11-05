@@ -11,7 +11,7 @@ public class NameSpacing {
     public static final String USER_DATA = "userData";
     public static final String SIGNED_USER = "signedUser";
 
-    //SIGN_UP ROUTE
+    //ROUTE_SIGN_UP
     public static final String ROUTE_SIGN_UP = "/signUp";
     public static final String SIGN_UP = "signUpRequest";
     public static final String SIGN_UP_SUCCESS = "signUpSuccess";
@@ -22,4 +22,9 @@ public class NameSpacing {
     public static final String SIGN_IN = "signInRequest";
     public static final String SIGN_IN_SUCCESS = "signInSuccess";
     public static final String SIGN_IN_FAILED = "signInFailed";
+
+    //CHAT
+    public static final String CHAT = "/chat";
+    public static final String CHAT_CONNECT = "chatConnected";
+    public static final String CHAT_CONNECT_FAILED = "chatConnectedFailed";
 }
