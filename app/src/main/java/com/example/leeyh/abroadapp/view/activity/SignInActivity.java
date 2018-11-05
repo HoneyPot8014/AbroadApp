@@ -1,9 +1,12 @@
 package com.example.leeyh.abroadapp.view.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -11,19 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
+import com.example.leeyh.abroadapp.service.BackgroundService;
 import com.example.leeyh.abroadapp.service.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.service.ServiceEventInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.leeyh.abroadapp.constants.NameSpacing.ROUTE_SIGN_IN;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_IN;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_IN_FAILED;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_IN_SUCCESS;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SQL_ERROR;
-import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_SIGN_IN;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_FAILED;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
+import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
@@ -38,11 +41,17 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     private TextView mSignUpTextView;
     private TextView mSignInTextView;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        Intent service = new Intent(getApplicationContext(), BackgroundService.class);
+        startService(service);
+
+        //request location permission
+        requestLocationPermission();
         mSocketListener = new ServiceEventInterface(getApplicationContext());
         //Routing namespace to '/signIn'
         mSocketListener.socketRouting(ROUTE_SIGN_IN);
@@ -71,6 +80,12 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
                 onSignInButtonClicked();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mSocketListener.socketRouting(ROUTE_SIGN_IN);
     }
 
     @Override
@@ -118,6 +133,11 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void requestLocationPermission() {
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_CODE);
+    }
+
     public void onSignInButtonClicked() {
         String id = mIdEditTextView.getText().toString();
         String password = mPasswordEditTextView.getText().toString();
@@ -131,6 +151,5 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         String signInDataToString = signInData.toString();
         mSocketListener.socketEmitEvent(SIGN_IN, signInDataToString);
     }
-
 
 }

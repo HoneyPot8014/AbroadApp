@@ -8,27 +8,25 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.example.leeyh.abroadapp.constants.NameSpacing;
+import com.example.leeyh.abroadapp.constants.SocketEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import static com.example.leeyh.abroadapp.constants.NameSpacing.CHECK_SIGNED;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.ROUTING;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_IN_FAILED;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_UP_FAILED;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTING;
 import static com.example.leeyh.abroadapp.constants.StaticString.BROADCAST;
 import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.JSON_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
 
 public class BackgroundService extends Service {
 
@@ -49,7 +47,7 @@ public class BackgroundService extends Service {
         socketOptions.reconnection = true;
         socketOptions.forceNew = true;
         try {
-            mSocket = IO.socket(NameSpacing.DEFAULT_HOST);
+            mSocket = IO.socket(SocketEvent.DEFAULT_HOST);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             //not connect handling
@@ -87,8 +85,10 @@ public class BackgroundService extends Service {
         socket.on(event, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                String receivedDataToString = Arrays.toString(args);
                 Intent broadCast = new Intent(BROADCAST);
                 broadCast.putExtra(ON_EVENT, event);
+                broadCast.putExtra(RECEIVED_DATA, receivedDataToString);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadCast);
             }
         });

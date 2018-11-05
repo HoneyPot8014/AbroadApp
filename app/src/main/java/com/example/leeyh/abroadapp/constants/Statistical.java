@@ -14,8 +14,6 @@ public class Statistical extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        Intent service = new Intent(getApplicationContext(), BackgroundService.class);
-        startService(service);
 
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         final int cacheSize = maxMemory / 6;

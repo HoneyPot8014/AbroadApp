@@ -45,8 +45,8 @@ public class DataConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        resultList.add(addressList.get(0).getCountryName());
         resultList.add(addressList.get(0).getAdminArea());
+        resultList.add(addressList.get(0).getCountryName());
         return resultList;
     }
 

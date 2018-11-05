@@ -25,11 +25,11 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static com.example.leeyh.abroadapp.constants.NameSpacing.ROUTE_SIGN_UP;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_UP;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_UP_FAILED;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SIGN_UP_SUCCESS;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.SQL_ERROR;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_SIGN_UP;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP_FAILED;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;

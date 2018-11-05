@@ -3,7 +3,8 @@ package com.example.leeyh.abroadapp.view.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.service.OnResponseReceivedListener;
@@ -13,15 +14,14 @@ import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.leeyh.abroadapp.constants.NameSpacing.CHAT;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.CHAT_CONNECT;
-import static com.example.leeyh.abroadapp.constants.NameSpacing.CHAT_CONNECT_FAILED;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAILED;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_ID;
 
 public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener {
 
-    private FrameLayout mMainFrameLayout;
     private ServiceEventInterface mSocketListener;
 
     @Override
@@ -36,11 +36,19 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         mSocketListener.socketOnEvent(CHAT_CONNECT_FAILED);
 
         //when socket connected namespace '/chat' emit event
-        String id = getIntent().getStringExtra(USER_ID);
+        final String id = getIntent().getStringExtra(USER_ID);
         onChatNameSpaceConnected(id);
 
-        mMainFrameLayout = findViewById(R.id.main_activity_container);
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, new LocationFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container
+                , LocationFragment.newInstance(id)).commit();
+
+        Button locationTabButton = findViewById(R.id.location_tab_button);
+        locationTabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, LocationFragment.newInstance(id)).commit();
+            }
+        });
 
     }
 

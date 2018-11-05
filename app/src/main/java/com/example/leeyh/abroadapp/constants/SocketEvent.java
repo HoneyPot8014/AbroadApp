@@ -1,6 +1,6 @@
 package com.example.leeyh.abroadapp.constants;
 
-public class NameSpacing {
+public class SocketEvent {
 
     public static final String ROUTING = "routing";
     public static final String SQL_ERROR = "sqlError";
@@ -27,4 +27,9 @@ public class NameSpacing {
     public static final String CHAT = "/chat";
     public static final String CHAT_CONNECT = "chatConnected";
     public static final String CHAT_CONNECT_FAILED = "chatConnectedFailed";
+
+    //MAP
+    public static final String ROUTE_MAP = "/chat/map";
+    public static final String SAVE_LOCATION = "saveLocation";
+    public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
 }
