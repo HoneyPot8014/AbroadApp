@@ -8,8 +8,14 @@ import android.widget.ImageView;
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.view.NearLocationItemView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.leeyh.abroadapp.constants.StaticString.CITY;
+import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
+import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_ID;
 
 public class NearLocationListViewAdapter extends BaseAdapter {
 
@@ -41,11 +47,18 @@ public class NearLocationListViewAdapter extends BaseAdapter {
         }
 
         UserModel item = items.get(i);
+        itemView.setNickName(item.getUserNickName());
+        itemView.setLocate(item.getLocate());
+        itemView.setImageView(item.getUserId());
 
-        return null;
+        return itemView;
     }
 
-   public void setMemberProfile() {
+    public void addItem(JSONObject userData) {
+        String id = userData.optString(USER_ID);
+        String nickName = userData.optString(NICKNAME);
+        String locate = userData.optString(CITY);
+        items.add(new UserModel(id, nickName, locate));
+    }
 
-   }
 }

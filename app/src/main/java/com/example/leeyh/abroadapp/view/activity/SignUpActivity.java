@@ -3,10 +3,13 @@ package com.example.leeyh.abroadapp.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,8 +49,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
     private EditText mIdEditEditTextView;
     private EditText mPasswordEditTextView;
     private EditText mNickNameEditTextView;
-    private Button mSignUpRequestButton;
-    private byte[] mProfileByteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         mIdEditEditTextView = findViewById(R.id.sign_up_id_edit_text);
         mPasswordEditTextView = findViewById(R.id.sign_up_password_edit_text);
         mNickNameEditTextView = findViewById(R.id.sign_up_nick_name_edit_text);
-        mSignUpRequestButton = findViewById(R.id.sign_up_button);
+        Button signUpRequestButton = findViewById(R.id.sign_up_button);
 
         mProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
             }
         });
 
-        mSignUpRequestButton.setOnClickListener(new View.OnClickListener() {
+        signUpRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSignUpButtonClicked();
@@ -104,7 +105,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 //sign up success handle here
                 Toast.makeText(mAppStatic, "회원가입 성공", Toast.LENGTH_SHORT).show();
                 String id = mIdEditEditTextView.getText().toString();
-                mAppStatic.addBitmapToMemoryCache(id, mProfileBitmap);
                 Intent setResultToSignIn = new Intent();
                 setResultToSignIn.putExtra(USER_Id, id);
                 setResult(RESULT_OK, setResultToSignIn);
@@ -131,7 +131,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                    mProfileByteArray = DataConverter.getByteArrayFromBitmap(mProfileBitmap);
                     mProfileImageView.setImageBitmap(mProfileBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -146,6 +145,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         String id = mIdEditEditTextView.getText().toString();
         String password = mPasswordEditTextView.getText().toString();
         String nickName = mNickNameEditTextView.getText().toString();
+        if(mProfileBitmap != null) {
+            mAppStatic.addBitmapToMemoryCache(id, mProfileBitmap);
+        }
 
         if (!id.equals("") && !password.equals("") && !nickName.equals("")) {
             JSONObject signUpData = new JSONObject();
@@ -153,11 +155,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 signUpData.put(USER_Id, id);
                 signUpData.put(PASSWORD, password);
                 signUpData.put(NICKNAME, nickName);
-                if (mProfileByteArray != null) {
-                    signUpData.put(PROFILE, mProfileByteArray);
-                } else {
-                    Toast.makeText(getApplicationContext(), "사진이 비어있슴", Toast.LENGTH_SHORT).show();
-                }
                 String signUpDataToString = signUpData.toString();
                 mSocketListener.socketEmitEvent(SIGN_UP, signUpDataToString);
             } catch (JSONException e) {

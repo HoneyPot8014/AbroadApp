@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.leeyh.abroadapp.R;
@@ -42,7 +43,7 @@ public class Test_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_);
 
-        final ProtoChatApplication application = (ProtoChatApplication) getApplication();
+//        final ProtoChatApplication application = (ProtoChatApplication) getApplication();
 
         try {
             IO.Options options = new IO.Options();
@@ -78,10 +79,12 @@ public class Test_Activity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run()         {
+                        Log.d("여기이이잉", "run: " + args);
                         byte[] bytes = (byte[]) args[0];
+                        Log.d("여기이잉", "run: " + bytes);
                         Bitmap bitmap1 = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        application.addBitmapToMemoryCache("test", bitmap1);
-                        test2.setImageBitmap(application.getBitmapFromMemoryCache("test"));
+//                        application.addBitmapToMemoryCache("test", bitmap1);
+//                        test2.setImageBitmap(application.getBitmapFromMemoryCache("test"));
                     }
                 });
                                          }

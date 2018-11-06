@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,14 +18,18 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.leeyh.abroadapp.R;
+import com.example.leeyh.abroadapp.constants.Statistical;
+import com.example.leeyh.abroadapp.controller.NearLocationListViewAdapter;
 import com.example.leeyh.abroadapp.dataconverter.DataConverter;
 import com.example.leeyh.abroadapp.service.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.service.ServiceEventInterface;
@@ -43,6 +49,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.MIN_DISTANCE_FO
 import static com.example.leeyh.abroadapp.constants.StaticString.MIN_TIME_FOR_UPDATE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NATION;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_Id;
 
@@ -52,6 +59,9 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private ServiceEventInterface mSocketListener;
     private TextView mMyLocationTextView;
     private ListView mNearLocationListView;
+    private NearLocationListViewAdapter mAdapter;
+    private Statistical mAppstatic;
+    private ImageView testImage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +81,12 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_location, container, false);
+        mAppstatic = (Statistical) getContext().getApplicationContext();
         mMyLocationTextView = view.findViewById(R.id.my_location_text_view);
         mNearLocationListView = view.findViewById(R.id.near_location_list_view);
+        testImage = view.findViewById(R.id.profile_test);
+        mAdapter = new NearLocationListViewAdapter();
+        mNearLocationListView.setAdapter(mAdapter);
         getLocation();
         return view;
     }
@@ -83,8 +97,8 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             int permission = getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if(permission == PackageManager.PERMISSION_DENIED) {
-                if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (permission == PackageManager.PERMISSION_DENIED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                     dialog.setTitle("위치권한이 필요합니다.")
                             .setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -142,8 +156,8 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == LOCATION_CODE) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == LOCATION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocation();
             }
         }
@@ -169,12 +183,19 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             case SAVE_LOCATION_SUCCESS:
                 //get same location member handle here
                 try {
-                    Log.d("받은 데이터1", "onResponseReceived: " + intent.getStringExtra(RECEIVED_DATA));
-                    JSONArray receivedArrayData = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
-                    for(int i = 0; i < receivedArrayData.length(); i++) {
-                        JSONObject receivedData = (JSONObject) receivedArrayData.get(i);
-                        Log.d("받은 데이터", "onResponseReceived: " + receivedData);
+                    JSONArray memberDataArray = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
+                    for(int i = 0; i < memberDataArray.length(); i++) {
+                        JSONObject memberData = new JSONObject(memberDataArray.get(i).toString());
+                        mAdapter.addItem(memberData);
                     }
+//                    JSONArray receivedFirstArrayData = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
+//                    JSONArray receivedSecondArrayData = new JSONArray(receivedFirstArrayData.get(0).toString());
+//                    Log.d("헬로", "onResponseReceived: " + receivedSecondArrayData);
+//                    for (int i = 0; i < receivedSecondArrayData.length(); i++) {
+//                        JSONObject receivedObject = new JSONObject(receivedSecondArrayData.get(0).toString());
+//                        mAdapter.addItem(receivedObject);
+//                    }
+//                    mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

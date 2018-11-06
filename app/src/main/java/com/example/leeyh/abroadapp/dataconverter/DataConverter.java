@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Base64;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -13,22 +14,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.util.Base64.*;
+
 public class DataConverter {
 
     public static byte[] getByteArrayFromImageView(ImageView imageView) {
         Drawable drawable = imageView.getDrawable();
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         byte[] imageByteArray = outputStream.toByteArray();
         return imageByteArray;
     }
 
-    public static byte[] getByteArrayFromBitmap(Bitmap bitmap) {
+    public static String getByteArrayToStringFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         byte[] imageByteArray = outputStream.toByteArray();
-        return imageByteArray;
+        return encodeToString(imageByteArray, DEFAULT);
+    }
+
+    public static byte[] getByteArrayFromString(String byteArrayToString) {
+        return decode(byteArrayToString, DEFAULT);
     }
 
     public static List<String> convertAddress(Context context, double latitude, double longitude) {
