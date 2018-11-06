@@ -42,7 +42,6 @@ public class ProtoSignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proto__sign_in);
         profile = findViewById(R.id.profile_image);
-        Log.d(TAG, "onCreate: login" );
         Intent service = new Intent(getApplicationContext(), ProtoBackgroundChat.class);
         service.putExtra(ROUTING, LOGIN_ROUTE);
         startService(service);

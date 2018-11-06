@@ -53,6 +53,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         //request location permission
         requestLocationPermission();
         mSocketListener = new ServiceEventInterface(getApplicationContext());
+
         //Routing namespace to '/signIn'
         mSocketListener.socketRouting(ROUTE_SIGN_IN);
         mSocketListener.setResponseListener(this);
@@ -92,6 +93,14 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     protected void onDestroy() {
         super.onDestroy();
         mSocketListener = null;
+    }
+
+    @Override
+    public void onSocketRouted() {
+        //set socket on event listener
+        mSocketListener.socketOnEvent(SIGN_IN_SUCCESS);
+        mSocketListener.socketOnEvent(SIGN_IN_FAILED);
+        mSocketListener.socketOnEvent(SQL_ERROR);
     }
 
     @Override

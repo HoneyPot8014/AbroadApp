@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,12 +16,10 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,13 +39,13 @@ import java.util.List;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_MAP;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.USER_LOCATION;
 import static com.example.leeyh.abroadapp.constants.StaticString.CITY;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.MIN_DISTANCE_FOR_UPDATE;
 import static com.example.leeyh.abroadapp.constants.StaticString.MIN_TIME_FOR_UPDATE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NATION;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_Id;
 
@@ -60,8 +56,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private TextView mMyLocationTextView;
     private ListView mNearLocationListView;
     private NearLocationListViewAdapter mAdapter;
-    private Statistical mAppstatic;
-    private ImageView testImage;
+    private Statistical mAppStatic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,13 +76,12 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-        mAppstatic = (Statistical) getContext().getApplicationContext();
+        mAppStatic = (Statistical) getContext().getApplicationContext();
         mMyLocationTextView = view.findViewById(R.id.my_location_text_view);
         mNearLocationListView = view.findViewById(R.id.near_location_list_view);
-        testImage = view.findViewById(R.id.profile_test);
         mAdapter = new NearLocationListViewAdapter();
         mNearLocationListView.setAdapter(mAdapter);
-        getLocation();
+//        getLocation();
         return view;
     }
 
@@ -168,6 +162,12 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         super.onDetach();
     }
 
+    @Override
+    public void onSocketRouted() {
+        mSocketListener.socketOnEvent(USER_LOCATION);
+        mSocketListener.socketOnEvent(SAVE_LOCATION_SUCCESS);
+    }
+
     public static LocationFragment newInstance(String param1) {
         LocationFragment fragment = new LocationFragment();
         Bundle args = new Bundle();
@@ -176,26 +176,22 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onResponseReceived(Intent intent) {
         String event = intent.getStringExtra(ON_EVENT);
         switch (event) {
+            case USER_LOCATION:
+                getLocation();
+                break;
             case SAVE_LOCATION_SUCCESS:
-                //get same location member handle here
                 try {
                     JSONArray memberDataArray = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
-                    for(int i = 0; i < memberDataArray.length(); i++) {
+                    for (int i = 0; i < memberDataArray.length(); i++) {
                         JSONObject memberData = new JSONObject(memberDataArray.get(i).toString());
                         mAdapter.addItem(memberData);
                     }
-//                    JSONArray receivedFirstArrayData = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
-//                    JSONArray receivedSecondArrayData = new JSONArray(receivedFirstArrayData.get(0).toString());
-//                    Log.d("헬로", "onResponseReceived: " + receivedSecondArrayData);
-//                    for (int i = 0; i < receivedSecondArrayData.length(); i++) {
-//                        JSONObject receivedObject = new JSONObject(receivedSecondArrayData.get(0).toString());
-//                        mAdapter.addItem(receivedObject);
-//                    }
-//                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

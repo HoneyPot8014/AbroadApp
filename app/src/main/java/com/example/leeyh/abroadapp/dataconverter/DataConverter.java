@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.util.Base64.*;
-
 public class DataConverter {
 
     public static byte[] getByteArrayFromImageView(ImageView imageView) {
@@ -27,15 +25,14 @@ public class DataConverter {
         return imageByteArray;
     }
 
-    public static String getByteArrayToStringFromBitmap(Bitmap bitmap) {
+    public static byte[] getByteArrayToStringFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        byte[] imageByteArray = outputStream.toByteArray();
-        return encodeToString(imageByteArray, DEFAULT);
+        return outputStream.toByteArray();
     }
 
     public static byte[] getByteArrayFromString(String byteArrayToString) {
-        return decode(byteArrayToString, DEFAULT);
+        return Base64.decode(byteArrayToString, Base64.DEFAULT);
     }
 
     public static List<String> convertAddress(Context context, double latitude, double longitude) {

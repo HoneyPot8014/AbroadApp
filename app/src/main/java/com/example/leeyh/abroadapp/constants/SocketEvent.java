@@ -30,6 +30,7 @@ public class SocketEvent {
 
     //MAP
     public static final String ROUTE_MAP = "/chat/map";
+    public static final String USER_LOCATION = "userLocation";
     public static final String SAVE_LOCATION = "saveLocation";
     public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
 }

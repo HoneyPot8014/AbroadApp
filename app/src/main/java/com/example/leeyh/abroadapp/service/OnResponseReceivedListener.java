@@ -4,4 +4,5 @@ import android.content.Intent;
 
 public interface OnResponseReceivedListener {
     void onResponseReceived(Intent intent);
+    void onSocketRouted();
 }

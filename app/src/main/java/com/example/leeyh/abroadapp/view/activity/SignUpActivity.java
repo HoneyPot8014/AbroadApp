@@ -3,13 +3,9 @@ package com.example.leeyh.abroadapp.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +14,6 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.constants.Statistical;
-import com.example.leeyh.abroadapp.dataconverter.DataConverter;
 import com.example.leeyh.abroadapp.service.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.service.ServiceEventInterface;
 
@@ -37,7 +32,6 @@ import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
-import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_Id;
 
 public class SignUpActivity extends AppCompatActivity implements OnResponseReceivedListener {
@@ -59,10 +53,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         //Routing namespace to '/signUp'
         mSocketListener.socketRouting(ROUTE_SIGN_UP);
         mSocketListener.setResponseListener(this);
-        //set socket on event listener
-        mSocketListener.socketOnEvent(SIGN_UP_SUCCESS);
-        mSocketListener.socketOnEvent(SIGN_UP_FAILED);
-        mSocketListener.socketOnEvent(SQL_ERROR);
 
         mAppStatic = (Statistical) getApplication();
 
@@ -92,9 +82,24 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        //Routing namespace to '/signUp'
+        mSocketListener.socketRouting(ROUTE_SIGN_UP);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mSocketListener = null;
+    }
+
+    @Override
+    public void onSocketRouted() {
+        //set socket on event listener
+        mSocketListener.socketOnEvent(SIGN_UP_SUCCESS);
+        mSocketListener.socketOnEvent(SIGN_UP_FAILED);
+        mSocketListener.socketOnEvent(SQL_ERROR);
     }
 
     @Override
@@ -108,6 +113,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 Intent setResultToSignIn = new Intent();
                 setResultToSignIn.putExtra(USER_Id, id);
                 setResult(RESULT_OK, setResultToSignIn);
+
                 finish();
                 break;
             case SIGN_UP_FAILED:
@@ -124,7 +130,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAMERA_CODE) {
@@ -145,7 +151,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         String id = mIdEditEditTextView.getText().toString();
         String password = mPasswordEditTextView.getText().toString();
         String nickName = mNickNameEditTextView.getText().toString();
-        if(mProfileBitmap != null) {
+        if (mProfileBitmap != null) {
             mAppStatic.addBitmapToMemoryCache(id, mProfileBitmap);
         }
 

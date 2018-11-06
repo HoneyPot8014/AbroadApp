@@ -4,6 +4,7 @@ public class StaticString {
 
     public static final String EMIT_EVENT = "event";
     public static final String BROADCAST = "broadCast";
+    public static final String SOCKET_ROUTED = "socketRouted";
     public static final String RECEIVED_DATA = "receivedData";
     public static final String ON_EVENT = "onEvent";
     public static final String USER_INFO = "userInfo";

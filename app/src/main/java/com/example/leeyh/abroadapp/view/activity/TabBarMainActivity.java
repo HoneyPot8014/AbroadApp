@@ -23,6 +23,7 @@ import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_ID;
 public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener {
 
     private ServiceEventInterface mSocketListener;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +34,10 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         //Routing namespace to '/signIn'
         mSocketListener.socketRouting(CHAT);
         mSocketListener.setResponseListener(this);
-        mSocketListener.socketOnEvent(CHAT_CONNECT_FAILED);
 
         //when socket connected namespace '/chat' emit event
-        final String id = getIntent().getStringExtra(USER_ID);
+        id = getIntent().getStringExtra(USER_ID);
         onChatNameSpaceConnected(id);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container
-                , LocationFragment.newInstance(id)).commit();
 
         Button locationTabButton = findViewById(R.id.location_tab_button);
         locationTabButton.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +57,19 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
                 //handle here when chat connect failed
                 break;
         }
+    }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mSocketListener.socketRouting(CHAT);
+    }
+
+    @Override
+    public void onSocketRouted() {
+        mSocketListener.socketOnEvent(CHAT_CONNECT_FAILED);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container
+                , LocationFragment.newInstance(id)).commit();
     }
 
     public void onChatNameSpaceConnected(String id) {

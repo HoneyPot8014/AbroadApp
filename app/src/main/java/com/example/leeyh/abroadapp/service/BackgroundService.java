@@ -43,6 +43,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
+import static com.example.leeyh.abroadapp.constants.StaticString.SOCKET_ROUTED;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_Id;
 
 public class BackgroundService extends Service {
@@ -72,7 +73,7 @@ public class BackgroundService extends Service {
 
         }
         mSocket.connect();
-        mAppStatic = (Statistical) getApplication();
+        mAppStatic = (Statistical) getApplicationContext();
         super.onCreate();
     }
 
@@ -83,16 +84,16 @@ public class BackgroundService extends Service {
                 String routeString = intent.getStringExtra(ROUTING);
                 mSocket = mSocket.io().socket(routeString);
                 mSocket.connect();
+                Log.d("소켓이 라우팅 되어있냐??", "onStartCommand: " + mSocket.connected());
+                onSocketRouted(mSocket, routeString);
             } else if (intent.getStringExtra(EMIT_EVENT) != null) {
-
                 if (intent.getStringExtra(EMIT_EVENT).equals(SIGN_UP)) {
                     String event = intent.getStringExtra(EMIT_EVENT);
                     String data = intent.getStringExtra(JSON_DATA);
                     try {
                         JSONObject jsonData = new JSONObject(data);
                         String id = jsonData.getString(USER_Id);
-                        String profileByteArrayToString = DataConverter.getByteArrayToStringFromBitmap(mAppStatic.getBitmapFromMemoryCache(id));
-                        jsonData.put(PROFILE, profileByteArrayToString);
+                        jsonData.put(PROFILE, DataConverter.getByteArrayToStringFromBitmap(mAppStatic.getBitmapFromMemoryCache(id)));
                         mSocket.emit(event, jsonData);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -113,39 +114,26 @@ public class BackgroundService extends Service {
                     mSocket.on(SAVE_LOCATION_SUCCESS, new Emitter.Listener() {
                         @Override
                         public void call(Object... args) {
-                            try {
-                                JSONArray memberDataArray = new JSONArray();
-                                JSONArray receivedMemberDataArray = new JSONArray(args[0].toString());
-                                Log.d("여기 뭐지 2", "call: " + receivedMemberDataArray + receivedMemberDataArray.length());
-                                for (int i = 0; i < receivedMemberDataArray.length(); i++) {
-                                    JSONObject receivedMemberData = new JSONObject(receivedMemberDataArray.get(i).toString());
-                                    JSONObject memberData = new JSONObject();
-                                    memberData.put(USER_Id, receivedMemberData.getString(USER_Id));
-                                    memberData.put(NICKNAME, receivedMemberData.getString(NICKNAME));
-                                    memberData.put(CITY, receivedMemberData.getString(CITY));
-                                    memberDataArray.put(memberData);
-                                    Log.d("여기 뭐지", "call: " + receivedMemberData.getString(PROFILE));
-                                    if (receivedMemberData.getString(PROFILE) != null) {
+                            JSONArray memberDataArray = (JSONArray) args[0];
+                            for (int i = 0; i < memberDataArray.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = (JSONObject) memberDataArray.get(i);
+                                    String id = jsonObject.getString(USER_Id);
+                                    byte[] bytes = (byte[]) jsonObject.get(PROFILE);
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    mAppStatic.addBitmapToMemoryCache(id, bitmap);
 
-                                        byte[] memberProfileByteArray = DataConverter.getByteArrayFromString(receivedMemberData.getString(PROFILE));
-                                        Bitmap memberProfileBitmap = BitmapFactory.decodeByteArray(memberProfileByteArray, 0, memberProfileByteArray.length);
-                                        Log.d("여기 뭐지 bitmap", "call: " + memberProfileBitmap);
-                                        Log.d("여기 뭐지 id", "call: " + receivedMemberData.getString(USER_Id));
-                                        mAppStatic.addBitmapToMemoryCache(receivedMemberData.getString(USER_Id), memberProfileBitmap);
-                                    }
+                                    Intent broadCast = new Intent(BROADCAST);
+                                    broadCast.putExtra(ON_EVENT, SAVE_LOCATION_SUCCESS);
+                                    broadCast.putExtra(RECEIVED_DATA, memberDataArray.toString());
+                                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadCast);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                                Intent broadCast = new Intent(BROADCAST);
-                                broadCast.putExtra(ON_EVENT, SAVE_LOCATION_SUCCESS);
-                                broadCast.putExtra(RECEIVED_DATA, memberDataArray.toString());
-                                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadCast);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-
                         }
                     });
-
 
                 } else {
                     String event = intent.getStringExtra(ON_EVENT);
@@ -154,6 +142,16 @@ public class BackgroundService extends Service {
             }
         }
         return START_STICKY;
+    }
+
+    public void onSocketRouted(Socket socket, String route) {
+        socket.on(route, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Intent broadCast = new Intent(SOCKET_ROUTED);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadCast);
+            }
+        });
     }
 
     public void setOnEvent(Socket socket, final String event) {

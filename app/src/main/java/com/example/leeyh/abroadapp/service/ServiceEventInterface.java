@@ -11,6 +11,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.BROADCAST;
 import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.JSON_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.SOCKET_ROUTED;
 
 public class ServiceEventInterface implements SocketListener {
 
@@ -20,6 +21,7 @@ public class ServiceEventInterface implements SocketListener {
     public ServiceEventInterface(Context context) {
         this.mContext = context;
         onReceivedResponse();
+        onSocketRouted();
     }
 
     @Override
@@ -44,6 +46,18 @@ public class ServiceEventInterface implements SocketListener {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mResponseListener.onResponseReceived(intent);
+            }
+        };
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    public void onSocketRouted() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SOCKET_ROUTED);
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mResponseListener.onSocketRouted();
             }
         };
         LocalBroadcastManager.getInstance(mContext).registerReceiver(broadcastReceiver, intentFilter);
