@@ -1,4 +1,4 @@
-package com.example.leeyh.abroadapp.service;
+package com.example.leeyh.abroadapp.background;
 
 public interface SocketListener {
 

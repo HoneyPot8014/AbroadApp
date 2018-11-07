@@ -14,9 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.service.BackgroundService;
-import com.example.leeyh.abroadapp.service.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.service.ServiceEventInterface;
+import com.example.leeyh.abroadapp.background.BackgroundService;
+import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.ServiceEventInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +57,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         //Routing namespace to '/signIn'
         mSocketListener.socketRouting(ROUTE_SIGN_IN);
         mSocketListener.setResponseListener(this);
+
         //set socket on event listener
         mSocketListener.socketOnEvent(SIGN_IN_SUCCESS);
         mSocketListener.socketOnEvent(SIGN_IN_FAILED);
@@ -95,13 +96,10 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         mSocketListener = null;
     }
 
-    @Override
-    public void onSocketRouted() {
-        //set socket on event listener
-        mSocketListener.socketOnEvent(SIGN_IN_SUCCESS);
-        mSocketListener.socketOnEvent(SIGN_IN_FAILED);
-        mSocketListener.socketOnEvent(SQL_ERROR);
-    }
+//    @Override
+//    public void onSocketRouted() {
+//
+//    }
 
     @Override
     public void onResponseReceived(Intent intent) {
@@ -118,7 +116,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
                 Intent goToMainActivity = new Intent(getApplicationContext(), TabBarMainActivity.class);
                 goToMainActivity.putExtra(USER_Id, id);
                 startActivity(goToMainActivity);
-
+                finish();
                 break;
             case SIGN_IN_FAILED:
                 //signInFailed handle - not match with Id or Password

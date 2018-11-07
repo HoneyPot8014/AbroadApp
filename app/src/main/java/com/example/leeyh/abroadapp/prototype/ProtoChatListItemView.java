@@ -26,7 +26,7 @@ public class ProtoChatListItemView extends LinearLayout {
 
     private void init(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.chat_list_item_view, this, true);
+        inflater.inflate(R.layout.proto_chat_list_item_view, this, true);
 
         mRoomNameTextView = findViewById(R.id.room_name_text_view);
         mLastMessageTextView = findViewById(R.id.last_message_text_view);

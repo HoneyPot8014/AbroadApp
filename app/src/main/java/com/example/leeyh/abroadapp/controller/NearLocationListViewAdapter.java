@@ -61,4 +61,8 @@ public class NearLocationListViewAdapter extends BaseAdapter {
         items.add(new UserModel(id, nickName, locate));
     }
 
+    public void deleteAllItem() {
+        items.clear();
+    }
+
 }

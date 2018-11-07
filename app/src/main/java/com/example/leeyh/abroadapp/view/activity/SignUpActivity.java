@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.constants.Statistical;
-import com.example.leeyh.abroadapp.service.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.service.ServiceEventInterface;
+import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.ServiceEventInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +53,11 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         //Routing namespace to '/signUp'
         mSocketListener.socketRouting(ROUTE_SIGN_UP);
         mSocketListener.setResponseListener(this);
+
+        //set socket on event listener
+        mSocketListener.socketOnEvent(SIGN_UP_SUCCESS);
+        mSocketListener.socketOnEvent(SIGN_UP_FAILED);
+        mSocketListener.socketOnEvent(SQL_ERROR);
 
         mAppStatic = (Statistical) getApplication();
 
@@ -94,13 +99,10 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         mSocketListener = null;
     }
 
-    @Override
-    public void onSocketRouted() {
-        //set socket on event listener
-        mSocketListener.socketOnEvent(SIGN_UP_SUCCESS);
-        mSocketListener.socketOnEvent(SIGN_UP_FAILED);
-        mSocketListener.socketOnEvent(SQL_ERROR);
-    }
+//    @Override
+//    public void onSocketRouted() {
+//
+//    }
 
     @Override
     public void onResponseReceived(Intent intent) {
@@ -108,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         switch (event) {
             case SIGN_UP_SUCCESS:
                 //sign up success handle here
-                Toast.makeText(mAppStatic, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                 String id = mIdEditEditTextView.getText().toString();
                 Intent setResultToSignIn = new Intent();
                 setResultToSignIn.putExtra(USER_Id, id);
@@ -118,11 +120,11 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 break;
             case SIGN_UP_FAILED:
                 //sign up failed handle here
-                Toast.makeText(mAppStatic, "회원가입 실패", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT).show();
                 break;
             case SQL_ERROR:
                 //server can't handle this data or server problem so handle here
-                Toast.makeText(mAppStatic, "SQL ERROR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "SQL ERROR", Toast.LENGTH_SHORT).show();
                 break;
             default:
         }

@@ -1,11 +1,8 @@
 package com.example.leeyh.abroadapp.constants;
 
 import android.app.Application;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.LruCache;
-
-import com.example.leeyh.abroadapp.service.BackgroundService;
 
 public class Statistical extends Application{
 

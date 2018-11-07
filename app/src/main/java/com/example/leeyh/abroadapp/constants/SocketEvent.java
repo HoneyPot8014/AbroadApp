@@ -26,11 +26,11 @@ public class SocketEvent {
     //CHAT
     public static final String CHAT = "/chat";
     public static final String CHAT_CONNECT = "chatConnected";
+    public static final String CHAT_CONNECT_SUCCESS = "chatConnectedSuccess";
     public static final String CHAT_CONNECT_FAILED = "chatConnectedFailed";
 
     //MAP
     public static final String ROUTE_MAP = "/chat/map";
-    public static final String USER_LOCATION = "userLocation";
     public static final String SAVE_LOCATION = "saveLocation";
     public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
 }

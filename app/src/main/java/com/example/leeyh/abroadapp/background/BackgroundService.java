@@ -1,4 +1,4 @@
-package com.example.leeyh.abroadapp.service;
+package com.example.leeyh.abroadapp.background;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,8 +10,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
-import android.util.Log;
 
 import com.example.leeyh.abroadapp.constants.SocketEvent;
 import com.example.leeyh.abroadapp.constants.Statistical;
@@ -22,11 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -36,10 +30,8 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTING;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP;
 import static com.example.leeyh.abroadapp.constants.StaticString.BROADCAST;
-import static com.example.leeyh.abroadapp.constants.StaticString.CITY;
 import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.JSON_DATA;
-import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
@@ -84,7 +76,6 @@ public class BackgroundService extends Service {
                 String routeString = intent.getStringExtra(ROUTING);
                 mSocket = mSocket.io().socket(routeString);
                 mSocket.connect();
-                Log.d("소켓이 라우팅 되어있냐??", "onStartCommand: " + mSocket.connected());
                 onSocketRouted(mSocket, routeString);
             } else if (intent.getStringExtra(EMIT_EVENT) != null) {
                 if (intent.getStringExtra(EMIT_EVENT).equals(SIGN_UP)) {
@@ -144,10 +135,11 @@ public class BackgroundService extends Service {
         return START_STICKY;
     }
 
-    public void onSocketRouted(Socket socket, String route) {
+    public void onSocketRouted(Socket socket, final String route) {
         socket.on(route, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                String routeString = route;
                 Intent broadCast = new Intent(SOCKET_ROUTED);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadCast);
             }
