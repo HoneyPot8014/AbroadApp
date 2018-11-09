@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.constants.Statistical;
+import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.background.ServiceEventInterface;
 
@@ -32,12 +32,12 @@ import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_Id;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 
 public class SignUpActivity extends AppCompatActivity implements OnResponseReceivedListener {
 
     private ServiceEventInterface mSocketListener;
-    private Statistical mAppStatic;
+    private ApplicationManagement mAppStatic;
     private Bitmap mProfileBitmap;
     private ImageView mProfileImageView;
     private EditText mIdEditEditTextView;
@@ -59,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         mSocketListener.socketOnEvent(SIGN_UP_FAILED);
         mSocketListener.socketOnEvent(SQL_ERROR);
 
-        mAppStatic = (Statistical) getApplication();
+        mAppStatic = (ApplicationManagement) getApplication();
 
         mProfileImageView = findViewById(R.id.sign_up_profile_image_view);
         mIdEditEditTextView = findViewById(R.id.sign_up_id_edit_text);
@@ -110,10 +110,22 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         switch (event) {
             case SIGN_UP_SUCCESS:
                 //sign up success handle here
+//                SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                try {
+//                    JSONArray receivedUuid = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
+//                    JSONObject receivedUuidObject = new JSONObject(receivedUuid.toString());
+//                    editor.putString(USER_UUID, receivedUuidObject.getString(USER_UUID));
+//                    Log.d("값은?", "onResponseReceived: " + receivedUuidObject.getString(USER_UUID));
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
                 Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                 String id = mIdEditEditTextView.getText().toString();
-                Intent setResultToSignIn = new Intent();
-                setResultToSignIn.putExtra(USER_Id, id);
+                Intent setResultToSignIn = new Intent(getApplicationContext(), SignInActivity.class);
+//                setResultToSignIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK & Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(setResultToSignIn);
+                setResultToSignIn.putExtra(USER_ID, id);
                 setResult(RESULT_OK, setResultToSignIn);
 
                 finish();
@@ -160,7 +172,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         if (!id.equals("") && !password.equals("") && !nickName.equals("")) {
             JSONObject signUpData = new JSONObject();
             try {
-                signUpData.put(USER_Id, id);
+                signUpData.put(USER_ID, id);
                 signUpData.put(PASSWORD, password);
                 signUpData.put(NICKNAME, nickName);
                 String signUpDataToString = signUpData.toString();

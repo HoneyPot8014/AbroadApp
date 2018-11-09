@@ -9,6 +9,8 @@ import android.location.Geocoder;
 import android.util.Base64;
 import android.widget.ImageView;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,23 +18,10 @@ import java.util.List;
 
 public class DataConverter {
 
-    public static byte[] getByteArrayFromImageView(ImageView imageView) {
-        Drawable drawable = imageView.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        byte[] imageByteArray = outputStream.toByteArray();
-        return imageByteArray;
-    }
-
     public static byte[] getByteArrayToStringFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         return outputStream.toByteArray();
-    }
-
-    public static byte[] getByteArrayFromString(String byteArrayToString) {
-        return Base64.decode(byteArrayToString, Base64.DEFAULT);
     }
 
     public static List<String> convertAddress(Context context, double latitude, double longitude) {

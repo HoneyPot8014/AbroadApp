@@ -1,30 +1,32 @@
 package com.example.leeyh.abroadapp.view.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.background.ServiceEventInterface;
+import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
 import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
-import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener {
 
+    private LocationFragment mLocationFragment;
     private ServiceEventInterface mSocketListener;
-    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,25 +34,35 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         setContentView(R.layout.activity_tab_bar_main);
 
         mSocketListener = new ServiceEventInterface(getApplicationContext());
-        //Routing namespace to '/signIn'
-        mSocketListener.socketRouting(CHAT);
+        mSocketListener.socketRouting(ROUTE_CHAT);
         mSocketListener.setResponseListener(this);
+        SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        try {
+            JSONObject requestChatConnectData = new JSONObject();
+            requestChatConnectData.put(USER_ID, sharedPreferences.getString(USER_ID, null));
+            mSocketListener.socketOnEvent(CHAT_CONNECT_SUCCESS);
+            mSocketListener.socketEmitEvent(CHAT_CONNECT, requestChatConnectData.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        //when socket connected namespace '/chat' emit event
-        id = getIntent().getStringExtra(USER_ID);
-        onChatNameSpaceConnected(id);
-
-        mSocketListener.socketOnEvent(CHAT_CONNECT_SUCCESS);
-        mSocketListener.socketOnEvent(CHAT_CONNECT_FAILED);
+        mLocationFragment = new LocationFragment();
 
         Button locationTabButton = findViewById(R.id.location_tab_button);
         locationTabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, LocationFragment.newInstance(id)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, mLocationFragment).addToBackStack(null).commitAllowingStateLoss();
             }
         });
 
+        Button chatListTabButton = findViewById(R.id.chat_tab_button);
+        chatListTabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, new ChatListFragment()).commitAllowingStateLoss();
+            }
+        });
     }
 
     @Override
@@ -58,28 +70,9 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         String event = intent.getStringExtra(ON_EVENT);
         switch (event) {
             case CHAT_CONNECT_SUCCESS:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container
-                        , LocationFragment.newInstance(id)).commit();
-            case CHAT_CONNECT_FAILED:
-                //handle here when chat connect failed
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, mLocationFragment).commitAllowingStateLoss();
                 break;
         }
-    }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        mSocketListener.socketRouting(CHAT);
-    }
-
-    public void onChatNameSpaceConnected(String id) {
-        JSONObject connectedConfirmData = new JSONObject();
-        try {
-            connectedConfirmData.put(USER_ID, id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String connectedConfirmDataToString = connectedConfirmData.toString();
-        mSocketListener.socketEmitEvent(CHAT_CONNECT, connectedConfirmDataToString);
     }
 }

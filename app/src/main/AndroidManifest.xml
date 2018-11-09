@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:name=".constants.Statistical"
+        android:name=".helper.ApplicationManagement"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -42,8 +42,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.SignUpActivity" />
-        <activity android:name=".view.activity.TabBarMainActivity" />
-
+        <activity android:name=".view.activity.TabBarMainActivity"
+            android:configChanges="screenSize|orientation"></activity>
         <service
             android:name=".background.GpsService"
             android:enabled="true"

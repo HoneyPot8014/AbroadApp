@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.CITY;
+import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_ID;
 
@@ -40,9 +41,9 @@ public class NearLocationListViewAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         NearLocationItemView itemView;
 
-        if(view == null) {
+        if (view == null) {
             itemView = new NearLocationItemView(viewGroup.getContext());
-        }else {
+        } else {
             itemView = (NearLocationItemView) view;
         }
 
@@ -57,12 +58,11 @@ public class NearLocationListViewAdapter extends BaseAdapter {
     public void addItem(JSONObject userData) {
         String id = userData.optString(USER_ID);
         String nickName = userData.optString(NICKNAME);
-        String locate = userData.optString(CITY);
+        String locate = userData.optString(DISTANCE);
         items.add(new UserModel(id, nickName, locate));
     }
 
     public void deleteAllItem() {
         items.clear();
     }
-
 }

@@ -10,14 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.constants.Statistical;
+import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 public class NearLocationItemView extends LinearLayout {
 
     private ImageView mImageView;
     private TextView mNickNameTextView;
     private TextView mLocateTextView;
-    private Statistical mAppStatic;
+    private ApplicationManagement mAppStatic;
 
     public NearLocationItemView(Context context) {
         super(context);
@@ -34,7 +34,7 @@ public class NearLocationItemView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.near_location_item_view, this, true);
 
-        mAppStatic = (Statistical) context.getApplicationContext();
+        mAppStatic = (ApplicationManagement) context.getApplicationContext();
         mImageView = findViewById(R.id.location_profile_image_view);
         mNickNameTextView = findViewById(R.id.location_nick_name_text_view);
         mLocateTextView = findViewById(R.id.location_locate_text_view);

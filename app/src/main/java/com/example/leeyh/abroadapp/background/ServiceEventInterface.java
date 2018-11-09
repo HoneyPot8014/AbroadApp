@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
+import static com.example.leeyh.abroadapp.constants.SocketEvent.DISCONNECT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTING;
 import static com.example.leeyh.abroadapp.constants.StaticString.BROADCAST;
 import static com.example.leeyh.abroadapp.constants.StaticString.EMIT_EVENT;
@@ -16,6 +17,7 @@ public class ServiceEventInterface implements SocketListener {
 
     private Context mContext;
     private OnResponseReceivedListener mResponseListener;
+    private BroadcastReceiver mBroadcastReceiver;
 
     public ServiceEventInterface(Context context) {
         this.mContext = context;
@@ -38,17 +40,28 @@ public class ServiceEventInterface implements SocketListener {
         mContext.startService(service);
     }
 
-    public void onReceivedResponse() {
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
+
+    private void onReceivedResponse() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST);
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mResponseListener.onResponseReceived(intent);
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(broadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mBroadcastReceiver, intentFilter);
     }
+
+    public void unRegisterReceivedResponse() {
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiver);
+    }
+
+
 
     public void setResponseListener(OnResponseReceivedListener listener) {
         this.mResponseListener = listener;
@@ -60,4 +73,13 @@ public class ServiceEventInterface implements SocketListener {
         service.putExtra(ON_EVENT, onEvent);
         mContext.startService(service);
     }
+
+    @Override
+    public void closeSocket() {
+        Intent service = new Intent(mContext, BackgroundService.class);
+        service.putExtra(DISCONNECT, DISCONNECT);
+        mContext.startService(service);
+    }
+
+
 }
