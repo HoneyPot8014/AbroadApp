@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.OnResponseReceivedListener2;
 import com.example.leeyh.abroadapp.background.ServiceEventInterface;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.controller.NearLocationListViewAdapter;
@@ -55,7 +55,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class LocationFragment extends Fragment implements OnResponseReceivedListener {
+public class LocationFragment extends Fragment implements OnResponseReceivedListener2 {
 
     private String userId;
     private ServiceEventInterface mSocketListener;

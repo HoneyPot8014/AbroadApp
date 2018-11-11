@@ -16,7 +16,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 public class ServiceEventInterface implements SocketListener {
 
     private Context mContext;
-    private OnResponseReceivedListener mResponseListener;
+    private OnResponseReceivedListener2 mResponseListener;
     private BroadcastReceiver mBroadcastReceiver;
 
     public ServiceEventInterface(Context context) {
@@ -27,17 +27,17 @@ public class ServiceEventInterface implements SocketListener {
 
     @Override
     public void socketRouting(String nameSpace) {
-        Intent service = new Intent(mContext, BackgroundService.class);
-        service.putExtra(ROUTING, nameSpace);
-        mContext.startService(service);
+//        Intent service = new Intent(mContext, BackgroundService.class);
+//        service.putExtra(ROUTING, nameSpace);
+//        mContext.startService(service);
     }
 
     @Override
     public void socketEmitEvent(String event, String data) {
-        Intent service = new Intent(mContext, BackgroundService.class);
-        service.putExtra(EMIT_EVENT, event);
-        service.putExtra(JSON_DATA, data);
-        mContext.startService(service);
+//        Intent service = new Intent(mContext, BackgroundService.class);
+//        service.putExtra(EMIT_EVENT, event);
+//        service.putExtra(JSON_DATA, data);
+//        mContext.startService(service);
     }
 
     @Override
@@ -63,22 +63,22 @@ public class ServiceEventInterface implements SocketListener {
 
 
 
-    public void setResponseListener(OnResponseReceivedListener listener) {
+    public void setResponseListener(OnResponseReceivedListener2 listener) {
         this.mResponseListener = listener;
     }
 
     @Override
     public void socketOnEvent(String onEvent) {
-        Intent service = new Intent(mContext, BackgroundService.class);
-        service.putExtra(ON_EVENT, onEvent);
-        mContext.startService(service);
+//        Intent service = new Intent(mContext, BackgroundService.class);
+//        service.putExtra(ON_EVENT, onEvent);
+//        mContext.startService(service);
     }
 
     @Override
     public void closeSocket() {
-        Intent service = new Intent(mContext, BackgroundService.class);
-        service.putExtra(DISCONNECT, DISCONNECT);
-        mContext.startService(service);
+//        Intent service = new Intent(mContext, BackgroundService.class);
+//        service.putExtra(DISCONNECT, DISCONNECT);
+//        mContext.startService(service);
     }
 
 

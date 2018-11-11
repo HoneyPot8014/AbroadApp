@@ -4,9 +4,9 @@ public class StaticString {
 
     public static final String EMIT_EVENT = "event";
     public static final String BROADCAST = "broadCast";
-    public static final String SOCKET_ROUTED = "socketRouted";
     public static final String RECEIVED_DATA = "receivedData";
     public static final String ON_EVENT = "onEvent";
+    public static final String SAVED_INSTANCE = "savedInstance";
     public static final String USER_INFO = "userInfo";
     public static final String JSON_DATA = "jsonData";
     public static final String USER_ID = "userId";

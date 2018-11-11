@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.OnResponseReceivedListener2;
 import com.example.leeyh.abroadapp.background.ServiceEventInterface;
 import com.example.leeyh.abroadapp.controller.ChatListAdapter;
 
@@ -24,7 +24,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
-public class ChatListFragment extends Fragment implements OnResponseReceivedListener {
+public class ChatListFragment extends Fragment implements OnResponseReceivedListener2 {
 
     private ListView mChattingListListView;
     private ChatListAdapter mChatListAdapter;

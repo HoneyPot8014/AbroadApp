@@ -1,26 +1,30 @@
 package com.example.leeyh.abroadapp.view.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.background.BackgroundService;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.background.ServiceEventInterface;
+import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,9 +38,8 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
-import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
-import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
+import static com.example.leeyh.abroadapp.constants.StaticString.SAVED_INSTANCE;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
@@ -44,12 +47,11 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class SignInActivity extends AppCompatActivity implements OnResponseReceivedListener {
 
-    private ServiceEventInterface mSocketListener;
     private SharedPreferences mSharedPreferences;
     private EditText mIdEditTextView;
     private EditText mPasswordEditTextView;
-    private TextView mSignUpTextView;
-    private TextView mSignInTextView;
+    private ApplicationManagement mAppManagement;
+    private String packageName;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -57,43 +59,14 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        Intent service = new Intent(getApplicationContext(), BackgroundService.class);
-        stopService(service);
-        if (!isServiceRunningCheck()) {
-            startService(service);
-        }
 
-
-        mSocketListener = new ServiceEventInterface(getApplicationContext());
-        mSocketListener.socketRouting(ROUTE_SIGN_IN);
-        mSocketListener.setResponseListener(this);
-        mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-        try {
-            if (mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
-                    && mSharedPreferences.getString(USER_UUID, null) != null) {
-                JSONObject checkUserSignedData = new JSONObject();
-                checkUserSignedData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
-                checkUserSignedData.put(PASSWORD, mSharedPreferences.getString(PASSWORD, null));
-                checkUserSignedData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
-                mSocketListener.socketEmitEvent(CHECK_SIGNED, checkUserSignedData.toString());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mSocketListener.socketOnEvent(SIGNED_USER);
-        mSocketListener.socketOnEvent(SIGN_IN_SUCCESS);
-        mSocketListener.socketOnEvent(SIGN_IN_FAILED);
-        mSocketListener.socketOnEvent(SQL_ERROR);
-
+        packageName = getPackageName();
         //request location permission
         requestLocationPermission();
-        mSocketListener.socketOnEvent(SIGNED_USER);
 
         mIdEditTextView = findViewById(R.id.editTextId);
         mPasswordEditTextView = findViewById(R.id.editTextPassword);
-        mSignUpTextView = findViewById(R.id.signUpTextView);
-        mSignInTextView = findViewById(R.id.signInTextView);
-
+        TextView mSignUpTextView = findViewById(R.id.signUpTextView);
         mSignUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,49 +75,24 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
             }
         });
 
+        TextView mSignInTextView = findViewById(R.id.signInTextView);
         mSignInTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onSignInButtonClicked();
+                emitRequestSignIn();
             }
         });
     }
 
     @Override
-    public void onResponseReceived(Intent intent) {
-        String event = intent.getStringExtra(ON_EVENT);
-        switch (event) {
-            case SIGNED_USER:
-                Log.d("여기눈", "onResponseReceived: ");
-//                goToMainActivity();
-                break;
-            case SIGN_IN_SUCCESS:
-                //signInSuccess handle
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                try {
-                    JSONArray receivedArray = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
-                    JSONObject receivedObject = (JSONObject) receivedArray.get(0);
-                    editor.putString(USER_ID, receivedObject.optString(USER_ID));
-                    editor.putString(PASSWORD, receivedObject.optString(PASSWORD));
-                    editor.putString(USER_UUID, receivedObject.optString(USER_UUID));
-                    editor.commit();
-                    Log.d("여기 ㅠ", "onResponseReceived: " + receivedObject.getString(USER_ID) + receivedObject.get(PASSWORD) + receivedObject.getString(USER_UUID));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //save userInfo in system environment
-                goToMainActivity();
-                break;
-            case SIGN_IN_FAILED:
-                //signInFailed handle - not match with Id or Password
-                Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show();
-                break;
-            case SQL_ERROR:
-                //handle error
-                break;
-            default:
-                break;
-        }
+    protected void onStart() {
+        super.onStart();
+        mAppManagement = (ApplicationManagement) getApplication();
+        mAppManagement.routeSocket(ROUTE_SIGN_IN);
+        mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        mAppManagement.setOnResponseReceivedListener(this);
+        setOnResponseSignIn();
+        emitRequestUserIsSigned();
     }
 
     @Override
@@ -157,18 +105,77 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         }
     }
 
+    @Override
+    public void onResponseReceived(String onEvent, Object[] args) {
+        switch (onEvent) {
+            case SQL_ERROR:
+                Toast.makeText(mAppManagement, "sql error // server error", Toast.LENGTH_SHORT).show();
+                break;
+            case SIGN_IN_SUCCESS:
+                onResponseSignInSuccess(args);
+                break;
+            case SIGN_IN_FAILED:
+                Looper.prepare();
+                Toast.makeText(mAppManagement, "signInFailed", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+                break;
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void requestLocationPermission() {
-        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_CODE);
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null && (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || powerManager.isIgnoringBatteryOptimizations("package:" + packageName))) {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this)
+                    .setMessage("Abroad를 사용하기 위해서는 위치권한과 배터리 사용량 최적화 설정 안함이 필요합니다. 설정화면으로 이동??")
+                    .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_CODE);
+                        }
+                    }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(mAppManagement, "권한설정을 취소했습니다.", Toast.LENGTH_SHORT).show();
+                            dialogInterface.cancel();
+                        }
+                    });
+            AlertDialog alertDialog = alertBuilder.create();
+            alertDialog.show();
+        }
     }
 
-    public void goToMainActivity() {
-        Intent goToMainActivity = new Intent(getApplicationContext(), TabBarMainActivity.class);
-        startActivity(goToMainActivity);
-        finish();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent getIgnoreBatteryPermission = new Intent();
+                getIgnoreBatteryPermission.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                getIgnoreBatteryPermission.setData(Uri.parse("package:" + packageName));
+                startActivity(getIgnoreBatteryPermission);
+            }
+
+        }
     }
 
-    public void onSignInButtonClicked() {
+    public void emitRequestUserIsSigned() {
+        try {
+            if (mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
+                    && mSharedPreferences.getString(USER_UUID, null) != null) {
+                JSONObject checkUserSignedData = new JSONObject();
+                checkUserSignedData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+                checkUserSignedData.put(PASSWORD, mSharedPreferences.getString(PASSWORD, null));
+                checkUserSignedData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+                mAppManagement.emitRequestToServer(CHECK_SIGNED, checkUserSignedData);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void emitRequestSignIn() {
         String id = mIdEditTextView.getText().toString();
         String password = mPasswordEditTextView.getText().toString();
         JSONObject signInData = new JSONObject();
@@ -178,28 +185,41 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String signInDataToString = signInData.toString();
-        mSocketListener.socketEmitEvent(SIGN_IN, signInDataToString);
+        mAppManagement.emitRequestToServer(SIGN_IN, signInData);
     }
 
-    public boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (BackgroundService.class.getName().equals(service.service.getClassName()))
-                return true;
+    public void setOnResponseSignIn() {
+        mAppManagement.onResponseFromServer(SQL_ERROR);
+        mAppManagement.onResponseFromServer(SIGN_IN_SUCCESS);
+        mAppManagement.onResponseFromServer(SIGN_IN_FAILED);
+        mAppManagement.onResponseFromServer(SIGNED_USER);
+    }
+
+    public void goToMainActivity() {
+        Intent goToMainActivity = new Intent(getApplicationContext(), TabBarMainActivity.class);
+        startActivity(goToMainActivity);
+        finish();
+    }
+
+    public void onResponseSignInSuccess(Object[] args) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        try {
+            JSONArray receivedArray = (JSONArray) args[0];
+            JSONObject receivedObject = (JSONObject) receivedArray.get(0);
+            editor.putString(USER_ID, receivedObject.optString(USER_ID));
+            editor.putString(PASSWORD, receivedObject.optString(PASSWORD));
+            editor.putString(USER_UUID, receivedObject.optString(USER_UUID));
+            editor.commit();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return false;
+        //save userInfo in system environment
+        goToMainActivity();
     }
 
-    public boolean isServiceRunningCheck() {
-        ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.example.leeyh.abroadapp.background.BackgroundService".equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//       mAppManagement.disconnectSocket();
     }
-
-
 }
