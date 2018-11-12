@@ -4,15 +4,20 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.background.OnResponseReceivedListener2;
-import com.example.leeyh.abroadapp.background.ServiceEventInterface;
-import com.example.leeyh.abroadapp.helper.ApplicationManagement;
+import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.controller.NearLocationListViewAdapter;
+import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -35,7 +39,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
@@ -48,45 +51,43 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
-import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
+import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.TARGET_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class LocationFragment extends Fragment implements OnResponseReceivedListener2 {
+public class LocationFragment extends Fragment implements OnResponseReceivedListener {
 
     private String userId;
-    private ServiceEventInterface mSocketListener;
     private TextView mMyLocationTextView;
-    private ListView mNearLocationListView;
     private NearLocationListViewAdapter mAdapter;
-    private ApplicationManagement mAppStatic;
+    private ApplicationManagement mAppManager;
     private FusedLocationProviderClient mFusedLocationClient;
     private SharedPreferences mSharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSocketListener = new ServiceEventInterface(getContext());
-        mSocketListener.socketRouting(ROUTE_MAP);
-        mSocketListener.setResponseListener(this);
-        mAppStatic = (ApplicationManagement) getContext().getApplicationContext();
-        mSocketListener.socketOnEvent(SAVE_LOCATION_SUCCESS);
+
+        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
+        mAppManager.setOnResponseReceivedListener(this);
+        mAppManager.routeSocket(ROUTE_MAP);
+        mAppManager.onResponseFromServer(SQL_ERROR);
+        mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
+        mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
+
         mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString(USER_ID, null);
+        userId = mSharedPreferences.getString(USER_ID, null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
         View view = inflater.inflate(R.layout.fragment_location, container, false);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         mMyLocationTextView = view.findViewById(R.id.my_location_text_view);
-        mNearLocationListView = view.findViewById(R.id.near_location_list_view);
+        ListView mNearLocationListView = view.findViewById(R.id.near_location_list_view);
         mAdapter = new NearLocationListViewAdapter();
         mNearLocationListView.setAdapter(mAdapter);
 
@@ -98,15 +99,14 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        JSONObject makeChatData = new JSONObject();
+                        JSONObject makeRoomIdsData = new JSONObject();
                         try {
-                            makeChatData.put(USER_ID, userId);
-                            makeChatData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
-                            makeChatData.put(TARGET_ID, user.getUserId());
+                            makeRoomIdsData.put(USER_ID, userId);
+                            makeRoomIdsData.put(TARGET_ID, user.getUserId());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        mSocketListener.socketEmitEvent(MAKE_CHAT_ROOM, makeChatData.toString());
+                        mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
                     }
                 }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                     @Override
@@ -116,50 +116,66 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 }).create().show();
             }
         });
-        getLocation();
+        getLocationPermission();
         return view;
     }
 
     @Override
-    public void onResponseReceived(Intent intent) {
-        String event = intent.getStringExtra(ON_EVENT);
-        switch (event) {
+    public void onResponseReceived(String onEvent, Object[] object) {
+        switch (onEvent) {
             case SQL_ERROR:
-                Toast.makeText(mAppStatic, "SQL 에러", Toast.LENGTH_SHORT).show();
                 break;
             case SAVE_LOCATION_SUCCESS:
                 mAdapter.deleteAllItem();
-                try {
-                    JSONArray memberDataArray = new JSONArray(intent.getStringExtra(RECEIVED_DATA));
-                    for (int i = 0; i < memberDataArray.length(); i++) {
-                        JSONObject memberData = new JSONObject(memberDataArray.get(i).toString());
-                        mAdapter.addItem(memberData);
+                JSONArray receivedData = (JSONArray) object[0];
+                for (int i = 0; i < receivedData.length(); i++) {
+                    try {
+                        JSONObject nearLocationUser = receivedData.getJSONObject(i);
+                        byte[] profileByteArray = (byte[]) nearLocationUser.get(PROFILE);
+                        Bitmap nearUserProfile = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+                        mAppManager.addBitmapToMemoryCache(nearLocationUser.getString(USER_ID), nearUserProfile);
+                        mAdapter.addItem(nearLocationUser);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    mAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-                mSocketListener.socketRouting(ROUTE_CHAT);
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }.sendEmptyMessage(0);
+                routeSocketToChatting();
                 break;
-            case CHAT_CONNECT_SUCCESS:
-                mSocketListener.socketOnEvent(SQL_ERROR);
-                mSocketListener.socketOnEvent(MAKE_CHAT_ROOM_SUCCESS);
-                mSocketListener.socketOnEvent(MAKE_CHAT_ROOM_FAILED);
-                mSocketListener.socketOnEvent(NEW_ROOM_CHAT);
+            case NEW_ROOM_CHAT:
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        Toast.makeText(mAppManager, "새로운 채팅이 도착했어요", Toast.LENGTH_SHORT).show();
+                    }
+                }.sendEmptyMessage(0);
                 break;
             case MAKE_CHAT_ROOM_SUCCESS:
-                //Client who request make Room Chat received Success onEvent here.
-                Toast.makeText(mAppStatic, "요청한 사람 룸챗 만들기 성공", Toast.LENGTH_SHORT).show();
+                JSONObject makeRoomSuccessObject = (JSONObject) object[0];
+                Log.d("룸생성", "onResponseReceived: " + makeRoomSuccessObject.optString("roomName"));
+
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        Toast.makeText(mAppManager, "성공", Toast.LENGTH_SHORT).show();
+                    }
+                }.sendEmptyMessage(0);
                 break;
             case MAKE_CHAT_ROOM_FAILED:
-                //Client who request make Room Chat received Failed onEvent here because target user is not connected
-                Toast.makeText(mAppStatic, "요청한 사람 룸챗 만들기 실패", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void getLocation() {
+    public void getLocationPermission() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
                 , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             int permission = getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -177,6 +193,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                             .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
                                 }
                             })
                             .create().show();
@@ -190,12 +207,17 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 if (location != null) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-//                    List<String> addressData = DataConverter.convertAddress(getContext(), latitude, longitude);
                     mMyLocationTextView.setText(latitude + "\n" + longitude);
                     sendUserLocation(latitude, longitude);
                 }
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        mAppManager.unregisterSocket();
     }
 
     public void sendUserLocation(double latitude, double longitude) {
@@ -207,7 +229,23 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String locationDataToString = locationData.toString();
-        mSocketListener.socketEmitEvent(SAVE_LOCATION, locationDataToString);
+        mAppManager.emitRequestToServer(SAVE_LOCATION, locationData);
+    }
+
+    public void routeSocketToChatting() {
+        mAppManager.routeSocket(ROUTE_CHAT);
+        mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
+        mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_SUCCESS);
+        mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_FAILED);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }

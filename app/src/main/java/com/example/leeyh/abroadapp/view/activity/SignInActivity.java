@@ -39,7 +39,6 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
-import static com.example.leeyh.abroadapp.constants.StaticString.SAVED_INSTANCE;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
@@ -58,7 +57,6 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
 
         packageName = getPackageName();
         //request location permission
@@ -220,6 +218,12 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//       mAppManagement.disconnectSocket();
+        mAppManagement = null;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        mAppManagement.unregisterSocket();
     }
 }

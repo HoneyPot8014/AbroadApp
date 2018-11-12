@@ -2,7 +2,7 @@ package com.example.leeyh.abroadapp.helper;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.net.Uri;
 import android.util.LruCache;
 
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
@@ -10,7 +10,6 @@ import com.example.leeyh.abroadapp.constants.SocketEvent;
 
 import org.json.JSONObject;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import io.socket.client.IO;
@@ -18,7 +17,7 @@ import io.socket.client.Manager;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import static com.example.leeyh.abroadapp.constants.StaticString.CHACHE_SIZE;
+import static com.example.leeyh.abroadapp.constants.StaticString.CACHE_SIZE;
 
 public class ApplicationManagement extends Application {
 
@@ -28,24 +27,21 @@ public class ApplicationManagement extends Application {
 
     @Override
     public void onCreate() {
-
         super.onCreate();
 
         IO.Options socketOptions = new IO.Options();
-        socketOptions.forceNew = false;
         socketOptions.reconnection = true;
+        socketOptions.forceNew = false;
         socketOptions.multiplex = false;
         socketOptions.secure = true;
+
         try {
             mSocket = IO.socket(SocketEvent.DEFAULT_HOST, socketOptions);
+            mSocket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            //not connect handling
         }
-        mSocket.connect();
-        Log.d("계속 만들어짐?", "onCreate: ");
-
-        bitmapLruCache = new LruCache<String, Bitmap>(CHACHE_SIZE) {
+        bitmapLruCache = new LruCache<String, Bitmap>(CACHE_SIZE) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
                 return value.getByteCount() / 1024;
@@ -58,19 +54,8 @@ public class ApplicationManagement extends Application {
     }
 
     public void routeSocket(String route) {
-        IO.Options options = new IO.Options();
-        options.forceNew = false;
-        options.reconnection = true;
-        options.multiplex = false;
-        options.secure = true;
-        mSocket.disconnect();
-        try {
-            Socket newSocket = IO.socket(SocketEvent.DEFAULT_HOST + route, options);
-            mSocket = newSocket;
-            mSocket.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        mSocket.off();
+        mSocket = mSocket.io().socket(route).connect();
     }
 
     public void emitRequestToServer(String emitEvent, JSONObject jsonObject) {
@@ -84,10 +69,6 @@ public class ApplicationManagement extends Application {
                 onResponseReceivedListener.onResponseReceived(onEvent, args);
             }
         });
-    }
-
-    public void unRegisterOnResponse(String onEvent) {
-        mSocket.off(onEvent);
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {

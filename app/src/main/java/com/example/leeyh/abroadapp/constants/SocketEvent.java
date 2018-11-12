@@ -17,25 +17,25 @@ public class SocketEvent {
     public static final String SIGN_UP_SUCCESS = "signUpSuccess";
     public static final String SIGN_UP_FAILED = "signUpFailed";
 
-    //ROUTE_SIGN_IN ROUTE
+    //ROUTE_SIGN_IN
     public static final String ROUTE_SIGN_IN = "/signIn";
     public static final String SIGN_IN = "signInRequest";
     public static final String SIGN_IN_SUCCESS = "signInSuccess";
     public static final String SIGN_IN_FAILED = "signInFailed";
 
-    //CHAT
+    //ROUTE_CHAT
     public static final String ROUTE_CHAT = "/chat";
     public static final String CHAT_LIST = "chatList";
     public static final String CHAT_CONNECT = "chatConnected";
     public static final String CHAT_CONNECT_SUCCESS = "chatConnectedSuccess";
     public static final String CHAT_CONNECT_FAILED = "chatConnectedFailed";
-
-    //MAP
-    public static final String ROUTE_MAP = "/chat/map";
-    public static final String SAVE_LOCATION = "saveLocation";
-    public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
     public static final String MAKE_CHAT_ROOM = "makeChatRoom";
     public static final String MAKE_CHAT_ROOM_SUCCESS = "makeRoomSuccess";
     public static final String MAKE_CHAT_ROOM_FAILED = "makeRoomFailed";
     public static final String NEW_ROOM_CHAT = "newRoomChat";
+
+    //ROUTE_MAP
+    public static final String ROUTE_MAP = "/chat/map";
+    public static final String SAVE_LOCATION = "saveLocation";
+    public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
 }

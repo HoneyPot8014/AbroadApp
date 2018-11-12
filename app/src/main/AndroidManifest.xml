@@ -29,10 +29,10 @@
         <activity android:name=".prototype.ProtoSignUpActivity" />
         <activity android:name=".prototype.ProtoChatListActivity" />
 
-        <service
-            android:name=".background.BackgroundService"
-            android:enabled="true"
-            android:exported="true" />
+        <!--<service-->
+            <!--android:name=".background.BackgroundService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true" />-->
 
         <activity android:name=".prototype.Test_Activity" />
         <activity android:name=".view.activity.SignInActivity">

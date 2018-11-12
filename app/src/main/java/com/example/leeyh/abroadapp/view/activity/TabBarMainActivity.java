@@ -2,9 +2,12 @@ package com.example.leeyh.abroadapp.view.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
@@ -18,6 +21,8 @@ import org.json.JSONObject;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
+import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
@@ -25,6 +30,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
 
     private LocationFragment mLocationFragment;
     private ApplicationManagement mAppManager;
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,9 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         mAppManager = (ApplicationManagement) getApplication();
         mAppManager.setOnResponseReceivedListener(this);
         mAppManager.routeSocket(ROUTE_CHAT);
-//        mAppManager.onResponseFromServer(CHAT_CONNECT_SUCCESS);
+        mAppManager.onResponseFromServer(CHAT_CONNECT_SUCCESS);
+
+        mFragmentManager = getSupportFragmentManager();
 
         emitToServerConnectedToChatNameSpace();
         mLocationFragment = new LocationFragment();
@@ -42,7 +50,9 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         locationTabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, mLocationFragment).addToBackStack(null).commitAllowingStateLoss();
+                if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof LocationFragment)
+                    return;
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, mLocationFragment, LOCATION_FRAGMENT).commitAllowingStateLoss();
             }
         });
 
@@ -50,16 +60,24 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         chatListTabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, new ChatListFragment()).commitAllowingStateLoss();
+                if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof ChatListFragment)
+                    return;
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new ChatListFragment(), CHAT_LIST_FRAGMENT).commitAllowingStateLoss();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        mAppManager.unregisterSocket();
     }
 
     @Override
     public void onResponseReceived(String onEvent, Object[] object) {
         switch (onEvent) {
             case CHAT_CONNECT_SUCCESS:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, mLocationFragment).commitAllowingStateLoss();
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, mLocationFragment, LOCATION_FRAGMENT).commitAllowingStateLoss();
                 break;
         }
     }
@@ -78,6 +96,6 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        mAppManager.unRegisterOnResponse(CHAT_CONNECT_SUCCESS);
+        mAppManager = null;
     }
 }

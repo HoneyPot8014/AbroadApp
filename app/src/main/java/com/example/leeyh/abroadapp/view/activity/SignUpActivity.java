@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
-import com.example.leeyh.abroadapp.background.OnResponseReceivedListener2;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +29,6 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.ON_EVENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 
@@ -51,9 +49,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         mAppManager = (ApplicationManagement) getApplication();
         mAppManager.routeSocket(ROUTE_SIGN_UP);
         mAppManager.setOnResponseReceivedListener(this);
-        mAppManager.onResponseFromServer(SQL_ERROR);
-        mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
-        mAppManager.onResponseFromServer(SIGN_UP_FAILED);
+//        mAppManager.onResponseFromServer(SQL_ERROR);
+//        mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
+//        mAppManager.onResponseFromServer(SIGN_UP_FAILED);
 
         mIdEditEditTextView = findViewById(R.id.sign_up_id_edit_text);
         mPasswordEditTextView = findViewById(R.id.sign_up_password_edit_text);
@@ -87,9 +85,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 try {
                     mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
                     mProfileImageView.setImageBitmap(mProfileBitmap);
-                    mAppManager.onResponseFromServer(SQL_ERROR);
-                    mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
-                    mAppManager.onResponseFromServer(SIGN_UP_FAILED);
+//                    mAppManager.onResponseFromServer(SQL_ERROR);
+//                    mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
+//                    mAppManager.onResponseFromServer(SIGN_UP_FAILED);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -147,8 +145,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAppManager.unRegisterOnResponse(SQL_ERROR);
-        mAppManager.unRegisterOnResponse(SIGN_UP_SUCCESS);
-        mAppManager.unRegisterOnResponse(SIGN_UP_FAILED);
+        mAppManager = null;
     }
 }

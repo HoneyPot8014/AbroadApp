@@ -20,13 +20,15 @@ public class StaticString {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String DISTANCE = "distance";
+    public static final String LOCATION_FRAGMENT = "locationFragment";
+    public static final String CHAT_LIST_FRAGMENT = "chatListFragment";
 
 
     public static final int CAMERA_CODE = 1111;
     public static final int SIGN_UP_CODE = 1112;
     public static final int LOCATION_CODE = 1113;
     public static final int MAX_MEMORY = (int) (Runtime.getRuntime().maxMemory() / 1024);
-    public static final int CHACHE_SIZE = MAX_MEMORY / 6;
+    public static final int CACHE_SIZE = MAX_MEMORY / 6;
 
     public static final long MIN_DISTANCE_FOR_UPDATE = 1000;
     public static final long MIN_TIME_FOR_UPDATE = 1000 * 60 * 10;
