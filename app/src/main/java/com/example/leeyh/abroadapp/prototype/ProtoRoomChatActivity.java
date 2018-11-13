@@ -49,7 +49,7 @@ public class ProtoRoomChatActivity extends AppCompatActivity {
         mUserId = preferences.getString(USER_ID, null);
         mRoomName = getIntent().getStringExtra(ROOM_NAME);
 
-        mChatView = findViewById(R.id.chat_messages_list_view);
+        mChatView = findViewById(R.id.proto_chat_messages_list_view);
         mChatView.setStackFromBottom(true);
         Button sendMessageButton = findViewById(R.id.send_message_button);
         sendMessageButton.setOnClickListener(new View.OnClickListener() {

@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:name=".helper.ApplicationManagement"
@@ -29,10 +29,10 @@
         <activity android:name=".prototype.ProtoSignUpActivity" />
         <activity android:name=".prototype.ProtoChatListActivity" />
 
-        <!--<service-->
-            <!--android:name=".background.BackgroundService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true" />-->
+        <!-- <service -->
+        <!-- android:name=".background.BackgroundService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" /> -->
 
         <activity android:name=".prototype.Test_Activity" />
         <activity android:name=".view.activity.SignInActivity">
@@ -43,10 +43,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.SignUpActivity" />
-        <activity android:name=".view.activity.TabBarMainActivity"
-            android:configChanges="screenSize|orientation"></activity>
+        <activity
+            android:name=".view.activity.TabBarMainActivity"
+            android:configChanges="screenSize|orientation" />
+
         <service
             android:name=".background.GpsService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".background.BackgroundChattingService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

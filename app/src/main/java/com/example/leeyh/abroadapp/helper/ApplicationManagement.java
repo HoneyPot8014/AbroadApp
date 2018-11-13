@@ -1,16 +1,19 @@
 package com.example.leeyh.abroadapp.helper;
 
 import android.app.Application;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.LruCache;
 
+import com.example.leeyh.abroadapp.background.BackgroundChattingService;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.constants.SocketEvent;
 
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.logging.Handler;
 
 import io.socket.client.IO;
 import io.socket.client.Manager;
@@ -28,7 +31,6 @@ public class ApplicationManagement extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         IO.Options socketOptions = new IO.Options();
         socketOptions.reconnection = true;
         socketOptions.forceNew = false;
@@ -47,6 +49,9 @@ public class ApplicationManagement extends Application {
                 return value.getByteCount() / 1024;
             }
         };
+
+        final Intent intent = new Intent(getApplicationContext(), BackgroundChattingService.class);
+        startService(intent);
     }
 
     public void setOnResponseReceivedListener(OnResponseReceivedListener listener) {

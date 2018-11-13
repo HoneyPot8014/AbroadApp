@@ -1,4 +1,4 @@
-package com.example.leeyh.abroadapp.view.fragment;
+package com.example.leeyh.abroadapp.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -10,21 +10,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.leeyh.abroadapp.R;
+import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 public class ChatListItemView extends LinearLayout{
 
     private ImageView mChatListProfileImageView;
     private TextView mChatListRoomNickNameTextView;
     private TextView mChatListLastMessageTextView;
+    private ApplicationManagement mAppManager;
 
     public ChatListItemView(Context context) {
         super(context);
         init(context);
+        mAppManager = (ApplicationManagement) context.getApplicationContext();
     }
 
     public ChatListItemView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
+        mAppManager = (ApplicationManagement) context.getApplicationContext();
     }
 
     private void init(Context context) {
@@ -35,15 +39,15 @@ public class ChatListItemView extends LinearLayout{
         mChatListLastMessageTextView = rootView.findViewById(R.id.chat_list_last_message_text_view);
     }
 
-    public void setChatListProfileImage() {
-
+    public void setChatListProfileImage(String userId) {
+        mChatListProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(userId));
     }
 
-    public void setChatListRoomNickName() {
-
+    public void setChatListRoomNickName(String nickName) {
+        mChatListRoomNickNameTextView.setText(nickName);
     }
 
-    public void setChatListLastMessage() {
-
+    public void setChatListLastMessage(String lastMessage) {
+        mChatListLastMessageTextView.setText(lastMessage);
     }
 }

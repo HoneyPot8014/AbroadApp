@@ -23,16 +23,4 @@ public class UserModel {
     public String getLocate() {
         return locate;
     }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
-    }
-
-    public void setLocate(String locate) {
-        this.locate = locate;
-    }
 }

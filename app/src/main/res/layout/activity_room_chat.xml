@@ -7,7 +7,7 @@
     tools:context=".prototype.ProtoRoomChatActivity">
 
     <ListView
-        android:id="@+id/chat_messages_list_view"
+        android:id="@+id/proto_chat_messages_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:divider="@null"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/input_message_edit_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/chat_messages_list_view" />
+        app:layout_constraintTop_toBottomOf="@+id/proto_chat_messages_list_view" />
 
 
 </android.support.constraint.ConstraintLayout>

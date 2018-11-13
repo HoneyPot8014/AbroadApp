@@ -20,8 +20,10 @@ public class StaticString {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String DISTANCE = "distance";
+    public static final String JOIN_MEMBERS = "joinMembers";
     public static final String LOCATION_FRAGMENT = "locationFragment";
     public static final String CHAT_LIST_FRAGMENT = "chatListFragment";
+    public static final String LAST_MESSAGE = "lastMessage";
 
 
     public static final int CAMERA_CODE = 1111;

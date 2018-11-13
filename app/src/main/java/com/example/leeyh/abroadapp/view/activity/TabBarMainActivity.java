@@ -4,21 +4,23 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
+import com.example.leeyh.abroadapp.model.ChatListModel;
 import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
+import com.example.leeyh.abroadapp.view.fragment.ChattingFragment;
 import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
+import com.example.leeyh.abroadapp.view.fragment.OnChatListItemClicked;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
@@ -26,7 +28,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGME
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
-public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener {
+public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener, OnChatListItemClicked {
 
     private LocationFragment mLocationFragment;
     private ApplicationManagement mAppManager;
@@ -68,16 +70,12 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-//        mAppManager.unregisterSocket();
-    }
-
-    @Override
     public void onResponseReceived(String onEvent, Object[] object) {
         switch (onEvent) {
             case CHAT_CONNECT_SUCCESS:
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, mLocationFragment, LOCATION_FRAGMENT).commitAllowingStateLoss();
+                break;
+            case CHAT_CONNECT_FAILED:
                 break;
         }
     }
@@ -97,5 +95,11 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     protected void onDestroy() {
         super.onDestroy();
         mAppManager = null;
+    }
+
+    @Override
+    public void onChatItemClicked(ChatListModel chatListModel) {
+        String roomName = chatListModel.getRoomName();
+        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).addToBackStack(null).commitAllowingStateLoss();
     }
 }
