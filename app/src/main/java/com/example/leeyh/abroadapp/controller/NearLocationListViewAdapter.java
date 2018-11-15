@@ -3,7 +3,6 @@ package com.example.leeyh.abroadapp.controller;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.view.NearLocationItemView;
@@ -13,10 +12,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.leeyh.abroadapp.constants.StaticString.CITY;
 import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
-import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 
 public class NearLocationListViewAdapter extends BaseAdapter {
 

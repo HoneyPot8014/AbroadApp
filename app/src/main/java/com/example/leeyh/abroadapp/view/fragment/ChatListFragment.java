@@ -109,4 +109,9 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         }
         mAppManager.emitRequestToServer(CHAT_LIST, chatListData);
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 }

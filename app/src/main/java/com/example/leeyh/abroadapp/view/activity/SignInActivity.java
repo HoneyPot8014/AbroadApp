@@ -117,6 +117,9 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
                 Toast.makeText(mAppManagement, "signInFailed", Toast.LENGTH_SHORT).show();
                 Looper.loop();
                 break;
+            case SIGNED_USER:
+                goToMainActivity();
+                break;
         }
     }
 
@@ -219,11 +222,5 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     protected void onDestroy() {
         super.onDestroy();
         mAppManagement = null;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        mAppManagement.unregisterSocket();
     }
 }

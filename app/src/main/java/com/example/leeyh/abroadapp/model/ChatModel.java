@@ -2,22 +2,20 @@ package com.example.leeyh.abroadapp.model;
 
 public class ChatModel {
 
-    private String userNickName;
+    private String userId;
     private String message;
-    private boolean isMyMessage;
 
-    public ChatModel(String userNickName, String message, boolean isMyMessage) {
-        this.userNickName = userNickName;
+    public ChatModel(String userId, String message) {
+        this.userId = userId;
         this.message = message;
-        this.isMyMessage = isMyMessage;
     }
 
-    public String getUserNickName() {
-        return userNickName;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getMessage() {
@@ -26,13 +24,5 @@ public class ChatModel {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public boolean isMyMessage() {
-        return isMyMessage;
-    }
-
-    public void setMyMessage(boolean myMessage) {
-        isMyMessage = myMessage;
     }
 }

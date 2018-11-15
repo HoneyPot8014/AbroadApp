@@ -39,6 +39,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.ByteBuffer;
+
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
@@ -99,13 +101,9 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        JSONObject makeRoomIdsData = new JSONObject();
-                        try {
-                            makeRoomIdsData.put(USER_ID, userId);
-                            makeRoomIdsData.put(TARGET_ID, user.getUserId());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        JSONArray makeRoomIdsData = new JSONArray();
+                        makeRoomIdsData.put(userId);
+                        makeRoomIdsData.put(user.getUserId());
                         mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
                     }
                 }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -132,8 +130,11 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                     try {
                         JSONObject nearLocationUser = receivedData.getJSONObject(i);
                         byte[] profileByteArray = (byte[]) nearLocationUser.get(PROFILE);
-                        Bitmap nearUserProfile = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
-                        mAppManager.addBitmapToMemoryCache(nearLocationUser.getString(USER_ID), nearUserProfile);
+                        if(profileByteArray != null) {
+                            Bitmap nearUserProfile = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
+
+                            mAppManager.addBitmapToMemoryCache(nearLocationUser.getString(USER_ID), nearUserProfile);
+                        }
                         mAdapter.addItem(nearLocationUser);
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -3,9 +3,15 @@ package com.example.leeyh.abroadapp.view.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,13 +20,18 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.dataconverter.DataConverter;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_SIGN_UP;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP;
@@ -30,6 +41,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
+import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 
 public class SignUpActivity extends AppCompatActivity implements OnResponseReceivedListener {
@@ -40,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
     private EditText mIdEditEditTextView;
     private EditText mPasswordEditTextView;
     private EditText mNickNameEditTextView;
+    private byte[] mProfileByteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +62,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         mAppManager = (ApplicationManagement) getApplication();
         mAppManager.routeSocket(ROUTE_SIGN_UP);
         mAppManager.setOnResponseReceivedListener(this);
-//        mAppManager.onResponseFromServer(SQL_ERROR);
-//        mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
-//        mAppManager.onResponseFromServer(SIGN_UP_FAILED);
+        mAppManager.onResponseFromServer(SQL_ERROR);
+        mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
+        mAppManager.onResponseFromServer(SIGN_UP_FAILED);
 
         mIdEditEditTextView = findViewById(R.id.sign_up_id_edit_text);
         mPasswordEditTextView = findViewById(R.id.sign_up_password_edit_text);
@@ -84,10 +97,8 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                    mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
                     mProfileImageView.setImageBitmap(mProfileBitmap);
-//                    mAppManager.onResponseFromServer(SQL_ERROR);
-//                    mAppManager.onResponseFromServer(SIGN_UP_SUCCESS);
-//                    mAppManager.onResponseFromServer(SIGN_UP_FAILED);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -114,7 +125,14 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 finish();
                 break;
             case SIGN_UP_FAILED:
-                Toast.makeText(mAppManager, "SIGN_UP_FAILED", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        Toast.makeText(mAppManager, "SIGN_UP_FAILED", Toast.LENGTH_SHORT).show();
+                    }
+                }.sendEmptyMessage(0);
+
                 break;
         }
     }
@@ -133,6 +151,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 signUpData.put(USER_ID, id);
                 signUpData.put(PASSWORD, password);
                 signUpData.put(NICKNAME, nickName);
+                if(mProfileByteArray != null) {
+                    signUpData.put(PROFILE, mProfileByteArray);
+                }
                 mAppManager.emitRequestToServer(SIGN_UP, signUpData);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -16,7 +16,7 @@ import java.util.List;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.JOIN_MEMBERS;
 import static com.example.leeyh.abroadapp.constants.StaticString.LAST_MESSAGE;
-import static com.example.leeyh.abroadapp.prototype.ProtoChatListActivity.ROOM_NAME;
+import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 
 public class ChatListAdapter extends BaseAdapter {
 

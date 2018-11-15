@@ -2,10 +2,15 @@ package com.example.leeyh.abroadapp.view.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
@@ -27,6 +32,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGM
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener, OnChatListItemClicked {
 
@@ -43,7 +49,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         mAppManager.setOnResponseReceivedListener(this);
         mAppManager.routeSocket(ROUTE_CHAT);
         mAppManager.onResponseFromServer(CHAT_CONNECT_SUCCESS);
-
+        mAppManager.onResponseFromServer(CHAT_CONNECT_FAILED);
         mFragmentManager = getSupportFragmentManager();
 
         emitToServerConnectedToChatNameSpace();
@@ -76,6 +82,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, mLocationFragment, LOCATION_FRAGMENT).commitAllowingStateLoss();
                 break;
             case CHAT_CONNECT_FAILED:
+                Log.d("실패", "onResponseReceived: ");
                 break;
         }
     }
@@ -85,6 +92,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         JSONObject requestChatConnectData = new JSONObject();
         try {
             requestChatConnectData.put(USER_ID, sharedPreferences.getString(USER_ID, null));
+            requestChatConnectData.put(USER_UUID, sharedPreferences.getString(USER_UUID, null));
             mAppManager.emitRequestToServer(CHAT_CONNECT, requestChatConnectData);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -100,6 +108,6 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     @Override
     public void onChatItemClicked(ChatListModel chatListModel) {
         String roomName = chatListModel.getRoomName();
-        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).addToBackStack(null).commitAllowingStateLoss();
+        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
     }
 }

@@ -37,6 +37,11 @@ public class SocketEvent {
     public static final String CHAT_LIST_SUCCESS = "chatListSuccess";
     public static final String CHAT_LIST_FAILED = "chatListFailed";
     public static final String CHAT_MESSAGE = "chatMessage";
+    public static final String CHAT_MESSAGE_SUCCESS = "chatMessageSuccess";
+    public static final String SEND_MESSAGE = "sendMessage";
+    public static final String SEND_MESSAGE_SUCCESS = "sendMessageSuccess";
+    public static final String SEND_MESSAGE_FAILED = "sendMessageFailed";
+    public static final String RECEIVE_MESSAGE = "receiveMessage";
 
     //ROUTE_MAP
     public static final String ROUTE_MAP = "/chat/map";
