@@ -10,6 +10,7 @@ import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.model.ChatModel;
 import com.example.leeyh.abroadapp.view.ChatMessageItemView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,18 +22,24 @@ import static com.example.leeyh.abroadapp.constants.StaticString.SEND_MESSAGE_ID
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
-public class ChatMessageAdapter extends BaseAdapter{
+public class ChatMessageAdapter extends BaseAdapter {
 
-    List<ChatModel> items = new ArrayList<>();
+    //    List<ChatModel> items = new ArrayList<>();
+    JSONArray items = new JSONArray();
 
     @Override
     public int getCount() {
-        return items.size();
+        return items.length();
     }
 
     @Override
     public Object getItem(int i) {
-        return items.get(i);
+        try {
+            return items.getJSONObject(i);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -42,37 +49,41 @@ public class ChatMessageAdapter extends BaseAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ApplicationManagement appManager = (ApplicationManagement) viewGroup.getContext().getApplicationContext();
         SharedPreferences sharedPreferences = viewGroup.getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
         String myId = sharedPreferences.getString(USER_ID, null);
 
         ChatMessageItemView itemView;
-        if(view == null) {
+        if (view == null) {
             itemView = new ChatMessageItemView(viewGroup.getContext());
         } else {
             itemView = (ChatMessageItemView) view;
         }
 
-        ChatModel item = items.get(i);
-        if(myId.equals(item.getUserId())) {
-            itemView.isMyMessage(true);
-            itemView.setMyMessageTextView(item.getMessage());
-        } else {
-            itemView.isMyMessage(false);
-            itemView.setOtherMessageTextView(item.getMessage());
-            itemView.setOtherProfileImageView(item.getUserId());
+//        ChatModel item = items.get(i);
+        JSONObject item = null;
+        try {
+            item = items.getJSONObject(i);
+            if (myId.equals(item.getString(SEND_MESSAGE_ID))) {
+                itemView.setIsMyMessage(true);
+                itemView.setMyMessageTextView(item.getString(MESSAGE));
+            } else {
+//                itemView.isMyMessage(false);
+                itemView.setIsMyMessage(false);
+                itemView.setOtherMessageTextView(item.getString(MESSAGE));
+                itemView.setOtherProfileImageView(viewGroup.getContext(), item.getString(SEND_MESSAGE_ID));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         return itemView;
     }
 
     public void addItem(JSONObject chatModel) {
-        try {
-            String id = chatModel.getString(SEND_MESSAGE_ID);
-            String message = chatModel.getString(MESSAGE);
-            items.add(new ChatModel(id, message));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        items.put(chatModel);
+    }
+
+    public void addList(JSONArray chatMessageList) {
+        items = chatMessageList;
     }
 }

@@ -1,8 +1,8 @@
 package com.example.leeyh.abroadapp.view.fragment;
 
-import com.example.leeyh.abroadapp.model.ChatListModel;
+import org.json.JSONObject;
 
 public interface OnChatListItemClicked {
 
-    void onChatItemClicked(ChatListModel chatListModel);
+    void onChatItemClicked(JSONObject chatListModel);
 }

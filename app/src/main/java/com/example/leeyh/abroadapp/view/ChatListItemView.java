@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
+import com.example.leeyh.abroadapp.helper.Network;
 
 public class ChatListItemView extends LinearLayout{
 
@@ -22,25 +24,29 @@ public class ChatListItemView extends LinearLayout{
     public ChatListItemView(Context context) {
         super(context);
         init(context);
-        mAppManager = (ApplicationManagement) context.getApplicationContext();
     }
 
     public ChatListItemView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
-        mAppManager = (ApplicationManagement) context.getApplicationContext();
     }
 
     private void init(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rootView = inflater.inflate(R.layout.chat_list_item_view, this, true);
+        mAppManager = (ApplicationManagement) context.getApplicationContext();
         mChatListProfileImageView = rootView.findViewById(R.id.chat_list_profile_image_view);
         mChatListRoomNickNameTextView = rootView.findViewById(R.id.chat_list_room_nick_name_text_view);
         mChatListLastMessageTextView = rootView.findViewById(R.id.chat_list_last_message_text_view);
     }
 
-    public void setChatListProfileImage(String userId) {
-        mChatListProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(userId));
+    public void setChatListProfileImage(String id, Context context) {
+//        if(mAppManager.getBitmapFromMemoryCache(id) == null) {
+//            Network.getProfile(mAppManager, context, mChatListProfileImageView, id);
+//        } else {
+//            mChatListProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(id));
+//        }
+        Glide.with(context).load("http://49.236.137.55/profile?id=" + id + ".jpeg").into(mChatListProfileImageView);
     }
 
     public void setChatListRoomNickName(String nickName) {
