@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -115,7 +116,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 Toast.makeText(mAppManager, "SQL // Server Error", Toast.LENGTH_SHORT).show();
                 break;
             case SIGN_UP_SUCCESS:
-                Toast.makeText(mAppManager, "", Toast.LENGTH_SHORT).show();
                 String id = mIdEditEditTextView.getText().toString();
                 Intent setResultToSignIn = new Intent(getApplicationContext(), SignInActivity.class);
                 setResultToSignIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK & Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_NEW_TASK);

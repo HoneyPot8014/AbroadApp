@@ -10,6 +10,8 @@
         android:id="@+id/room_chat_message_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:divider="#ffffff"
+        android:dividerHeight="0dp"
         app:layout_constraintBottom_toTopOf="@id/room_chat_message_edit_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

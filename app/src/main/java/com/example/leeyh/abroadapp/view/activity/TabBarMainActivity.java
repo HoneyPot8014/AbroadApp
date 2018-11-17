@@ -60,7 +60,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
             public void onClick(View view) {
                 if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof LocationFragment)
                     return;
-                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, mLocationFragment, LOCATION_FRAGMENT).commitAllowingStateLoss();
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).commitAllowingStateLoss();
             }
         });
 
@@ -79,7 +79,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     public void onResponseReceived(String onEvent, Object[] object) {
         switch (onEvent) {
             case CHAT_CONNECT_SUCCESS:
-                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, mLocationFragment, LOCATION_FRAGMENT).commitAllowingStateLoss();
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).commitAllowingStateLoss();
                 break;
             case CHAT_CONNECT_FAILED:
                 Log.d("실패", "onResponseReceived: ");

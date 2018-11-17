@@ -4,30 +4,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.example.leeyh.abroadapp.dataconverter.DataConverter;
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.view.NearLocationItemView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
+import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
+import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 
 public class NearLocationListViewAdapter extends BaseAdapter {
 
-    List<UserModel> items = new ArrayList<>();
+//    List<UserModel> items = new ArrayList<>();
+    JSONArray items = new JSONArray();
 
     @Override
     public int getCount() {
-        return items.size();
+        return items.length();
     }
 
     @Override
     public Object getItem(int i) {
-        return items.get(i);
+        try {
+            return items.getJSONObject(i);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
     }
 
     @Override
@@ -45,10 +56,18 @@ public class NearLocationListViewAdapter extends BaseAdapter {
             itemView = (NearLocationItemView) view;
         }
 
-        UserModel item = items.get(i);
-        itemView.setNickName(item.getUserNickName());
-        itemView.setLocate(item.getLocate());
-        itemView.setImageView(item.getUserId());
+//        UserModel item = items.get(i);
+        JSONObject item = null;
+        try {
+            item = items.getJSONObject(i);
+            double latitude = Double.parseDouble(item.getString(LATITUDE));
+            double longitude = Double.parseDouble(item.getString(LONGITUDE));
+            itemView.setNickName(item.getString(NICKNAME));
+            itemView.setLocate(DataConverter.convertAddress(viewGroup.getContext(), latitude, longitude));
+            itemView.setImageView(item.getString(USER_ID), viewGroup.getContext());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return itemView;
     }
@@ -57,10 +76,14 @@ public class NearLocationListViewAdapter extends BaseAdapter {
         String id = userData.optString(USER_ID);
         String nickName = userData.optString(NICKNAME);
         String locate = userData.optString(DISTANCE);
-        items.add(new UserModel(id, nickName, locate));
+//        items.add(new UserModel(id, nickName, locate));
     }
 
     public void deleteAllItem() {
-        items.clear();
+        items = null;
+    }
+
+    public void addList(JSONArray userDataJsonArray) {
+        items = userDataJsonArray;
     }
 }

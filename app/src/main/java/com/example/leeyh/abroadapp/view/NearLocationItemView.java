@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
@@ -29,7 +30,6 @@ public class NearLocationItemView extends LinearLayout {
         init(context);
     }
 
-
     private void init(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.near_location_item_view, this, true);
@@ -40,10 +40,8 @@ public class NearLocationItemView extends LinearLayout {
         mLocateTextView = findViewById(R.id.location_locate_text_view);
     }
 
-    public void setImageView(String id) {
-        Bitmap bitmap = mAppStatic.getBitmapFromMemoryCache(id);
-        mImageView.setImageBitmap(bitmap);
-
+    public void setImageView(String id, Context context) {
+        Glide.with(context).load("http://49.236.137.55/profile?id=" + id + ".jpeg").into(mImageView);
     }
 
     public void setNickName(String nickName) {

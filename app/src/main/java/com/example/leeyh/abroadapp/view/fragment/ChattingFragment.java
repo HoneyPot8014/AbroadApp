@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_MESSAGE_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.RECEIVE_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE_SUCCESS;
@@ -39,9 +36,8 @@ import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class ChattingFragment extends Fragment implements OnResponseReceivedListener{
+public class ChattingFragment extends Fragment implements OnResponseReceivedListener {
 
     private String mRoomName;
     private OnFragmentInteractionListener mListener;
@@ -74,7 +70,6 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(SEND_MESSAGE_SUCCESS);
         mAppManager.onResponseFromServer(SEND_MESSAGE_FAILED);
         mAppManager.onResponseFromServer(RECEIVE_MESSAGE);
-//        emitToServerConnectedToChatNameSpace();
     }
 
     @Override
@@ -82,6 +77,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chatting, container, false);
         ListView mChatMessageListView = view.findViewById(R.id.room_chat_message_list_view);
+        mChatMessageListView.setSelected(true);
         mChatMessageListView.setAdapter(mChatMessageAdaptor);
         mChatMessageEditText = view.findViewById(R.id.room_chat_message_edit_text);
         Button sendMessageButton = view.findViewById(R.id.room_chat_send_button);
@@ -122,7 +118,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
         switch (onEvent) {
             case CHAT_MESSAGE_SUCCESS:
                 JSONArray chatMessageList = (JSONArray) object[0];
-                for(int i = 0; i < chatMessageList.length(); i++) {
+                for (int i = 0; i < chatMessageList.length(); i++) {
                     try {
                         JSONObject chatMessage = (JSONObject) chatMessageList.get(i);
                         mChatMessageAdaptor.addItem(chatMessage);
@@ -184,17 +180,5 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
             e.printStackTrace();
         }
         mAppManager.emitRequestToServer(SEND_MESSAGE, sendMessageData);
-    }
-
-    public void emitToServerConnectedToChatNameSpace() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(USER_INFO, MODE_PRIVATE);
-        JSONObject requestChatConnectData = new JSONObject();
-        try {
-            requestChatConnectData.put(USER_ID, sharedPreferences.getString(USER_ID, null));
-            requestChatConnectData.put(USER_UUID, sharedPreferences.getString(USER_UUID, null));
-            mAppManager.emitRequestToServer(CHAT_CONNECT, requestChatConnectData);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 }

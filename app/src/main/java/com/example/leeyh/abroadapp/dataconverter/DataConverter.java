@@ -2,6 +2,7 @@ package com.example.leeyh.abroadapp.dataconverter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -19,17 +20,19 @@ import java.util.List;
 public class DataConverter {
 
     public static byte[] getByteArrayToStringFromBitmap(Bitmap bitmap) {
+        BitmapFactory.Options bitmapOption = new BitmapFactory.Options();
+        bitmapOption.inSampleSize = 5;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         return outputStream.toByteArray();
     }
 
-    public static List<String> convertAddress(Context context, double latitude, double longitude) {
+    public static String convertAddress(Context context, double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(context);
-        List<String> resultList = new ArrayList<>();
+//        List<String> resultList = new ArrayList<>();
         List<Address> addressList = null;
         try {
-            addressList = geocoder.getFromLocation(latitude, longitude, 10);
+            addressList = geocoder.getFromLocation(latitude, longitude, 1);
             if(addressList != null) {
                 if(addressList.size() == 0) {
                     return null;
@@ -38,10 +41,9 @@ public class DataConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        resultList.add(addressList.get(0).getAddressLine(0));
-        resultList.add(addressList.get(0).getAdminArea());
-        resultList.add(addressList.get(0).getCountryName());
-        return resultList;
+//        resultList.add(addressList.get(0).getAdminArea());
+//        resultList.add(addressList.get(0).getCountryName());
+        return addressList.get(0).getAdminArea();
     }
 
 }
