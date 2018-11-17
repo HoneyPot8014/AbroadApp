@@ -8,15 +8,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
-public class ChatMessageItemView extends LinearLayout{
+public class ChatMessageItemView extends LinearLayout {
 
     private ApplicationManagement mAppManager;
     private ImageView mOtherProfileImageView;
     private TextView mOtherMessageTextView;
     private TextView mMyMessageTextView;
+    private boolean isMyMessage;
 
     public ChatMessageItemView(Context context) {
         super(context);
@@ -38,20 +40,33 @@ public class ChatMessageItemView extends LinearLayout{
         mMyMessageTextView = findViewById(R.id.my_message_text_view);
     }
 
-    public void setOtherProfileImageView(String userId) {
-        mOtherProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(userId));
+    public void setIsMyMessage(boolean isMyMessage) {
+        this.isMyMessage = isMyMessage;
+    }
+
+    public void setOtherProfileImageView(Context context, String userId) {
+        mOtherProfileImageView.setVisibility(VISIBLE);
+        Glide.with(context).load("http://49.236.137.55/profile?id=" + userId + ".jpeg").into(mOtherProfileImageView);
+        mOtherMessageTextView.setVisibility(VISIBLE);
+        mMyMessageTextView.setVisibility(GONE);
     }
 
     public void setOtherMessageTextView(String message) {
+        mOtherMessageTextView.setVisibility(VISIBLE);
         mOtherMessageTextView.setText(message);
+        mOtherProfileImageView.setVisibility(GONE);
+        mOtherMessageTextView.setVisibility(GONE);
     }
 
     public void setMyMessageTextView(String message) {
+        mMyMessageTextView.setVisibility(VISIBLE);
         mMyMessageTextView.setText(message);
+        mOtherMessageTextView.setVisibility(GONE);
+        mOtherProfileImageView.setVisibility(GONE);
     }
 
     public void isMyMessage(boolean isMyMessage) {
-        if(isMyMessage) {
+        if (isMyMessage) {
             mOtherMessageTextView.setVisibility(GONE);
             mMyMessageTextView.setVisibility(VISIBLE);
         } else {

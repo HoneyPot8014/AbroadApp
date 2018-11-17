@@ -42,6 +42,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
     private String mRoomName;
     private OnFragmentInteractionListener mListener;
     private ApplicationManagement mAppManager;
+    ListView mChatMessageListView;
     private ChatMessageAdapter mChatMessageAdaptor;
     private EditText mChatMessageEditText;
     private SharedPreferences mSharedPreferences;
@@ -76,8 +77,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chatting, container, false);
-        ListView mChatMessageListView = view.findViewById(R.id.room_chat_message_list_view);
-        mChatMessageListView.setSelected(true);
+        mChatMessageListView = view.findViewById(R.id.room_chat_message_list_view);
         mChatMessageListView.setAdapter(mChatMessageAdaptor);
         mChatMessageEditText = view.findViewById(R.id.room_chat_message_edit_text);
         Button sendMessageButton = view.findViewById(R.id.room_chat_send_button);
@@ -118,19 +118,21 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
         switch (onEvent) {
             case CHAT_MESSAGE_SUCCESS:
                 JSONArray chatMessageList = (JSONArray) object[0];
-                for (int i = 0; i < chatMessageList.length(); i++) {
-                    try {
-                        JSONObject chatMessage = (JSONObject) chatMessageList.get(i);
-                        mChatMessageAdaptor.addItem(chatMessage);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                mChatMessageAdaptor.addList(chatMessageList);
+//                for (int i = 0; i < chatMessageList.length(); i++) {
+//                    try {
+//                        JSONObject chatMessage = (JSONObject) chatMessageList.get(i);
+//                        mChatMessageAdaptor.addItem(chatMessage);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
                         mChatMessageAdaptor.notifyDataSetChanged();
+                        mChatMessageListView.setSelection(mChatMessageAdaptor.getCount() - 1);
                     }
                 }.sendEmptyMessage(0);
                 break;
@@ -143,6 +145,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
                         mChatMessageAdaptor.notifyDataSetChanged();
+                        mChatMessageListView.setSelection(mChatMessageAdaptor.getCount() - 1);
                     }
                 }.sendEmptyMessage(0);
                 break;

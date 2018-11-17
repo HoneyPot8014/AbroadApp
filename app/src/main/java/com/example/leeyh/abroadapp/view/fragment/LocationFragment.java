@@ -131,20 +131,6 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 mAdapter.deleteAllItem();
                 JSONArray receivedData = (JSONArray) object[0];
                 mAdapter.addList(receivedData);
-//                for (int i = 0; i < receivedData.length(); i++) {
-//                    try {
-//                        JSONObject nearLocationUser = receivedData.getJSONObject(i);
-//                        byte[] profileByteArray = (byte[]) nearLocationUser.get(PROFILE);
-//                        if(profileByteArray != null) {
-//                            Bitmap nearUserProfile = BitmapFactory.decodeByteArray(profileByteArray, 0, profileByteArray.length);
-//
-//                            mAppManager.addBitmapToMemoryCache(nearLocationUser.getString(USER_ID), nearUserProfile);
-//                        }
-////                        mAdapter.addItem(nearLocationUser);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {

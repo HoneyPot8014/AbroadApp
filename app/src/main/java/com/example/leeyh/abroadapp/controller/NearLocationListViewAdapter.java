@@ -5,17 +5,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.example.leeyh.abroadapp.dataconverter.DataConverter;
-import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.view.NearLocationItemView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
@@ -23,7 +18,6 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 
 public class NearLocationListViewAdapter extends BaseAdapter {
 
-//    List<UserModel> items = new ArrayList<>();
     JSONArray items = new JSONArray();
 
     @Override
@@ -68,13 +62,6 @@ public class NearLocationListViewAdapter extends BaseAdapter {
         }
 
         return itemView;
-    }
-
-    public void addItem(JSONObject userData) {
-        String id = userData.optString(USER_ID);
-        String nickName = userData.optString(NICKNAME);
-        String locate = userData.optString(DISTANCE);
-//        items.add(new UserModel(id, nickName, locate));
     }
 
     public void deleteAllItem() {

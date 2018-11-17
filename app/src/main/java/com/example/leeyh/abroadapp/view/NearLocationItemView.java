@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
+import com.example.leeyh.abroadapp.helper.Network;
 
 public class NearLocationItemView extends LinearLayout {
 
@@ -41,6 +42,11 @@ public class NearLocationItemView extends LinearLayout {
     }
 
     public void setImageView(String id, Context context) {
+//        if(mAppStatic.getBitmapFromMemoryCache(id) == null) {
+//            Network.getProfile(mAppStatic, context, mImageView, id);
+//        } else {
+//            mImageView.setImageBitmap(mAppStatic.getBitmapFromMemoryCache(id));
+//        }
         Glide.with(context).load("http://49.236.137.55/profile?id=" + id + ".jpeg").into(mImageView);
     }
 
