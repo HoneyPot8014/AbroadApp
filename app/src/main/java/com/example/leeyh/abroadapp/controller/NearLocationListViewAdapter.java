@@ -56,10 +56,8 @@ public class NearLocationListViewAdapter extends BaseAdapter {
             itemView = (NearLocationItemView) view;
         }
 
-//        UserModel item = items.get(i);
-        JSONObject item = null;
         try {
-            item = items.getJSONObject(i);
+            JSONObject item = items.getJSONObject(i);
             double latitude = Double.parseDouble(item.getString(LATITUDE));
             double longitude = Double.parseDouble(item.getString(LONGITUDE));
             itemView.setNickName(item.getString(NICKNAME));

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
@@ -39,8 +40,9 @@ public class ChatListItemView extends LinearLayout{
         mChatListLastMessageTextView = rootView.findViewById(R.id.chat_list_last_message_text_view);
     }
 
-    public void setChatListProfileImage(String userId) {
-        mChatListProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(userId));
+    public void setChatListProfileImage(String id, Context context) {
+        Glide.with(context).load("http://49.236.137.55/profile?id=" + id + ".jpeg").into(mChatListProfileImageView);
+//        mChatListProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(userId));
     }
 
     public void setChatListRoomNickName(String nickName) {

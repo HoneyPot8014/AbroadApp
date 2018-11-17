@@ -96,15 +96,19 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mNearLocationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final UserModel user = (UserModel) mAdapter.getItem(i);
+                final JSONObject user = (JSONObject) mAdapter.getItem(i);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         JSONArray makeRoomIdsData = new JSONArray();
-                        makeRoomIdsData.put(userId);
-                        makeRoomIdsData.put(user.getUserId());
-                        mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
+                        try {
+                            makeRoomIdsData.put(userId);
+                            makeRoomIdsData.put(user.getString(USER_ID));
+                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                     @Override

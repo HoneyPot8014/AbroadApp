@@ -30,6 +30,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUC
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
@@ -106,8 +107,12 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     }
 
     @Override
-    public void onChatItemClicked(ChatListModel chatListModel) {
-        String roomName = chatListModel.getRoomName();
-        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
+    public void onChatItemClicked(JSONObject chatListModel) {
+        try {
+            String roomName = chatListModel.getString(ROOM_NAME);
+            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

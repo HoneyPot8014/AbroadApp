@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         mChattingListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ChatListModel chatListModel = (ChatListModel) mChatListAdapter.getItem(i);
+                JSONObject chatListModel = (JSONObject) mChatListAdapter.getItem(i);
                 mChatListItemListener.onChatItemClicked(chatListModel);
             }
         });
@@ -81,14 +82,16 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         switch (onEvent) {
             case CHAT_LIST_SUCCESS:
                 JSONArray chatListArray = (JSONArray) args[0];
-                for(int i = 0; i < chatListArray.length(); i++) {
-                    try {
-                        JSONObject chatList = (JSONObject) chatListArray.get(i);
-                        mChatListAdapter.addItem(chatList);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                Log.d("채팅", "onResponseReceived: " + chatListArray);
+                mChatListAdapter.addList(chatListArray);
+//                for(int i = 0; i < chatListArray.length(); i++) {
+//                    try {
+//                        JSONObject chatList = (JSONObject) chatListArray.get(i);
+//                        mChatListAdapter.addItem(chatList);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
