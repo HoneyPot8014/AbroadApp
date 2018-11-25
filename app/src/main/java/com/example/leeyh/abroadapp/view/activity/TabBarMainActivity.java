@@ -3,10 +3,7 @@ package com.example.leeyh.abroadapp.view.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +11,6 @@ import android.widget.Button;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.controller.MemberListAdapter;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
 import com.example.leeyh.abroadapp.view.fragment.ChattingFragment;
@@ -43,6 +39,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,25 +73,6 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new ChatListFragment(), CHAT_LIST_FRAGMENT).commitAllowingStateLoss();
             }
         });
-
-        //RECYLCER VIEW
-//        int[] data = {R.drawable.bum,R.drawable.bum, R.drawable.bum, R.drawable.bum, R.drawable.bum, R.drawable.bum};
-//        mRecyclerView = (RecyclerView) findViewById(R.id.memberRecyclerView);
-//
-//        mRecyclerView.setHasFixedSize(true);
-//
-//        // use a linear layout manager
-//
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        // specify an adapter (see also next example)
-//        mAdapter = new MemberListAdapter(data);
-//        mRecyclerView.setAdapter(mAdapter);
-//        DividerItemDecoration myDivider = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
-//
-//        myDivider.setDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.divider));
-//        mRecyclerView.addItemDecoration(myDivider);
     }
 
     @Override

@@ -4,31 +4,30 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.example.leeyh.abroadapp.background.BackgroundChattingService;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.constants.SocketEvent;
-import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.logging.Handler;
 
 import io.socket.client.IO;
-import io.socket.client.Manager;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHECK_SIGNED;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.RECEIVE_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGNED_USER;
 import static com.example.leeyh.abroadapp.constants.StaticString.CACHE_SIZE;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
+import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
@@ -51,6 +50,7 @@ public class ApplicationManagement extends Application {
         try {
             mSocket = IO.socket(SocketEvent.DEFAULT_HOST, socketOptions);
             mSocket.connect();
+            Log.d("서비스10", "onCreate: ");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -62,9 +62,12 @@ public class ApplicationManagement extends Application {
                 return value.getByteCount() / 1024;
             }
         };
-
         final Intent intent = new Intent(getApplicationContext(), BackgroundChattingService.class);
         startService(intent);
+        Log.d("서비스", "onCreate: 서비스 시작됨");
+    }
+    public Socket getSocket() {
+        return mSocket;
     }
 
     public void autoSignIn(Socket socket) {
@@ -97,6 +100,19 @@ public class ApplicationManagement extends Application {
     public void routeSocket(String route) {
         mSocket.off();
         mSocket = mSocket.io().socket(route).connect();
+        if(route.equals(ROUTE_CHAT)) {
+            Log.d("서비스4", "call: 라우팅.");
+            mSocket.on(RECEIVE_MESSAGE, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.d("서비스3", "call: 메세지 받는 곳.");
+                    JSONObject receivedData = (JSONObject) args[0];
+                    Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
+                    service.putExtra(RECEIVED_DATA, receivedData.toString());
+                    startService(service);
+                }
+            });
+        }
     }
 
     public void emitRequestToServer(String emitEvent, JSONObject jsonObject) {

@@ -40,11 +40,6 @@ public class ChatListItemView extends LinearLayout{
     }
 
     public void setChatListProfileImage(String id, Context context) {
-//        if(mAppManager.getBitmapFromMemoryCache(id) == null) {
-//            Network.getProfile(mAppManager, context, mChatListProfileImageView, id);
-//        } else {
-//            mChatListProfileImageView.setImageBitmap(mAppManager.getBitmapFromMemoryCache(id));
-//        }
         Glide.with(context).load("http://49.236.137.55/profile?id=" + id + ".jpeg").into(mChatListProfileImageView);
     }
 
