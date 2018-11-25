@@ -9,6 +9,8 @@ import android.util.LruCache;
 
 import com.example.leeyh.abroadapp.background.BackgroundChattingService;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.SocketRequestListener;
+import com.example.leeyh.abroadapp.background.SocketResponseListener;
 import com.example.leeyh.abroadapp.constants.SocketEvent;
 
 import org.json.JSONArray;
@@ -32,11 +34,12 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class ApplicationManagement extends Application {
+public class ApplicationManagement extends Application implements SocketResponseListener{
 
     private LruCache<String, Bitmap> bitmapLruCache;
     private Socket mSocket;
     private OnResponseReceivedListener onResponseReceivedListener;
+    private SocketRequestListener mSocketRequestListener;
 
     @Override
     public void onCreate() {
@@ -68,6 +71,10 @@ public class ApplicationManagement extends Application {
     }
     public Socket getSocket() {
         return mSocket;
+    }
+
+    public void setListener(SocketRequestListener listener) {
+        this.mSocketRequestListener = listener;
     }
 
     public void autoSignIn(Socket socket) {
@@ -113,23 +120,45 @@ public class ApplicationManagement extends Application {
                 }
             });
         }
+//        Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
+//        service.putExtra(ROUTING, route);
+//        startService(service);
+//        mSocketRequestListener.socketRouting(route);
+//        mSocket.off();
+//        mSocket = mSocket.io().socket(route).connect();
+//        if(route.equals(ROUTE_CHAT)) {
+//            Log.d("서비스4", "call: 라우팅.");
+//            mSocket.on(RECEIVE_MESSAGE, new Emitter.Listener() {
+//                @Override
+//                public void call(Object... args) {
+//                    Log.d("서비스3", "call: 메세지 받는 곳.");
+//                    JSONObject receivedData = (JSONObject) args[0];
+//                    Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
+//                    service.putExtra(RECEIVED_DATA, receivedData.toString());
+//                    startService(service);
+//                }
+//            });
+//        }
     }
 
     public void emitRequestToServer(String emitEvent, JSONObject jsonObject) {
-        mSocket.emit(emitEvent, jsonObject);
+//        mSocketRequestListener.socketEmitEvent(emitEvent, jsonObject);
+//        mSocket.emit(emitEvent, jsonObject);
     }
 
     public void emitRequestToServer(String emitEvent, JSONArray jsonArray) {
-        mSocket.emit(emitEvent, jsonArray);
+//        mSocketRequestListener.socketEmitEvent(emitEvent, jsonArray);
+//        mSocket.emit(emitEvent, jsonArray);
     }
 
     public void onResponseFromServer(final String onEvent) {
-        mSocket.on(onEvent, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                onResponseReceivedListener.onResponseReceived(onEvent, args);
-            }
-        });
+//        mSocketRequestListener.socketOnEvent(onEvent);
+//        mSocket.on(onEvent, new Emitter.Listener() {
+//            @Override
+//            public void call(Object... args) {
+//                onResponseReceivedListener.onResponseReceived(onEvent, args);
+//            }
+//        });
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -140,5 +169,10 @@ public class ApplicationManagement extends Application {
 
     public Bitmap getBitmapFromMemoryCache(String key) {
         return bitmapLruCache.get(key);
+    }
+
+    @Override
+    public void onResponseFromServer(String onEvent, Object... args) {
+        onResponseReceivedListener.onResponseReceived(onEvent, args);
     }
 }

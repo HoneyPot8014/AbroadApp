@@ -16,7 +16,6 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.example.leeyh.abroadapp.constants.SocketEvent;
-import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 
 import org.json.JSONException;
@@ -25,8 +24,8 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 
 import io.socket.client.IO;
-import io.socket.client.Socket;
 
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTING;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
@@ -41,6 +40,7 @@ public class BackgroundChattingService extends Service {
     private NotificationCompat.Builder builder;
     private PendingIntent pendingIntent;
     private Intent notificationIntent;
+//    private Socket mSocket;
 
     public BackgroundChattingService() {
     }
@@ -75,7 +75,6 @@ public class BackgroundChattingService extends Service {
             NotificationChannel mChannel = new NotificationChannel("channel", "name", importance);
             notificationManager.createNotificationChannel(mChannel);
         }
-
         builder = new NotificationCompat.Builder(getApplicationContext(), "channel");
         notificationIntent = new Intent(getApplicationContext()
                 , TabBarMainActivity.class);

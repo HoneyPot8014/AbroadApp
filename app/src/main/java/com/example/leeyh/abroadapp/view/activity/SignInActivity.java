@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.SocketRequestListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 import org.json.JSONArray;
@@ -51,6 +52,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     private EditText mPasswordEditTextView;
     private ApplicationManagement mAppManagement;
     private String packageName;
+    private SocketRequestListener listener;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
