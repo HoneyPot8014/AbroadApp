@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,31 +15,26 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.controller.NearLocationListViewAdapter;
+import com.example.leeyh.abroadapp.controller.MemberListAdapter;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
-import com.example.leeyh.abroadapp.model.UserModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.ByteBuffer;
-
-import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.NEW_ROOM_CHAT;
@@ -53,19 +46,19 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
-import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
-import static com.example.leeyh.abroadapp.constants.StaticString.TARGET_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class LocationFragment extends Fragment implements OnResponseReceivedListener {
 
     private String userId;
-    private TextView mMyLocationTextView;
-    private NearLocationListViewAdapter mAdapter;
     private ApplicationManagement mAppManager;
     private FusedLocationProviderClient mFusedLocationClient;
     private SharedPreferences mSharedPreferences;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    //    private NearLocationListViewAdapter mAdapter;
+    //    private TextView mMyLocationTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,36 +81,47 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        mMyLocationTextView = view.findViewById(R.id.my_location_text_view);
-        ListView mNearLocationListView = view.findViewById(R.id.near_location_list_view);
-        mAdapter = new NearLocationListViewAdapter();
-        mNearLocationListView.setAdapter(mAdapter);
+        mRecyclerView = view.findViewById(R.id.memberRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager recyclerViewManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(recyclerViewManager);
+        int[] data = {R.drawable.bum,R.drawable.bum, R.drawable.bum, R.drawable.bum, R.drawable.bum, R.drawable.bum};
+        mAdapter = new MemberListAdapter(data);
+        mRecyclerView.setAdapter(mAdapter);
+        DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(myDivider);
+//        mAdapter = new NearLocationListViewAdapter();
 
-        mNearLocationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final JSONObject user = (JSONObject) mAdapter.getItem(i);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        JSONArray makeRoomIdsData = new JSONArray();
-                        try {
-                            makeRoomIdsData.put(userId);
-                            makeRoomIdsData.put(user.getString(USER_ID));
-                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                }).create().show();
-            }
-        });
+//        mMyLocationTextView = view.findViewById(R.id.my_location_text_view);
+//        ListView mNearLocationListView = view.findViewById(R.id.near_location_list_view);
+
+//        mNearLocationListView.setAdapter(mAdapter);
+
+//        mNearLocationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                final JSONObject user = (JSONObject) mAdapter.getItem(i);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        JSONArray makeRoomIdsData = new JSONArray();
+//                        try {
+//                            makeRoomIdsData.put(userId);
+//                            makeRoomIdsData.put(user.getString(USER_ID));
+//                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.cancel();
+//                    }
+//                }).create().show();
+//            }
+//        });
         getLocationPermission();
         return view;
     }
@@ -128,9 +132,9 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             case SQL_ERROR:
                 break;
             case SAVE_LOCATION_SUCCESS:
-                mAdapter.deleteAllItem();
-                JSONArray receivedData = (JSONArray) object[0];
-                mAdapter.addList(receivedData);
+//                mAdapter.deleteAllItem();
+//                JSONArray receivedData = (JSONArray) object[0];
+//                mAdapter.addList(receivedData);
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
@@ -199,7 +203,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 if (location != null) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                    mMyLocationTextView.setText(latitude + "\n" + longitude);
+//                    mMyLocationTextView.setText(latitude + "\n" + longitude);
                     sendUserLocation(latitude, longitude);
                 }
             }
