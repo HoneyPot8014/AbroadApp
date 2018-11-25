@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
-import com.example.leeyh.abroadapp.helper.Network;
 
 public class ChatListItemView extends LinearLayout{
 

@@ -24,7 +24,6 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class ChatMessageAdapter extends BaseAdapter {
 
-    //    List<ChatModel> items = new ArrayList<>();
     JSONArray items = new JSONArray();
 
     @Override
@@ -59,15 +58,12 @@ public class ChatMessageAdapter extends BaseAdapter {
             itemView = (ChatMessageItemView) view;
         }
 
-//        ChatModel item = items.get(i);
-        JSONObject item = null;
         try {
-            item = items.getJSONObject(i);
+            JSONObject item = items.getJSONObject(i);
             if (myId.equals(item.getString(SEND_MESSAGE_ID))) {
                 itemView.setIsMyMessage(true);
                 itemView.setMyMessageTextView(item.getString(MESSAGE));
             } else {
-//                itemView.isMyMessage(false);
                 itemView.setIsMyMessage(false);
                 itemView.setOtherMessageTextView(item.getString(MESSAGE));
                 itemView.setOtherProfileImageView(viewGroup.getContext(), item.getString(SEND_MESSAGE_ID));
