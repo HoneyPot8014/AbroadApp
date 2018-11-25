@@ -15,17 +15,11 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-import com.example.leeyh.abroadapp.constants.SocketEvent;
 import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
-
-import io.socket.client.IO;
-
-import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTING;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
@@ -40,7 +34,6 @@ public class BackgroundChattingService extends Service {
     private NotificationCompat.Builder builder;
     private PendingIntent pendingIntent;
     private Intent notificationIntent;
-//    private Socket mSocket;
 
     public BackgroundChattingService() {
     }
@@ -52,23 +45,7 @@ public class BackgroundChattingService extends Service {
 
     @Override
     public void onCreate() {
-//        ApplicationManagement appManager = (ApplicationManagement) getApplication();
-//        Socket socket = appManager.getSocket();
-//        IO.Options socketOptions = new IO.Options();
-//        socketOptions.reconnection = true;
-//        socketOptions.forceNew = false;
-//        socketOptions.multiplex = false;
-//        socketOptions.secure = true;
-//        socketOptions.timeout = 1000 * 60 * 100;
-//        try {
-//            socket = IO.socket(SocketEvent.DEFAULT_HOST, socketOptions);
-//            socket.connect();
-//            Log.d("서비스10", "onCreate: ");
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        appManager.autoSignIn(socket);
+        Log.d("서비스 999", "onCreate: ");
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;

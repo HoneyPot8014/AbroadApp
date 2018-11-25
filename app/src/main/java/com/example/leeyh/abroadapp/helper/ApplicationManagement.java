@@ -9,7 +9,6 @@ import android.util.LruCache;
 
 import com.example.leeyh.abroadapp.background.BackgroundChattingService;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.background.SocketRequestListener;
 import com.example.leeyh.abroadapp.background.SocketResponseListener;
 import com.example.leeyh.abroadapp.constants.SocketEvent;
 
@@ -23,6 +22,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHECK_SIGNED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.RECEIVE_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
@@ -39,7 +39,7 @@ public class ApplicationManagement extends Application implements SocketResponse
     private LruCache<String, Bitmap> bitmapLruCache;
     private Socket mSocket;
     private OnResponseReceivedListener onResponseReceivedListener;
-    private SocketRequestListener mSocketRequestListener;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public void onCreate() {
@@ -69,23 +69,16 @@ public class ApplicationManagement extends Application implements SocketResponse
         startService(intent);
         Log.d("서비스", "onCreate: 서비스 시작됨");
     }
-    public Socket getSocket() {
-        return mSocket;
-    }
-
-    public void setListener(SocketRequestListener listener) {
-        this.mSocketRequestListener = listener;
-    }
 
     public void autoSignIn(Socket socket) {
-        SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-        if(sharedPreferences.getString(USER_ID, null) != null && sharedPreferences.getString(PASSWORD, null) != null
-                && sharedPreferences.getString(USER_UUID, null) != null) {
+        mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        if(mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
+                && mSharedPreferences.getString(USER_UUID, null) != null) {
             JSONObject checkSignedData = new JSONObject();
             try {
-                checkSignedData.put(USER_ID, sharedPreferences.getString(USER_ID, null));
-                checkSignedData.put(PASSWORD, sharedPreferences.getString(PASSWORD, null));
-                checkSignedData.put(USER_UUID, sharedPreferences.getString(USER_UUID, null));
+                checkSignedData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+                checkSignedData.put(PASSWORD, mSharedPreferences.getString(PASSWORD, null));
+                checkSignedData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -95,6 +88,7 @@ public class ApplicationManagement extends Application implements SocketResponse
         socket.on(SIGNED_USER, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                Log.d("서비스 채팅으로 가세요", "call: ");
                 routeSocket(ROUTE_CHAT);
             }
         });
@@ -108,11 +102,17 @@ public class ApplicationManagement extends Application implements SocketResponse
         mSocket.off();
         mSocket = mSocket.io().socket(route).connect();
         if(route.equals(ROUTE_CHAT)) {
-            Log.d("서비스4", "call: 라우팅.");
+            JSONObject chatConnectData = new JSONObject();
+            try {
+                chatConnectData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+                chatConnectData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mSocket.emit(CHAT_CONNECT, chatConnectData);
             mSocket.on(RECEIVE_MESSAGE, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    Log.d("서비스3", "call: 메세지 받는 곳.");
                     JSONObject receivedData = (JSONObject) args[0];
                     Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
                     service.putExtra(RECEIVED_DATA, receivedData.toString());
@@ -120,45 +120,23 @@ public class ApplicationManagement extends Application implements SocketResponse
                 }
             });
         }
-//        Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
-//        service.putExtra(ROUTING, route);
-//        startService(service);
-//        mSocketRequestListener.socketRouting(route);
-//        mSocket.off();
-//        mSocket = mSocket.io().socket(route).connect();
-//        if(route.equals(ROUTE_CHAT)) {
-//            Log.d("서비스4", "call: 라우팅.");
-//            mSocket.on(RECEIVE_MESSAGE, new Emitter.Listener() {
-//                @Override
-//                public void call(Object... args) {
-//                    Log.d("서비스3", "call: 메세지 받는 곳.");
-//                    JSONObject receivedData = (JSONObject) args[0];
-//                    Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
-//                    service.putExtra(RECEIVED_DATA, receivedData.toString());
-//                    startService(service);
-//                }
-//            });
-//        }
     }
 
     public void emitRequestToServer(String emitEvent, JSONObject jsonObject) {
-//        mSocketRequestListener.socketEmitEvent(emitEvent, jsonObject);
-//        mSocket.emit(emitEvent, jsonObject);
+        mSocket.emit(emitEvent, jsonObject);
     }
 
     public void emitRequestToServer(String emitEvent, JSONArray jsonArray) {
-//        mSocketRequestListener.socketEmitEvent(emitEvent, jsonArray);
-//        mSocket.emit(emitEvent, jsonArray);
+        mSocket.emit(emitEvent, jsonArray);
     }
 
     public void onResponseFromServer(final String onEvent) {
-//        mSocketRequestListener.socketOnEvent(onEvent);
-//        mSocket.on(onEvent, new Emitter.Listener() {
-//            @Override
-//            public void call(Object... args) {
-//                onResponseReceivedListener.onResponseReceived(onEvent, args);
-//            }
-//        });
+        mSocket.on(onEvent, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                onResponseReceivedListener.onResponseReceived(onEvent, args);
+            }
+        });
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
