@@ -49,7 +49,7 @@ public class ChatListItemView extends LinearLayout{
     }
 
     public void setChatListRoomNickName(String nickName) {
-        mChatListRoomNickNameTextView.setText(nickName);
+        mChatListRoomNickNameTextView.setText("BUM, LUKAS");
     }
 
     public void setChatListLastMessage(String lastMessage) {

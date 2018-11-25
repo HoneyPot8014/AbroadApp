@@ -20,14 +20,30 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/memberRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:background="@android:color/background_light"
+            android:paddingTop="3dp"
+            android:scrollbars="vertical"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/main_activity_tab_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/darker_gray"
+
         android:orientation="horizontal"
+        android:background="@drawable/stroke_lower"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,31 +51,55 @@
 
         <Button
             android:id="@+id/location_tab_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="맵 뷰" />
+            android:drawablePadding="2sp"
+            android:drawableTop="@drawable/home"
+            android:fontFamily="@font/hel_basic"
+            android:text="home"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/chat_tab_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="채팅" />
+            android:drawablePadding="2sp"
+            android:drawableTop="@drawable/chat"
+            android:fontFamily="@font/hel_basic"
+            android:text="chat list"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/manage_travel_tab_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="나의 여행" />
+            android:drawablePadding="2sp"
+            android:drawableTop="@drawable/planet"
+            android:fontFamily="@font/hel_basic"
+            android:text="world"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/my_page_tab_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="계정 정보" />
+            android:drawablePadding="2sp"
+            android:drawableTop="@drawable/users"
+            android:fontFamily="@font/hel_basic"
+            android:text="mypage"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
 
     </LinearLayout>
 
