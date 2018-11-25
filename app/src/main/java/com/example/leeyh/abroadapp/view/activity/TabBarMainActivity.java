@@ -70,7 +70,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
             public void onClick(View view) {
                 if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof LocationFragment)
                     return;
-                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).commitAllowingStateLoss();
+                //mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).commitAllowingStateLoss();
             }
         });
 
