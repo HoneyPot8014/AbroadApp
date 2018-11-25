@@ -27,7 +27,7 @@ public class StaticString {
     public static final String MESSAGE = "message";
     public static final String LAST_MESSAGE = "lastMessage";
     public static final String SEND_MESSAGE_ID = "sendMessageId";
-
+    public static final String MESSAGE_FROM_SERVICE = "messageFromService";
 
     public static final int CAMERA_CODE = 1111;
     public static final int SIGN_UP_CODE = 1112;

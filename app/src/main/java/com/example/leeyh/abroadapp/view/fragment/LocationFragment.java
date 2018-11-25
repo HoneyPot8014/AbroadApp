@@ -27,14 +27,17 @@ import android.widget.Toast;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.controller.MemberListAdapter;
+import com.example.leeyh.abroadapp.controller.RecyclerItemClickListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.NEW_ROOM_CHAT;
@@ -54,9 +57,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private String userId;
     private ApplicationManagement mAppManager;
     private FusedLocationProviderClient mFusedLocationClient;
-    private SharedPreferences mSharedPreferences;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private MemberListAdapter mAdapter;
     //    private NearLocationListViewAdapter mAdapter;
     //    private TextView mMyLocationTextView;
 
@@ -71,7 +72,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
         mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
 
-        mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
         userId = mSharedPreferences.getString(USER_ID, null);
     }
 
@@ -81,47 +82,39 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         View view = inflater.inflate(R.layout.fragment_location, container, false);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        mRecyclerView = view.findViewById(R.id.memberRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
+        RecyclerView recyclerView = view.findViewById(R.id.memberRecyclerView);
+        recyclerView.setHasFixedSize(true);
         LinearLayoutManager recyclerViewManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(recyclerViewManager);
-        int[] data = {R.drawable.bum,R.drawable.bum, R.drawable.bum, R.drawable.bum, R.drawable.bum, R.drawable.bum};
-        mAdapter = new MemberListAdapter(data);
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(recyclerViewManager);
+        mAdapter = new MemberListAdapter(new RecyclerItemClickListener() {
+            //when recycler view clicked handle here onItemClicked.
+
+            @Override
+            public void onItemClicked(View view, int position, final JSONObject item) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        JSONArray makeRoomIdsData = new JSONArray();
+                        try {
+                            makeRoomIdsData.put(userId);
+                            makeRoomIdsData.put(item.getString(USER_ID));
+                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                }).create().show();
+            }
+        });
+        recyclerView.setAdapter(mAdapter);
         DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        mRecyclerView.addItemDecoration(myDivider);
-//        mAdapter = new NearLocationListViewAdapter();
-
-//        mMyLocationTextView = view.findViewById(R.id.my_location_text_view);
-//        ListView mNearLocationListView = view.findViewById(R.id.near_location_list_view);
-
-//        mNearLocationListView.setAdapter(mAdapter);
-
-//        mNearLocationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                final JSONObject user = (JSONObject) mAdapter.getItem(i);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        JSONArray makeRoomIdsData = new JSONArray();
-//                        try {
-//                            makeRoomIdsData.put(userId);
-//                            makeRoomIdsData.put(user.getString(USER_ID));
-//                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.cancel();
-//                    }
-//                }).create().show();
-//            }
-//        });
+        recyclerView.addItemDecoration(myDivider);
         getLocationPermission();
         return view;
     }
@@ -132,9 +125,9 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             case SQL_ERROR:
                 break;
             case SAVE_LOCATION_SUCCESS:
-//                mAdapter.deleteAllItem();
-//                JSONArray receivedData = (JSONArray) object[0];
-//                mAdapter.addList(receivedData);
+                mAdapter.deleteAllItem();
+                JSONArray receivedData = (JSONArray) object[0];
+                mAdapter.addList(receivedData);
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
@@ -156,7 +149,6 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             case MAKE_CHAT_ROOM_SUCCESS:
                 JSONObject makeRoomSuccessObject = (JSONObject) object[0];
                 Log.d("룸생성", "onResponseReceived: " + makeRoomSuccessObject.optString("roomName"));
-
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
