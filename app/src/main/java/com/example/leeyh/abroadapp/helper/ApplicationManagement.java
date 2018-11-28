@@ -34,7 +34,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class ApplicationManagement extends Application implements SocketResponseListener{
+public class ApplicationManagement extends Application implements SocketResponseListener {
 
     private LruCache<String, Bitmap> bitmapLruCache;
     private Socket mSocket;
@@ -72,7 +72,7 @@ public class ApplicationManagement extends Application implements SocketResponse
 
     public void autoSignIn(Socket socket) {
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-        if(mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
+        if (mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
                 && mSharedPreferences.getString(USER_UUID, null) != null) {
             JSONObject checkSignedData = new JSONObject();
             try {
@@ -101,7 +101,7 @@ public class ApplicationManagement extends Application implements SocketResponse
     public void routeSocket(String route) {
         mSocket.off();
         mSocket = mSocket.io().socket(route).connect();
-        if(route.equals(ROUTE_CHAT)) {
+        if (route.equals(ROUTE_CHAT)) {
             JSONObject chatConnectData = new JSONObject();
             try {
                 chatConnectData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
