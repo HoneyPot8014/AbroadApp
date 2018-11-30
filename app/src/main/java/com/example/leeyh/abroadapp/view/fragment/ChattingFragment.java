@@ -99,12 +99,6 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -119,14 +113,6 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
             case CHAT_MESSAGE_SUCCESS:
                 JSONArray chatMessageList = (JSONArray) object[0];
                 mChatMessageAdaptor.addList(chatMessageList);
-//                for (int i = 0; i < chatMessageList.length(); i++) {
-//                    try {
-//                        JSONObject chatMessage = (JSONObject) chatMessageList.get(i);
-//                        mChatMessageAdaptor.addItem(chatMessage);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {

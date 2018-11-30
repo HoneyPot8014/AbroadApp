@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.SocketRequestListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 import org.json.JSONArray;
@@ -147,17 +148,20 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent getIgnoreBatteryPermission = new Intent();
-                getIgnoreBatteryPermission.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                getIgnoreBatteryPermission.setData(Uri.parse("package:" + packageName));
-                startActivity(getIgnoreBatteryPermission);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            Intent intent = new Intent();
+            if (pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            } else {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
             }
-
+            startActivity(intent);
         }
     }
 
