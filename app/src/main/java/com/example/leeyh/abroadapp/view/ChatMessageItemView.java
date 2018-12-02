@@ -2,6 +2,7 @@ package com.example.leeyh.abroadapp.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ public class ChatMessageItemView extends LinearLayout {
     private ImageView mOtherProfileImageView;
     private TextView mOtherMessageTextView;
     private TextView mMyMessageTextView;
+    private CardView mRoundedCardView;
     private boolean isMyMessage;
 
     public ChatMessageItemView(Context context) {
@@ -38,6 +40,7 @@ public class ChatMessageItemView extends LinearLayout {
         mOtherProfileImageView = findViewById(R.id.other_profile_image_view);
         mOtherMessageTextView = findViewById(R.id.other_message_text_view);
         mMyMessageTextView = findViewById(R.id.my_message_text_view);
+        mRoundedCardView = findViewById(R.id.messageCardView);
     }
 
     public void setIsMyMessage(boolean isMyMessage) {
@@ -46,6 +49,7 @@ public class ChatMessageItemView extends LinearLayout {
 
     public void setOtherProfileImageView(Context context, String userId) {
         mOtherProfileImageView.setVisibility(VISIBLE);
+        mRoundedCardView.setVisibility(VISIBLE);
         Glide.with(context).load("http://49.236.137.55/profile?id=" + userId + ".jpeg").into(mOtherProfileImageView);
         mOtherMessageTextView.setVisibility(VISIBLE);
         mMyMessageTextView.setVisibility(GONE);
@@ -56,13 +60,14 @@ public class ChatMessageItemView extends LinearLayout {
         mOtherMessageTextView.setText(message);
         mOtherProfileImageView.setVisibility(GONE);
         mOtherMessageTextView.setVisibility(GONE);
+        mRoundedCardView.setVisibility(GONE);
     }
-
     public void setMyMessageTextView(String message) {
         mMyMessageTextView.setVisibility(VISIBLE);
         mMyMessageTextView.setText(message);
         mOtherMessageTextView.setVisibility(GONE);
         mOtherProfileImageView.setVisibility(GONE);
+        mRoundedCardView.setVisibility(GONE);
     }
 
     public void isMyMessage(boolean isMyMessage) {
