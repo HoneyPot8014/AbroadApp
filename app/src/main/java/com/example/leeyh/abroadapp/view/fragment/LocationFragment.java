@@ -24,6 +24,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -49,6 +52,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_MAP;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
+import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
@@ -62,6 +66,9 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private FusedLocationProviderClient mFusedLocationClient;
     private MemberListAdapter mAdapter;
     private SharedPreferences mSharedPreferences;
+    private ImageButton mSettingButton;
+    private boolean mIsShown = false;
+    private double mDistance = 5.0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +132,41 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mSettingButton = view.findViewById(R.id.imageButton);
+        final LinearLayout settingMenu = view.findViewById(R.id.location_menu_layout);
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDistance = ((TextView) view).getText().toString().charAt(0);
+                mAppManager.routeSocket(ROUTE_MAP);
+                mAppManager.onResponseFromServer(SQL_ERROR);
+                mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
+                mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
+                getLocationPermission();
+                settingMenu.setVisibility(View.GONE);
+                mIsShown = !mIsShown;
+            }
+        };
+        TextView distance3 = view.findViewById(R.id.location_distance_3);
+        distance3.setOnClickListener(clickListener);
+        TextView distance5 = view.findViewById(R.id.location_distance_5);
+        distance5.setOnClickListener(clickListener);
+        TextView distance7 = view.findViewById(R.id.location_distance_7);
+        distance7.setOnClickListener(clickListener);
+
+        mSettingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mIsShown) {
+                    settingMenu.setVisibility(View.VISIBLE);
+                    mIsShown = !mIsShown;
+                } else {
+                    settingMenu.setVisibility(View.GONE);
+                    mIsShown = !mIsShown;
+                }
+            }
+        });
 
         return view;
     }
@@ -217,6 +259,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         try {
             locationData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
             locationData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
+            locationData.put(DISTANCE, mDistance);
             locationData.put(LATITUDE, latitude);
             locationData.put(LONGITUDE, longitude);
         } catch (JSONException e) {

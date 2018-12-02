@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarLoc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@android:color/background_light"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/location_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteX="16dp"
@@ -44,6 +45,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
         </android.support.constraint.ConstraintLayout>
 
 
@@ -64,8 +67,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarLoc">
 
-
     </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/location_menu_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/location_distance_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3km"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/location_distance_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5km"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/location_distance_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7km"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
 
     <!--
         <android.support.design.widget.AppBarLayout
