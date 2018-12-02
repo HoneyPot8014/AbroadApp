@@ -13,58 +13,60 @@
             android:id="@+id/loginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="160dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="48dp"
             android:fontFamily="@font/hel_bold"
             android:text="Log in"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="60sp"
+            android:textSize="36sp"
             android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/editTextId"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
             android:backgroundTint="@android:color/darker_gray"
             android:ems="10"
             android:fontFamily="@font/aller_rg"
-            android:hint="아이디를 입력해주세요"
             android:inputType="textPersonName"
             android:outlineAmbientShadowColor="?attr/colorButtonNormal"
             android:outlineSpotShadowColor="@android:color/darker_gray"
             android:shadowColor="@android:color/darker_gray"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textColorHighlight="@android:color/darker_gray"
             android:textColorHint="@android:color/darker_gray"
             android:textColorLink="?attr/colorButtonNormal"
             android:textCursorDrawable="@android:color/darker_gray"
-            android:textSize="15sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
 
         <EditText
             android:id="@+id/editTextPassword"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
             android:backgroundTint="@android:color/darker_gray"
             android:ems="10"
             android:fontFamily="@font/aller_rg"
-            android:hint="비밀번호를 입력해주세요"
             android:inputType="textPersonName"
             android:outlineAmbientShadowColor="?attr/colorButtonNormal"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textColorLink="?attr/colorButtonNormal"
             android:textCursorDrawable="@android:color/darker_gray"
-            android:textSize="15sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.123"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextId" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
 
         <TextView
             android:id="@+id/signUpTextView"
@@ -73,24 +75,52 @@
             android:layout_marginEnd="24dp"
             android:layout_marginTop="32dp"
             android:clickable="true"
-            android:text="아직 회원이 아니신가요?"
-            android:textSize="14sp"
+            android:text="you don't have an account yet?"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
 
-        <TextView
+        <Button
             android:id="@+id/signInTextView"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginTop="16dp"
+            android:background="@color/cBlue"
             android:clickable="true"
-            android:text="Get Started"
-            android:textColor="@android:color/holo_blue_light"
+            android:fontFamily="@font/aller_bd"
+            android:text="Log in"
+            android:textAllCaps="false"
+            android:textColor="@android:color/background_light"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signUpTextView" />
+
+        <TextView
+            android:id="@+id/emailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/aller_bd"
+            android:text="EMAIL ADDRESS"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loginTitle" />
+
+        <TextView
+            android:id="@+id/passwordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/aller_bd"
+            android:text="PASSWORD"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextId" />
 
 
     </android.support.constraint.ConstraintLayout>

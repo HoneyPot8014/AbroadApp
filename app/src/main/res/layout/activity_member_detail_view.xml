@@ -129,7 +129,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/aller_bd"
-                android:text="BUM, 25"
+                android:text="BUM, 25(M)"
                 android:textColor="@color/textColor"
                 android:textSize="30sp"
                 android:textStyle="bold"
