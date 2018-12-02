@@ -23,8 +23,9 @@
         android:id="@+id/messageCardView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:background="@color/lightGray"
+        app:cardBackgroundColor="@color/cardview_light_background"
         app:cardCornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,22 +44,24 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/otherCardView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/lightGray"
-        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/lightGray"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toEndOf="@+id/messageCardView"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/other_message_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:background="@color/lightGray"
-            android:fontFamily="@font/hel_bold"
+            android:fontFamily="@font/aller_bd"
             android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toEndOf="@+id/messageCardView"
@@ -67,17 +70,19 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/myCardView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="right"
-        app:cardCornerRadius="6dp"
+        app:cardBackgroundColor="@color/cBlue"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintLeft_toRightOf="@id/guideline2"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/my_message_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:background="@color/cBlue"
