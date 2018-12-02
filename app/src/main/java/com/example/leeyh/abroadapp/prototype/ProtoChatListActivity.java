@@ -166,7 +166,7 @@
 //            @Override
 //            public void onReceive(Context context, Intent intent) {
 //                Intent goToChatRoom = new Intent(getApplicationContext(), ProtoRoomChatActivity.class);
-//                goToChatRoom.putExtra(USER_ID, intent.getStringExtra(USER_ID));
+//                goToChatRoom.putExtra(USER_NAME, intent.getStringExtra(USER_NAME));
 //                goToChatRoom.putExtra(ROOM_NAME, intent.getStringExtra(ROOM_NAME));
 //                startActivity(goToChatRoom);
 //            }

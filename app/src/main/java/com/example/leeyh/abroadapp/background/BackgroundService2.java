@@ -41,7 +41,7 @@
 //import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 //import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 //import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
-//import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+//import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 //import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 //import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 //
@@ -98,7 +98,7 @@
 //                    String data = intent.getStringExtra(JSON_DATA);
 //                    try {
 //                        JSONObject jsonData = new JSONObject(data);
-//                        String id = jsonData.getString(USER_ID);
+//                        String id = jsonData.getString(USER_NAME);
 //                        jsonData.put(PROFILE, DataConverter.getByteArrayToStringFromBitmap(mAppStatic.getBitmapFromMemoryCache(id)));
 //                        mSocket.emit(event, jsonData);
 //                    } catch (JSONException e) {
@@ -140,7 +140,7 @@
 //                            if (receivedObject.get(PROFILE) != null || !receivedObject.get(PROFILE).equals("")) {
 //                                byte[] userProfileByteArray = (byte[]) receivedObject.get(PROFILE);
 //                                Bitmap userProfile = BitmapFactory.decodeByteArray(userProfileByteArray, 0, userProfileByteArray.length);
-//                                mAppStatic.addBitmapToMemoryCache(receivedObject.getString(USER_ID), userProfile);
+//                                mAppStatic.addBitmapToMemoryCache(receivedObject.getString(USER_NAME), userProfile);
 //                            }
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
@@ -155,11 +155,11 @@
 //
 //    public void onSocketConnected(Socket socket) {
 //        SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-//        if (sharedPreferences.getString(USER_ID, null) != null && sharedPreferences.getString(PASSWORD, null) != null
+//        if (sharedPreferences.getString(USER_NAME, null) != null && sharedPreferences.getString(PASSWORD, null) != null
 //                && sharedPreferences.getString(USER_UUID, null) != null) {
 //            JSONObject checkSignData = new JSONObject();
 //            try {
-//                checkSignData.put(USER_ID, sharedPreferences.getString(USER_ID, null));
+//                checkSignData.put(USER_NAME, sharedPreferences.getString(USER_NAME, null));
 //                checkSignData.put(PASSWORD, sharedPreferences.getString(PASSWORD, null));
 //                checkSignData.put(USER_UUID, sharedPreferences.getString(USER_UUID, null));
 //                socket.emit(CHECK_SIGNED, checkSignData);

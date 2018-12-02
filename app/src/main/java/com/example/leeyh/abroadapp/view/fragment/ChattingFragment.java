@@ -34,7 +34,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE_FAI
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class ChattingFragment extends Fragment implements OnResponseReceivedListener {
@@ -162,7 +162,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
     public void sendMessage() {
         JSONObject sendMessageData = new JSONObject();
         try {
-            sendMessageData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+            sendMessageData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
             sendMessageData.put(ROOM_NAME, mRoomName);
             sendMessageData.put(MESSAGE, mChatMessageEditText.getText().toString());
         } catch (JSONException e) {

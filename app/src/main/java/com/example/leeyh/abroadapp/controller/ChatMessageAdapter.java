@@ -6,20 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.example.leeyh.abroadapp.helper.ApplicationManagement;
-import com.example.leeyh.abroadapp.model.ChatModel;
 import com.example.leeyh.abroadapp.view.ChatMessageItemView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.SEND_MESSAGE_ID;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class ChatMessageAdapter extends BaseAdapter {
@@ -49,7 +44,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         SharedPreferences sharedPreferences = viewGroup.getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        String myId = sharedPreferences.getString(USER_ID, null);
+        String myId = sharedPreferences.getString(USER_NAME, null);
 
         ChatMessageItemView itemView;
         if (view == null) {

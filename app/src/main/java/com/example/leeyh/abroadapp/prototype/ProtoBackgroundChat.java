@@ -54,7 +54,7 @@
 //import static com.example.leeyh.abroadapp.prototype.ProtoChatListActivity.ROOM_NAME;
 //import static com.example.leeyh.abroadapp.prototype.ProtoRoomChatActivity.MESSAGE;
 //import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.EVENT;
-//import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.NICKNAME;
+//import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.USER_EMAIL;
 //import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.PASSWORD;
 //import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.PROFILE;
 //import static com.example.leeyh.abroadapp.prototype.ProtoSignUpActivity.ROUTING;
@@ -125,7 +125,7 @@
 //                        String event = intent.getStringExtra(EVENT);
 //                        JSONObject data = new JSONObject();
 //                        try {
-//                            data.put(USER_ID, intent.getStringExtra(USER_ID));
+//                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put("invite", intent.getStringExtra("invite"));
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
@@ -138,7 +138,7 @@
 //                        String event = intent.getStringExtra(EVENT);
 //                        JSONObject data = new JSONObject();
 //                        try {
-//                            data.put(USER_ID, intent.getStringExtra(USER_ID));
+//                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put(ROOM_NAME, intent.getStringExtra(ROOM_NAME));
 //                            data.put(MESSAGE, intent.getStringExtra(MESSAGE));
 //                        } catch (JSONException e) {
@@ -150,7 +150,7 @@
 //                        String event = intent.getStringExtra(EVENT);
 //                        JSONObject data = new JSONObject();
 //                        try {
-//                            data.put(USER_ID, intent.getStringExtra(USER_ID));
+//                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put(ROOM_NAME, intent.getStringExtra(ROOM_NAME));
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
@@ -165,9 +165,9 @@
 //                        String event = intent.getStringExtra(EVENT);
 //                        JSONObject data = new JSONObject();
 //                        try {
-//                            data.put(USER_ID, intent.getStringExtra(USER_ID));
+//                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put(PASSWORD, intent.getStringExtra(PASSWORD));
-//                            data.put(NICKNAME, intent.getStringExtra(NICKNAME));
+//                            data.put(USER_EMAIL, intent.getStringExtra(USER_EMAIL));
 //                            data.put(PROFILE, byteArray);
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
@@ -178,9 +178,9 @@
 //                        String event = intent.getStringExtra(EVENT);
 //                        JSONObject data = new JSONObject();
 //                        try {
-//                            data.put(USER_ID, intent.getStringExtra(USER_ID));
+//                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put(PASSWORD, intent.getStringExtra(PASSWORD));
-//                            data.put(NICKNAME, intent.getStringExtra(NICKNAME));
+//                            data.put(USER_EMAIL, intent.getStringExtra(USER_EMAIL));
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
 //                        }
@@ -213,13 +213,13 @@
 //            SharedPreferences preferences = getSharedPreferences("userInfo", MODE_PRIVATE);
 //            String userId = preferences.getString(USER_ID, null);
 //            String password = preferences.getString(PASSWORD, null);
-//            String nickName = preferences.getString(NICKNAME, null);
+//            String nickName = preferences.getString(USER_EMAIL, null);
 //            if (userId != null && password != null && nickName != null) {
 //                JSONObject data = new JSONObject();
 //                try {
 //                    data.put(USER_ID, userId);
 //                    data.put(PASSWORD, password);
-//                    data.put(NICKNAME, nickName);
+//                    data.put(USER_EMAIL, nickName);
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
@@ -331,9 +331,9 @@
 //                JSONObject receivedData = (JSONObject) args[0];
 //                SharedPreferences preferences = getSharedPreferences("userInfo", MODE_PRIVATE);
 //                SharedPreferences.Editor editor = preferences.edit();
-//                editor.putString(USER_ID, receivedData.optString(USER_ID));
+//                editor.putString(USER_NAME, receivedData.optString(USER_NAME));
 //                editor.putString(PASSWORD, receivedData.optString(PASSWORD));
-//                editor.putString(NICKNAME, receivedData.optString(NICKNAME));
+//                editor.putString(USER_EMAIL, receivedData.optString(USER_EMAIL));
 //                editor.commit();
 //                Intent broadCast = new Intent(SIGN_IN_SUCCESS);
 //                sendBroadcast(broadCast);
@@ -376,7 +376,7 @@
 //            public void call(Object... args) {
 //                JSONObject receivedData = (JSONObject) args[0];
 //                Intent broadCast = new Intent(JOIN_SUCCESS);
-//                broadCast.putExtra(USER_ID, receivedData.optString(USER_ID));
+//                broadCast.putExtra(USER_NAME, receivedData.optString(USER_NAME));
 //                broadCast.putExtra(ROOM_NAME, receivedData.optString(ROOM_NAME));
 //                sendBroadcast(broadCast);
 //            }

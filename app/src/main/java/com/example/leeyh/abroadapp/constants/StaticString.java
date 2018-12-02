@@ -9,12 +9,14 @@ public class StaticString {
     public static final String SAVED_INSTANCE = "savedInstance";
     public static final String USER_INFO = "userInfo";
     public static final String JSON_DATA = "jsonData";
-    public static final String USER_ID = "userId";
+    public static final String USER_NAME = "userId";
     public static final String PASSWORD = "password";
     public static final String USER_UUID = "userUuid";
     public static final String ROOM_NAME = "roomName";
-    public static final String NICKNAME = "nickName";
+    public static final String USER_EMAIL = "nickName";
     public static final String PROFILE = "profile";
+    public static final String GENDER = "gender";
+    public static final String DOB = "DOB";
     public static final String TARGET_ID = "targetId";
     public static final String NATION = "nation";
     public static final String CITY = "city";
