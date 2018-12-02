@@ -48,7 +48,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.DOB;
 import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
@@ -207,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                             JSONObject signUpData = new JSONObject();
                             try {
                                 signUpData.put(USER_NAME, editText_name.getText().toString());
-                                signUpData.put(USER_EMAIL, email);
+                                signUpData.put(E_MAIL, email);
                                 signUpData.put(PASSWORD, password);
                                 signUpData.put(GENDER, radioButton.getText());
                                 signUpData.put(DOB, yearSpinner.getSelectedItem().toString() + monthSpinner.getSelectedItem().toString() + daySpinner.getSelectedItem().toString());
@@ -227,7 +227,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         builder.setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //Toast.makeText(getApplicationContext(),"아니오를 선택했습니다.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"아니오를 선택했습니다.",Toast.LENGTH_LONG).show();
                     }
                 });
         builder.show();
@@ -240,11 +240,11 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         if (requestCode == CAMERA_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    Uri uri = data.getData();
-                    mProfileImageView.setImageURI(uri);
+//                    Uri uri = data.getData();
+//                    DataConverter.modifyOrientation(uri, mProfileImageView, getApplicationContext());
                     mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-//                    mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
-//                    mProfileImageView.setImageBitmap(mProfileBitmap);
+                    mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
+                    mProfileImageView.setImageBitmap(mProfileBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -261,14 +261,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 Toast.makeText(mAppManager, "SQL // Server Error", Toast.LENGTH_SHORT).show();
                 break;
             case SIGN_UP_SUCCESS:
-                String id = editText_email.getText().toString();
-//                Intent setResultToSignIn = new Intent(getApplicationContext(), SignInActivity.class);
-//                setResultToSignIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK & Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(setResultToSignIn);
-//                setResultToSignIn.putExtra(USER_NAME, id);
-                Intent intent = new Intent();
-                intent.putExtra(USER_NAME, editText_email.getText().toString());
-                setResult(RESULT_OK);
+                Intent signUpSuccessIntent = new Intent();
+                signUpSuccessIntent.putExtra(USER_NAME, editText_email.getText().toString());
+                setResult(RESULT_OK, signUpSuccessIntent);
                 finish();
                 break;
             case SIGN_UP_FAILED:
