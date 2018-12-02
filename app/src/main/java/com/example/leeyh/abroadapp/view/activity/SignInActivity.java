@@ -141,6 +141,9 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void requestLocationPermission() {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+        startActivity(intent);
         if (powerManager != null && (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || powerManager.isIgnoringBatteryOptimizations("package:" + packageName))) {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this)
@@ -171,9 +174,9 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             Intent intent = new Intent();
             if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.setAction(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
+                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
             } else {
-                intent.setAction(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 intent.setData(Uri.parse("package:" + packageName));
             }
             startActivity(intent);
