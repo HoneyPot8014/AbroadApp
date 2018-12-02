@@ -181,6 +181,11 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     }
 
     public void emitRequestSignIn() {
+        //sql injection inspection
+        if(mIdEditTextView.getText().toString().contains("'") || mPasswordEditTextView.getText().toString().contains("'")) {
+            Toast.makeText(this,"sql failed",Toast.LENGTH_LONG).show();
+            return;
+        }
         String id = mIdEditTextView.getText().toString();
         String password = mPasswordEditTextView.getText().toString();
         JSONObject signInData = new JSONObject();
