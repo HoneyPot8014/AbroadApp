@@ -13,7 +13,7 @@ public class StaticString {
     public static final String PASSWORD = "password";
     public static final String USER_UUID = "userUuid";
     public static final String ROOM_NAME = "roomName";
-    public static final String USER_EMAIL = "e_mail";
+    public static final String E_MAIL = "e_mail";
     public static final String PROFILE = "profile";
     public static final String GENDER = "gender";
     public static final String DOB = "DOB";

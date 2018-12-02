@@ -28,8 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.dataconverter.DataConverter;
@@ -39,7 +37,6 @@ import com.example.leeyh.abroadapp.model.UserModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -51,7 +48,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.DOB;
 import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.PROFILE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
@@ -210,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                             JSONObject signUpData = new JSONObject();
                             try {
                                 signUpData.put(USER_NAME, editText_name.getText().toString());
-                                signUpData.put(USER_EMAIL, email);
+                                signUpData.put(E_MAIL, email);
                                 signUpData.put(PASSWORD, password);
                                 signUpData.put(GENDER, radioButton.getText());
                                 signUpData.put(DOB, yearSpinner.getSelectedItem().toString() + monthSpinner.getSelectedItem().toString() + daySpinner.getSelectedItem().toString());
@@ -243,10 +240,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         if (requestCode == CAMERA_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    Uri uri = data.getData();
-                    DataConverter.modifyOrientation(uri, mProfileImageView, getApplicationContext());
+//                    Uri uri = data.getData();
+//                    DataConverter.modifyOrientation(uri, mProfileImageView, getApplicationContext());
                     mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                    mProfileImageView.setImageBitmap(mProfileBitmap);
                     mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
                     mProfileImageView.setImageBitmap(mProfileBitmap);
                 } catch (FileNotFoundException e) {

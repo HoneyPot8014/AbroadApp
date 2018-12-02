@@ -41,6 +41,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_IN_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
+import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
@@ -185,7 +186,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
             if (mSharedPreferences.getString(USER_NAME, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
                     && mSharedPreferences.getString(USER_UUID, null) != null) {
                 JSONObject checkUserSignedData = new JSONObject();
-                checkUserSignedData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
+                checkUserSignedData.put(E_MAIL, mSharedPreferences.getString(E_MAIL, null));
                 checkUserSignedData.put(PASSWORD, mSharedPreferences.getString(PASSWORD, null));
                 checkUserSignedData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
                 mAppManagement.emitRequestToServer(CHECK_SIGNED, checkUserSignedData);
@@ -205,7 +206,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         String password = mPasswordEditTextView.getText().toString();
         JSONObject signInData = new JSONObject();
         try {
-            signInData.put(USER_NAME, id);
+            signInData.put(E_MAIL, id);
             signInData.put(PASSWORD, password);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -230,8 +231,10 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         try {
             JSONArray receivedArray = (JSONArray) args[0];
+            Log.d("여기여기여기", "onResponseSignInSuccess: " +receivedArray.toString() );
             JSONObject receivedObject = (JSONObject) receivedArray.get(0);
-            editor.putString(USER_NAME, receivedObject.optString("userId"));
+            editor.putString(E_MAIL, receivedObject.optString(E_MAIL));
+            editor.putString(USER_NAME, receivedObject.optString(USER_NAME));
             editor.putString(PASSWORD, receivedObject.optString(PASSWORD));
             editor.putString(USER_UUID, receivedObject.optString(USER_UUID));
             editor.commit();

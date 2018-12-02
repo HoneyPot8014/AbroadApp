@@ -49,17 +49,16 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class LocationFragment extends Fragment implements OnResponseReceivedListener {
 
-    private String userId;
     private ApplicationManagement mAppManager;
     private FusedLocationProviderClient mFusedLocationClient;
     private MemberListAdapter mAdapter;
-    //    private NearLocationListViewAdapter mAdapter;
-    //    private TextView mMyLocationTextView;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,9 +70,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(SQL_ERROR);
         mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
         mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
-
-        SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        userId = mSharedPreferences.getString(USER_NAME, null);
+        mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -88,7 +85,6 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         recyclerView.setLayoutManager(recyclerViewManager);
         mAdapter = new MemberListAdapter(new RecyclerItemClickListener() {
             //when recycler view clicked handle here onItemClicked.
-
             @Override
             public void onItemClicked(View view, int position, final JSONObject item) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -97,8 +93,9 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                     public void onClick(DialogInterface dialogInterface, int i) {
                         JSONArray makeRoomIdsData = new JSONArray();
                         try {
-                            makeRoomIdsData.put(userId);
-                            makeRoomIdsData.put(item.getString(USER_NAME));
+                            makeRoomIdsData.put(mSharedPreferences.getString(USER_UUID, null));
+                            makeRoomIdsData.put(item.getString(USER_UUID));
+                            Log.d("여기2", "onClick: " + item.getString(USER_UUID));
                             mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -202,16 +199,11 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         });
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-//        mAppManager.unregisterSocket();
-    }
-
     public void sendUserLocation(double latitude, double longitude) {
         JSONObject locationData = new JSONObject();
         try {
-            locationData.put(USER_NAME, userId);
+            locationData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+            locationData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
             locationData.put(LATITUDE, latitude);
             locationData.put(LONGITUDE, longitude);
         } catch (JSONException e) {

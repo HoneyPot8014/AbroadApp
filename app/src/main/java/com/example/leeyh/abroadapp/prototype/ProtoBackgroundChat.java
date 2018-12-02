@@ -167,7 +167,7 @@
 //                        try {
 //                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put(PASSWORD, intent.getStringExtra(PASSWORD));
-//                            data.put(USER_EMAIL, intent.getStringExtra(USER_EMAIL));
+//                            data.put(E_MAIL, intent.getStringExtra(E_MAIL));
 //                            data.put(PROFILE, byteArray);
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
@@ -180,7 +180,7 @@
 //                        try {
 //                            data.put(USER_NAME, intent.getStringExtra(USER_NAME));
 //                            data.put(PASSWORD, intent.getStringExtra(PASSWORD));
-//                            data.put(USER_EMAIL, intent.getStringExtra(USER_EMAIL));
+//                            data.put(E_MAIL, intent.getStringExtra(E_MAIL));
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
 //                        }
@@ -333,7 +333,7 @@
 //                SharedPreferences.Editor editor = preferences.edit();
 //                editor.putString(USER_NAME, receivedData.optString(USER_NAME));
 //                editor.putString(PASSWORD, receivedData.optString(PASSWORD));
-//                editor.putString(USER_EMAIL, receivedData.optString(USER_EMAIL));
+//                editor.putString(E_MAIL, receivedData.optString(E_MAIL));
 //                editor.commit();
 //                Intent broadCast = new Intent(SIGN_IN_SUCCESS);
 //                sendBroadcast(broadCast);

@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,8 +26,8 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener, OnChatListItemClicked {
@@ -36,13 +35,9 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     private LocationFragment mLocationFragment;
     private ApplicationManagement mAppManager;
     private FragmentManager mFragmentManager;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("생명주기3", "onCreate: " );
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_bar_main);
 

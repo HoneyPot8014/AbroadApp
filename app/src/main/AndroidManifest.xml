@@ -25,6 +25,11 @@
         <!-- android:enabled="true" -->
         <!-- android:exported="true" /> -->
         <activity android:name=".view.activity.SignInActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".view.activity.SignUpActivity" />
         <activity
@@ -42,11 +47,6 @@
 
 
         <activity android:name=".view.activity.MemberDetailViewActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
