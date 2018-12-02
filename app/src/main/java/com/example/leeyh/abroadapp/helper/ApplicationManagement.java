@@ -30,7 +30,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGNED_USER;
 import static com.example.leeyh.abroadapp.constants.StaticString.CACHE_SIZE;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -72,11 +72,11 @@ public class ApplicationManagement extends Application implements SocketResponse
 
     public void autoSignIn(Socket socket) {
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-        if (mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
+        if (mSharedPreferences.getString(USER_NAME, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
                 && mSharedPreferences.getString(USER_UUID, null) != null) {
             JSONObject checkSignedData = new JSONObject();
             try {
-                checkSignedData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+                checkSignedData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
                 checkSignedData.put(PASSWORD, mSharedPreferences.getString(PASSWORD, null));
                 checkSignedData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
             } catch (JSONException e) {
@@ -104,7 +104,7 @@ public class ApplicationManagement extends Application implements SocketResponse
         if (route.equals(ROUTE_CHAT)) {
             JSONObject chatConnectData = new JSONObject();
             try {
-                chatConnectData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+                chatConnectData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
                 chatConnectData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
             } catch (JSONException e) {
                 e.printStackTrace();

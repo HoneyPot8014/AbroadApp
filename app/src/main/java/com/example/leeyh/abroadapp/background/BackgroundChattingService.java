@@ -25,7 +25,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SE
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.SEND_MESSAGE_ID;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class BackgroundChattingService extends Service {
@@ -77,7 +77,7 @@ public class BackgroundChattingService extends Service {
                     String sendMessageId = jsonObject.getString(SEND_MESSAGE_ID);
                     String roomName = jsonObject.getString(ROOM_NAME);
                     String message = jsonObject.getString(MESSAGE);
-                    if(!sharedPreferences.getString(USER_ID, null).equals(sendMessageId)) {
+                    if(!sharedPreferences.getString(USER_NAME, null).equals(sendMessageId)) {
                         notificationIntent.putExtra(MESSAGE_FROM_SERVICE, MESSAGE_FROM_SERVICE);
                         notificationIntent.putExtra(ROOM_NAME, roomName);
                         wakeLock.acquire(DateUtils.SECOND_IN_MILLIS * 5);

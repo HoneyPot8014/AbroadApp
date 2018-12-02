@@ -27,7 +27,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -42,6 +42,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("생명주기3", "onCreate: " );
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_bar_main);
 
@@ -91,7 +92,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
         JSONObject requestChatConnectData = new JSONObject();
         try {
-            requestChatConnectData.put(USER_ID, sharedPreferences.getString(USER_ID, null));
+            requestChatConnectData.put(USER_NAME, sharedPreferences.getString(USER_NAME, null));
             requestChatConnectData.put(USER_UUID, sharedPreferences.getString(USER_UUID, null));
             mAppManager.emitRequestToServer(CHAT_CONNECT, requestChatConnectData);
         } catch (JSONException e) {

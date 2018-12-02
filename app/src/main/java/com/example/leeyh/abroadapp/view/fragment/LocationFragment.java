@@ -49,7 +49,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 
 public class LocationFragment extends Fragment implements OnResponseReceivedListener {
@@ -73,7 +73,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
 
         SharedPreferences mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        userId = mSharedPreferences.getString(USER_ID, null);
+        userId = mSharedPreferences.getString(USER_NAME, null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -98,7 +98,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                         JSONArray makeRoomIdsData = new JSONArray();
                         try {
                             makeRoomIdsData.put(userId);
-                            makeRoomIdsData.put(item.getString(USER_ID));
+                            makeRoomIdsData.put(item.getString(USER_NAME));
                             mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -211,7 +211,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     public void sendUserLocation(double latitude, double longitude) {
         JSONObject locationData = new JSONObject();
         try {
-            locationData.put(USER_ID, userId);
+            locationData.put(USER_NAME, userId);
             locationData.put(LATITUDE, latitude);
             locationData.put(LONGITUDE, longitude);
         } catch (JSONException e) {

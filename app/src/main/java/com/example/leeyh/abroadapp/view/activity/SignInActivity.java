@@ -1,6 +1,7 @@
 package com.example.leeyh.abroadapp.view.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,13 +11,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,7 +28,6 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
-import com.example.leeyh.abroadapp.background.SocketRequestListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
 import org.json.JSONArray;
@@ -41,7 +44,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -56,13 +59,13 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("생명주기1", "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
         packageName = getPackageName();
         //request location permission
         requestLocationPermission();
-
         mIdEditTextView = findViewById(R.id.editTextId);
         mPasswordEditTextView = findViewById(R.id.editTextPassword);
         TextView mSignUpTextView = findViewById(R.id.signUpTextView);
@@ -86,6 +89,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("생명주기999", "onCreate: ");
         mAppManagement = (ApplicationManagement) getApplication();
         mAppManagement.routeSocket(ROUTE_SIGN_IN);
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
@@ -99,7 +103,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SIGN_UP_CODE) {
             if (resultCode == RESULT_OK) {
-                mIdEditTextView.setText(data.getStringExtra(USER_ID));
+                mIdEditTextView.setText(data.getStringExtra(USER_NAME));
             }
         }
     }
@@ -108,18 +112,28 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     public void onResponseReceived(String onEvent, Object[] args) {
         switch (onEvent) {
             case SQL_ERROR:
-                Toast.makeText(mAppManagement, "sql error // server error", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        Toast.makeText(mAppManagement, "sql error // server error", Toast.LENGTH_SHORT).show();
+                    }
+                }.sendEmptyMessage(0);
                 break;
             case SIGN_IN_SUCCESS:
                 onResponseSignInSuccess(args);
                 break;
             case SIGN_IN_FAILED:
-                Looper.prepare();
-                Toast.makeText(mAppManagement, "signInFailed", Toast.LENGTH_SHORT).show();
-                Looper.loop();
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        Toast.makeText(mAppManagement, "sign In Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }.sendEmptyMessage(0);
                 break;
             case SIGNED_USER:
-                goToMainActivity();
+//                goToMainActivity();
                 break;
         }
     }
@@ -148,6 +162,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -156,9 +171,9 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             Intent intent = new Intent();
             if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                intent.setAction(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
             } else {
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setAction(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
                 intent.setData(Uri.parse("package:" + packageName));
             }
             startActivity(intent);
@@ -167,10 +182,10 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
 
     public void emitRequestUserIsSigned() {
         try {
-            if (mSharedPreferences.getString(USER_ID, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
+            if (mSharedPreferences.getString(USER_NAME, null) != null && mSharedPreferences.getString(PASSWORD, null) != null
                     && mSharedPreferences.getString(USER_UUID, null) != null) {
                 JSONObject checkUserSignedData = new JSONObject();
-                checkUserSignedData.put(USER_ID, mSharedPreferences.getString(USER_ID, null));
+                checkUserSignedData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
                 checkUserSignedData.put(PASSWORD, mSharedPreferences.getString(PASSWORD, null));
                 checkUserSignedData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
                 mAppManagement.emitRequestToServer(CHECK_SIGNED, checkUserSignedData);
@@ -185,7 +200,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         String password = mPasswordEditTextView.getText().toString();
         JSONObject signInData = new JSONObject();
         try {
-            signInData.put(USER_ID, id);
+            signInData.put(USER_NAME, id);
             signInData.put(PASSWORD, password);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -211,7 +226,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         try {
             JSONArray receivedArray = (JSONArray) args[0];
             JSONObject receivedObject = (JSONObject) receivedArray.get(0);
-            editor.putString(USER_ID, receivedObject.optString(USER_ID));
+            editor.putString(USER_NAME, receivedObject.optString(USER_NAME));
             editor.putString(PASSWORD, receivedObject.optString(PASSWORD));
             editor.putString(USER_UUID, receivedObject.optString(USER_UUID));
             editor.commit();

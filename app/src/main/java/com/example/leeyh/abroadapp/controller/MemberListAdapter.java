@@ -7,22 +7,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.dataconverter.DataConverter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
-import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
-import static com.example.leeyh.abroadapp.constants.StaticString.NICKNAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 
 
 public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.MemberListViewHolder> {
@@ -69,8 +65,8 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
         // - replace the contents of the view with that element
         try {
             final JSONObject item = mItems.getJSONObject(position);
-            holder.nameTextView.setText(item.getString(NICKNAME));
-            Glide.with(mContext).load("http://49.236.137.55/profile?id=" + item.getString(USER_ID) + ".jpeg")
+            holder.nameTextView.setText(item.getString(USER_EMAIL));
+            Glide.with(mContext).load("http://49.236.137.55/profile?id=" + item.getString(USER_NAME) + ".jpeg")
                     .into(holder.mImageView);
 //            holder.descriptionTextView.setText(DataConverter.convertAddress(mContext
 //                    , Double.parseDouble(item.getString(LATITUDE)), Double.parseDouble(item.getString(LONGITUDE))));
