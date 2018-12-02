@@ -64,10 +64,10 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         setContentView(R.layout.activity_sign_in);
 
         packageName = getPackageName();
-        //request location permission
-        requestLocationPermission();
         mIdEditTextView = findViewById(R.id.editTextId);
         mPasswordEditTextView = findViewById(R.id.editTextPassword);
+        //request location permission
+        requestLocationPermission();
         TextView mSignUpTextView = findViewById(R.id.signUpTextView);
         mSignUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,9 +141,6 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void requestLocationPermission() {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-        startActivity(intent);
         if (powerManager != null && (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || powerManager.isIgnoringBatteryOptimizations("package:" + packageName))) {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this)
@@ -229,7 +226,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         try {
             JSONArray receivedArray = (JSONArray) args[0];
             JSONObject receivedObject = (JSONObject) receivedArray.get(0);
-            editor.putString(USER_NAME, receivedObject.optString(USER_NAME));
+            editor.putString(USER_NAME, receivedObject.optString("userId"));
             editor.putString(PASSWORD, receivedObject.optString(PASSWORD));
             editor.putString(USER_UUID, receivedObject.optString(USER_UUID));
             editor.commit();

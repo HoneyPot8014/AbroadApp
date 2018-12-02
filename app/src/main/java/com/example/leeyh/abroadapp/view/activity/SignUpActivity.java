@@ -28,6 +28,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.dataconverter.DataConverter;
@@ -37,6 +39,7 @@ import com.example.leeyh.abroadapp.model.UserModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -227,7 +230,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         builder.setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //Toast.makeText(getApplicationContext(),"아니오를 선택했습니다.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"아니오를 선택했습니다.",Toast.LENGTH_LONG).show();
                     }
                 });
         builder.show();
@@ -241,10 +244,11 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     Uri uri = data.getData();
-                    mProfileImageView.setImageURI(uri);
+                    DataConverter.modifyOrientation(uri, mProfileImageView, getApplicationContext());
                     mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-//                    mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
-//                    mProfileImageView.setImageBitmap(mProfileBitmap);
+                    mProfileImageView.setImageBitmap(mProfileBitmap);
+                    mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
+                    mProfileImageView.setImageBitmap(mProfileBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -261,14 +265,9 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 Toast.makeText(mAppManager, "SQL // Server Error", Toast.LENGTH_SHORT).show();
                 break;
             case SIGN_UP_SUCCESS:
-                String id = editText_email.getText().toString();
-//                Intent setResultToSignIn = new Intent(getApplicationContext(), SignInActivity.class);
-//                setResultToSignIn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK & Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(setResultToSignIn);
-//                setResultToSignIn.putExtra(USER_NAME, id);
-                Intent intent = new Intent();
-                intent.putExtra(USER_NAME, editText_email.getText().toString());
-                setResult(RESULT_OK);
+                Intent signUpSuccessIntent = new Intent();
+                signUpSuccessIntent.putExtra(USER_NAME, editText_email.getText().toString());
+                setResult(RESULT_OK, signUpSuccessIntent);
                 finish();
                 break;
             case SIGN_UP_FAILED:
