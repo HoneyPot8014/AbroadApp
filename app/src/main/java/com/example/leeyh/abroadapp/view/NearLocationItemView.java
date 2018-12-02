@@ -5,13 +5,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
@@ -47,6 +50,8 @@ public class NearLocationItemView extends LinearLayout {
         mImageView = findViewById(R.id.location_profile_image_view);
         mNickNameTextView = findViewById(R.id.location_nick_name_text_view);
         mLocateTextView = findViewById(R.id.location_locate_text_view);
+
+
     }
 
     public void setImageView(String id, Context context) {

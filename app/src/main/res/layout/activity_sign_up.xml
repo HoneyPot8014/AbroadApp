@@ -188,10 +188,12 @@
 
             android:layout_marginTop="32dp"
             android:background="@android:color/background_light"
-            android:fontFamily="@fonts/Swagger"
+            android:fontFamily="@font/aller_bd"
             android:onClick="onClickedSend"
-            android:text="get started"
-            android:textColor="@color/textColor"
+            android:text="Sign Up"
+            android:textAllCaps="false"
+            android:textColor="@color/cBlue"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/DateofBirth" />
@@ -294,6 +296,7 @@
             android:layout_marginTop="48dp"
             android:fontFamily="@font/aller_bd"
             android:text="Sign Up"
+            android:textColor="@color/textColor"
             android:textSize="36sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

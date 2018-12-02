@@ -15,14 +15,17 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
@@ -116,6 +119,16 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(myDivider);
         getLocationPermission();
+
+        View toolView = inflater.inflate(R.layout.fragment_location, container, false);
+        Toolbar toolbar = (Toolbar) toolView.findViewById(R.id.toolbarLoc);
+        toolbar.setTitle("hello");
+
+        //for crate home button
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         return view;
     }
 
