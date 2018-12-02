@@ -1,8 +1,11 @@
 package com.example.leeyh.abroadapp.view.activity;
 
+import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.os.Bundle;
          import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.view.Window;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
          import com.google.android.gms.maps.GoogleMap;
@@ -18,9 +22,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
          import com.google.android.gms.maps.model.LatLng;
 
 public class MemberDetailViewActivity extends AppCompatActivity implements OnMapReadyCallback{
+    //implements OnMapReadyCallback
     private MapView mapView;
     private GoogleMap gmap;
-
+    private String UUID;
+    private ImageView profileImg;
     private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyD3q4iAopnm9lr3CHbGXpfBFfnhBAY4w2c";
 
     @Override
@@ -36,8 +42,9 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
         }
 
         mapView = findViewById(R.id.mapView);
-        mapView.onCreate(mapViewBundle);
-        mapView.getMapAsync(this);
+
+       // mapView.getMapAsync(this);
+
 
 
         // inside your activity (if you did not enable transitions in your theme)
@@ -61,15 +68,20 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+      //  mapView.onResume();
+        Intent intent = getIntent();
+        UUID = intent.getStringExtra("name");
+        profileImg = findViewById(R.id.profileImg);
+        Glide.with(getApplicationContext()).load("http://49.236.137.55/profile?id=" + UUID + ".jpeg").into(profileImg);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mapView.onStart();
+        //mapView.onCreate(mapViewBundle);
+        mapView.getMapAsync(this);
     }
-
+/*
     @Override
     protected void onStop() {
         super.onStop();
@@ -89,7 +101,8 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
+    }*/
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
