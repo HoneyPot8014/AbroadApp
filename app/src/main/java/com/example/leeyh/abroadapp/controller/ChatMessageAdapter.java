@@ -14,8 +14,10 @@ import org.json.JSONObject;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.SEND_MESSAGE_ID;
+import static com.example.leeyh.abroadapp.constants.StaticString.SEND_MESSAGE_UUID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class ChatMessageAdapter extends BaseAdapter {
 
@@ -44,7 +46,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         SharedPreferences sharedPreferences = viewGroup.getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        String myId = sharedPreferences.getString(USER_NAME, null);
+        String myId = sharedPreferences.getString(USER_UUID, null);
 
         ChatMessageItemView itemView;
         if (view == null) {
@@ -55,13 +57,13 @@ public class ChatMessageAdapter extends BaseAdapter {
 
         try {
             JSONObject item = items.getJSONObject(i);
-            if (myId.equals(item.getString(SEND_MESSAGE_ID))) {
+            if (myId.equals(item.getString(SEND_MESSAGE_UUID))) {
                 itemView.setIsMyMessage(true);
                 itemView.setMyMessageTextView(item.getString(MESSAGE));
             } else {
                 itemView.setIsMyMessage(false);
                 itemView.setOtherMessageTextView(item.getString(MESSAGE));
-                itemView.setOtherProfileImageView(viewGroup.getContext(), item.getString(SEND_MESSAGE_ID));
+                itemView.setOtherProfileImageView(viewGroup.getContext(), item.getString(SEND_MESSAGE_UUID));
             }
         } catch (JSONException e) {
             e.printStackTrace();

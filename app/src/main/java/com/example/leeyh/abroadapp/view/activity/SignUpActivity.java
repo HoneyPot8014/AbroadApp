@@ -279,7 +279,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                         Toast.makeText(mAppManager, "SIGN_UP_FAILED", Toast.LENGTH_SHORT).show();
                     }
                 }.sendEmptyMessage(0);
-
                 break;
         }
     }
