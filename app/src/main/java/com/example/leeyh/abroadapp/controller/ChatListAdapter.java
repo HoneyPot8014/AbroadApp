@@ -1,5 +1,7 @@
 package com.example.leeyh.abroadapp.controller;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +15,14 @@ import org.json.JSONObject;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.JOIN_MEMBERS;
 import static com.example.leeyh.abroadapp.constants.StaticString.LAST_MESSAGE;
+import static com.example.leeyh.abroadapp.constants.StaticString.MEMBER_UUID;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 
 public class ChatListAdapter extends BaseAdapter {
 
-    JSONArray items = new JSONArray();
+    private SharedPreferences sharedPreferences;
+    private JSONArray items = new JSONArray();
 
     @Override
     public int getCount() {
@@ -41,6 +47,8 @@ public class ChatListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
+        sharedPreferences = viewGroup.getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+
         ChatListItemView itemView;
 
         if (view == null) {
@@ -51,11 +59,21 @@ public class ChatListAdapter extends BaseAdapter {
 
         try {
             JSONObject item = items.getJSONObject(i);
-            itemView.setChatListLastMessage(item.getString(LAST_MESSAGE));
             JSONArray joinMembers = (JSONArray) item.get(JOIN_MEMBERS);
-            itemView.setChatListProfileImage(joinMembers.getString(0), viewGroup.getContext());
-            Log.d("채팅2", "getView: " + joinMembers);
-            itemView.setChatListRoomNickName(joinMembers.toString());
+            JSONArray joinUuid = (JSONArray) item.get(MEMBER_UUID);
+            String profileId;
+            if(sharedPreferences.getString(USER_NAME, null).equals(joinUuid.getString(0))) {
+                profileId = joinUuid.getString(1);
+            } else {
+                profileId = joinUuid.getString(0);
+            }
+            StringBuilder members = new StringBuilder();
+            for(int k = 0; k < joinMembers.length(); k ++) {
+                members.append(joinMembers.getString(k)).append(" ");
+            }
+            itemView.setChatListRoomNickName(members.toString());
+            itemView.setChatListProfileImage(profileId, viewGroup.getContext());
+            itemView.setChatListLastMessage(item.getString(LAST_MESSAGE));
         } catch (JSONException e) {
             e.printStackTrace();
         }

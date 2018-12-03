@@ -1,6 +1,7 @@
 package com.example.leeyh.abroadapp.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -44,10 +45,12 @@ public class ChatListItemView extends LinearLayout{
     }
 
     public void setChatListRoomNickName(String nickName) {
-        mChatListRoomNickNameTextView.setText("BUM, LUKAS");
+        mChatListRoomNickNameTextView.setText(nickName);
     }
 
     public void setChatListLastMessage(String lastMessage) {
-        mChatListLastMessageTextView.setText(lastMessage);
+        if(lastMessage != null) {
+            mChatListLastMessageTextView.setText(lastMessage);
+        }
     }
 }
