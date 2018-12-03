@@ -63,7 +63,6 @@ public class BackgroundChattingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             if (intent.getStringExtra(RECEIVED_DATA) != null) {
-                Log.d("서비스2", "onStartCommand: 메세지 도착");
                 PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
                 PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "new Message");
                 try {
