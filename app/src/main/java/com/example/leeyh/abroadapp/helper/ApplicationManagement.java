@@ -1,14 +1,22 @@
 package com.example.leeyh.abroadapp.helper;
 
+import android.annotation.TargetApi;
 import android.app.Application;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.util.LruCache;
 
 import com.example.leeyh.abroadapp.background.BackgroundChattingService;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.background.ProfileCachingJobService;
 import com.example.leeyh.abroadapp.background.SocketResponseListener;
 import com.example.leeyh.abroadapp.constants.SocketEvent;
 
@@ -30,8 +38,8 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGNED_USER;
 import static com.example.leeyh.abroadapp.constants.StaticString.CACHE_SIZE;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class ApplicationManagement extends Application implements SocketResponseListener {
@@ -41,6 +49,7 @@ public class ApplicationManagement extends Application implements SocketResponse
     private OnResponseReceivedListener onResponseReceivedListener;
     private SharedPreferences mSharedPreferences;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -53,7 +62,6 @@ public class ApplicationManagement extends Application implements SocketResponse
         try {
             mSocket = IO.socket(SocketEvent.DEFAULT_HOST, socketOptions);
             mSocket.connect();
-            Log.d("서비스10", "onCreate: ");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -67,7 +75,8 @@ public class ApplicationManagement extends Application implements SocketResponse
         };
         final Intent intent = new Intent(getApplicationContext(), BackgroundChattingService.class);
         startService(intent);
-        Log.d("서비스", "onCreate: 서비스 시작됨");
+        jobSetting();
+
     }
 
     public void autoSignIn(Socket socket) {
@@ -120,6 +129,20 @@ public class ApplicationManagement extends Application implements SocketResponse
                 }
             });
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void jobSetting() {
+        JobInfo jobInfo = new JobInfo.Builder(123, new ComponentName(getApplicationContext(), ProfileCachingJobService.class))
+                .setRequiresDeviceIdle(true)
+                .setRequiresStorageNotLow(true)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPeriodic(JobInfo.getMinPeriodMillis())
+                .build();
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        assert jobScheduler != null;
+        jobScheduler.schedule(jobInfo);
     }
 
     public void emitRequestToServer(String emitEvent, JSONObject jsonObject) {

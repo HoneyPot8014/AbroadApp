@@ -60,7 +60,6 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("생명주기1", "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
@@ -90,7 +89,6 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("생명주기999", "onCreate: ");
         mAppManagement = (ApplicationManagement) getApplication();
         mAppManagement.routeSocket(ROUTE_SIGN_IN);
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
@@ -231,7 +229,6 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         try {
             JSONArray receivedArray = (JSONArray) args[0];
-            Log.d("여기여기여기", "onResponseSignInSuccess: " +receivedArray.toString() );
             JSONObject receivedObject = (JSONObject) receivedArray.get(0);
             editor.putString(E_MAIL, receivedObject.optString(E_MAIL));
             editor.putString(USER_NAME, receivedObject.optString(USER_NAME));

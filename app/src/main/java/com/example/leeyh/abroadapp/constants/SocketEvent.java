@@ -48,4 +48,6 @@ public class SocketEvent {
     public static final String SAVE_LOCATION = "saveLocation";
     public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
     public static final String NO_NEAR_USER = "noNearUser";
+    public static final String GET_LOCATION_USER = "getUserLocation";
+    public static final String GET_LOCATION_USER_SUCCESS = "getUserLocationSuccess";
 }

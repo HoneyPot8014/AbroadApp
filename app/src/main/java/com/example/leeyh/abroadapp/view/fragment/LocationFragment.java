@@ -2,7 +2,6 @@ package com.example.leeyh.abroadapp.view.fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,29 +22,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-=======
-import android.view.Window;
-import android.view.WindowManager;
->>>>>>> bff0a053998a0d6f026a88f2b18d3687d33170ed
 import android.widget.Toast;
 
-
-import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.controller.MemberListAdapter;
 import com.example.leeyh.abroadapp.controller.RecyclerItemClickListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.view.activity.MemberDetailViewActivity;
-import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,7 +44,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.NEW_ROOM_CHAT;

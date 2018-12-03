@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.dataconverter.DataConverter;
@@ -37,6 +40,7 @@ import com.example.leeyh.abroadapp.model.UserModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -77,7 +81,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("생명주기2", "onCreate: " );
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         password = (EditText) findViewById(R.id.password);
@@ -227,7 +230,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         builder.setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),"아니오를 선택했습니다.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
                     }
                 });
         builder.show();
@@ -239,18 +242,31 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_CODE) {
             if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getData();
+                String imagePath = uri.getPath();
+                Bitmap image = BitmapFactory.decodeFile(imagePath);
+
+                ExifInterface exif = null;
                 try {
-//                    Uri uri = data.getData();
-//                    DataConverter.modifyOrientation(uri, mProfileImageView, getApplicationContext());
-                    mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                    mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
-                    mProfileImageView.setImageBitmap(mProfileBitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    exif = new ExifInterface(imagePath);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                int exifOrientation = exif.getAttributeInt(
+                        ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int exifDegree = exifOrientationToDegrees(exifOrientation);
+//                image = rotate(image, exifDegree);
+                mProfileImageView.setImageBitmap(image);
             }
+//                try {
+//                    mProfileBitmap = DataConverter.handleSamplingAndRotationBitmap(getApplicationContext(), uri);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                mProfileBitmap = DataConverter.getRotatedBitmap(uri, getApplicationContext());
+//                    mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+//                mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
+            mProfileImageView.setImageBitmap(mProfileBitmap);
         }
     }
 
@@ -278,6 +294,18 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 break;
         }
     }
+
+    public int exifOrientationToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
 
     @Override
     protected void onDestroy() {
