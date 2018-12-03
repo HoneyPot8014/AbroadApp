@@ -18,7 +18,6 @@ import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.controller.ChatListAdapter;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
-import com.example.leeyh.abroadapp.model.ChatListModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +26,7 @@ import org.json.JSONObject;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_LIST;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_LIST_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
+import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -41,14 +41,23 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
-        mAppManager.setOnResponseReceivedListener(this);
-        mAppManager.routeSocket(ROUTE_CHAT);
-        mSharedPreferences = getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+        if(getArguments() != null) {
+            JSONObject fromService = new JSONObject();
+            try {
+                fromService.put(ROOM_NAME, getArguments().getString(ROOM_NAME));
+                mChatListItemListener.onChatItemClicked(fromService);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
+        mAppManager.setOnResponseReceivedListener(this);
+        mAppManager.routeSocket(ROUTE_CHAT);
+        mSharedPreferences = getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
         View rootView = inflater.inflate(R.layout.fragment_chat_list, container, false);
         getChattingList();
         mAppManager.onResponseFromServer(CHAT_LIST_SUCCESS);
@@ -64,6 +73,12 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("test", "onStart: ");
     }
 
     @Override
@@ -92,6 +107,14 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
                 }.sendEmptyMessage(0);
                 break;
         }
+    }
+
+    public static ChatListFragment newChattingFragmentInstance(String roomName) {
+        ChatListFragment fragment = new ChatListFragment();
+        Bundle args = new Bundle();
+        args.putString(ROOM_NAME, roomName);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public void getChattingList() {

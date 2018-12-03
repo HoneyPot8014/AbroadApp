@@ -25,6 +25,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUC
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
@@ -32,7 +33,6 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener, OnChatListItemClicked {
 
-    private LocationFragment mLocationFragment;
     private ApplicationManagement mAppManager;
     private FragmentManager mFragmentManager;
 
@@ -49,14 +49,13 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         mFragmentManager = getSupportFragmentManager();
 
         emitToServerConnectedToChatNameSpace();
-        mLocationFragment = new LocationFragment();
         Button locationTabButton = findViewById(R.id.location_tab_button);
         locationTabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof LocationFragment)
                     return;
-                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).commitAllowingStateLoss();
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).addToBackStack(null).commitAllowingStateLoss();
             }
         });
 
@@ -69,6 +68,11 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new ChatListFragment(), CHAT_LIST_FRAGMENT).commitAllowingStateLoss();
             }
         });
+
+        if(getIntent().getStringExtra(MESSAGE_FROM_SERVICE) != null) {
+            String roomName = getIntent().getStringExtra(ROOM_NAME);
+            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -78,7 +82,6 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new LocationFragment(), LOCATION_FRAGMENT).commitAllowingStateLoss();
                 break;
             case CHAT_CONNECT_FAILED:
-                Log.d("실패", "onResponseReceived: ");
                 break;
         }
     }
@@ -105,7 +108,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     public void onChatItemClicked(JSONObject chatListModel) {
         try {
             String roomName = chatListModel.getString(ROOM_NAME);
-            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
+            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).addToBackStack(null).commitAllowingStateLoss();
         } catch (JSONException e) {
             e.printStackTrace();
         }
