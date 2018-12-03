@@ -45,7 +45,6 @@ public class BackgroundChattingService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d("서비스 999", "onCreate: ");
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -57,11 +56,7 @@ public class BackgroundChattingService extends Service {
                 , TabBarMainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        int requestID = (int) System.currentTimeMillis();
-        pendingIntent = PendingIntent.getActivity(getApplicationContext()
-                , requestID
-                , notificationIntent
-                , PendingIntent.FLAG_UPDATE_CURRENT);
+
     }
 
     @Override
@@ -74,12 +69,19 @@ public class BackgroundChattingService extends Service {
                 try {
                     SharedPreferences sharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
                     JSONObject jsonObject = new JSONObject(intent.getStringExtra(RECEIVED_DATA));
+
                     String sendMessageId = jsonObject.getString(SEND_MESSAGE_ID);
                     String roomName = jsonObject.getString(ROOM_NAME);
                     String message = jsonObject.getString(MESSAGE);
                     if(!sharedPreferences.getString(USER_NAME, null).equals(sendMessageId)) {
                         notificationIntent.putExtra(MESSAGE_FROM_SERVICE, MESSAGE_FROM_SERVICE);
                         notificationIntent.putExtra(ROOM_NAME, roomName);
+                        int requestID = (int) System.currentTimeMillis();
+                        pendingIntent = PendingIntent.getActivity(getApplicationContext()
+                                , requestID
+                                , notificationIntent
+                                , PendingIntent.FLAG_UPDATE_CURRENT);
+
                         wakeLock.acquire(DateUtils.SECOND_IN_MILLIS * 5);
                         builder.setContentTitle(sendMessageId) // required
                                 .setContentText(message)  // required
