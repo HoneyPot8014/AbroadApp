@@ -82,16 +82,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         switch (onEvent) {
             case CHAT_LIST_SUCCESS:
                 JSONArray chatListArray = (JSONArray) args[0];
-                Log.d("채팅", "onResponseReceived: " + chatListArray);
                 mChatListAdapter.addList(chatListArray);
-//                for(int i = 0; i < chatListArray.length(); i++) {
-//                    try {
-//                        JSONObject chatList = (JSONObject) chatListArray.get(i);
-//                        mChatListAdapter.addItem(chatList);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {

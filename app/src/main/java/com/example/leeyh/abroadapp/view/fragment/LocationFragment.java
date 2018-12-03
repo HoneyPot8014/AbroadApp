@@ -44,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.NEW_ROOM_CHAT;
@@ -66,7 +67,6 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private FusedLocationProviderClient mFusedLocationClient;
     private MemberListAdapter mAdapter;
     private SharedPreferences mSharedPreferences;
-    private ImageButton mSettingButton;
     private boolean mIsShown = false;
     private double mDistance = 5.0;
 
@@ -97,16 +97,15 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             //when recycler view clicked handle here onItemClicked.
             @Override
             public void onItemClicked(View view, int position, final JSONObject item) {
-                try {
-                    Intent intent = new Intent(getActivity(), MemberDetailViewActivity.class);
-                    intent.putExtra("name",item.getString(USER_UUID));
-                    startActivity(intent);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Intent intent = new Intent(getActivity(), MemberDetailViewActivity.class);
+//                    intent.putExtra("name",item.getString(USER_UUID));
+//                    startActivity(intent);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
-
-                /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -125,7 +124,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
                     }
-                }).create().show();*/
+                }).create().show();
             }
         });
         recyclerView.setAdapter(mAdapter);
@@ -142,7 +141,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mSettingButton = view.findViewById(R.id.imageButton);
+        ImageButton settingButton = view.findViewById(R.id.imageButton);
         final LinearLayout settingMenu = view.findViewById(R.id.location_menu_layout);
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -164,7 +163,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         TextView distance7 = view.findViewById(R.id.location_distance_7);
         distance7.setOnClickListener(clickListener);
 
-        mSettingButton.setOnClickListener(new View.OnClickListener() {
+        settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!mIsShown) {
