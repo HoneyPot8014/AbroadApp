@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +70,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private SharedPreferences mSharedPreferences;
     private boolean mIsShown = false;
     private double mDistance = 5.0;
+    private ImageButton searchButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +89,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-
+        searchButton =  view.findViewById(R.id.searchButton);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.memberRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -104,29 +106,47 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
+                try {
+                    Intent intent = new Intent(getActivity(), MemberDetailViewActivity.class);
+                    intent.putExtra("name",item.getString(USER_UUID));
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        JSONArray makeRoomIdsData = new JSONArray();
-                        try {
-                            makeRoomIdsData.put(mSharedPreferences.getString(USER_UUID, null));
-                            makeRoomIdsData.put(item.getString(USER_UUID));
-                            Log.d("여기2", "onClick: " + item.getString(USER_UUID));
-                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                }).create().show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        JSONArray makeRoomIdsData = new JSONArray();
+//                        try {
+//                            makeRoomIdsData.put(mSharedPreferences.getString(USER_UUID, null));
+//                            makeRoomIdsData.put(item.getString(USER_UUID));
+//                            Log.d("여기2", "onClick: " + item.getString(USER_UUID));
+//                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.cancel();
+//                    }
+//                }).create().show();
             }
         });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+                View diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
+                dialog.setContentView(diag);
+                dialog.show();
+            }
+        });
+
         recyclerView.setAdapter(mAdapter);
         DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(myDivider);
@@ -141,8 +161,8 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ImageButton settingButton = view.findViewById(R.id.imageButton);
-        final LinearLayout settingMenu = view.findViewById(R.id.location_menu_layout);
+        //mSettingButton = view.findViewById(R.id.imageButton);
+      /*  final LinearLayout settingMenu = view.findViewById(R.id.location_menu_layout);
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,7 +195,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 }
             }
         });
-
+*/
         return view;
     }
 
@@ -282,7 +302,15 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_SUCCESS);
         mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_FAILED);
     }
-
+    /*public void onSearchClicked(View view) {
+        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+        View diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
+        dialog.setContentView(diag);
+        // dialog.setContentView();
+        Log.d("button", "button func" );
+        Toast.makeText(mAppManager, "새로운 채팅이 도착했어요", Toast.LENGTH_SHORT).show();
+        dialog.show();
+    }*/
     @Override
     public void onDestroy() {
         super.onDestroy();
