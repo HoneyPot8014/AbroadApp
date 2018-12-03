@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -31,6 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.dataconverter.DataConverter;
@@ -43,6 +47,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_SIGN_UP;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGN_UP;
@@ -242,7 +247,14 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Glide.with(this).load(data.getData()).into(mProfileImageView);
+                Glide.with(this).asBitmap().load(data.getData()).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        mProfileBitmap = Bitmap.createScaledBitmap(resource, (int)(resource.getHeight() * 0.5), (int)(resource.getWidth() * 0.5), true);
+                        mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
+                        mProfileImageView.setImageBitmap(mProfileBitmap);
+                    }
+                });
             }
         }
     }
@@ -271,18 +283,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 break;
         }
     }
-
-    public int exifOrientationToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
-        }
-        return 0;
-    }
-
 
     @Override
     protected void onDestroy() {

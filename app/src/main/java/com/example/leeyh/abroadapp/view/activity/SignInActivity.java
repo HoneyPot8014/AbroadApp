@@ -132,7 +132,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
                 }.sendEmptyMessage(0);
                 break;
             case SIGNED_USER:
-                goToMainActivity();
+//                goToMainActivity();
                 break;
         }
     }
@@ -234,7 +234,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
             editor.putString(USER_NAME, receivedObject.optString(USER_NAME));
             editor.putString(PASSWORD, receivedObject.optString(PASSWORD));
             editor.putString(USER_UUID, receivedObject.optString(USER_UUID));
-            editor.commit();
+            editor.apply();
         } catch (JSONException e) {
             e.printStackTrace();
         }
