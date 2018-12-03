@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
   console.log('*!*! NO NAMESPACE SOCKET.ID >>' + socket.id + '  *!*!');
   socket.on('checkSignedUser', (userInfo) => {
     console.log(TAG + 'no name checkSignedUser client emit');
-    sqlConnection.query('SELECT userId, password, userUuid FROM myMember', (err, rows, fields) => {
+    sqlConnection.query('SELECT userName, e_mail, password, userUuid FROM member', (err, rows, fields) => {
       if (err) {
         console.log(err);
         socket.emit('sqlError', {
@@ -45,8 +45,8 @@ io.on('connection', (socket) => {
         });
       } else {
         for (var i in rows) {
-          if (rows[i].userId == userInfo.userId) {
-            if (rows[i].userId == userInfo.userId && rows[i].password == userInfo.password && rows[i].userUuid == userInfo.userUuid) {
+          if (rows[i].e_mail == userInfo.e_mail) {
+            if (rows[i].password == userInfo.password && rows[i].userUuid == userInfo.userUuid) {
               socket.emit('signedUser', {
                 result: 'ok'
               });
@@ -67,7 +67,7 @@ signIn.on('connection', (socket) => {
   console.log('*!*  SIGN IN SOCKET.ID >>' + socket.id + '  *!*!');
   socket.on('checkSignedUser', (userInfo) => {
     console.log(TAG + 'sing in checkSignedUser client emit');
-    sqlConnection.query('SELECT userId, password, userUuid FROM myMember', (err, rows, fields) => {
+    sqlConnection.query('SELECT userName, password, userUuid FROM member', (err, rows, fields) => {
       if (err) {
         console.log(err);
         socket.emit('sqlError', {
@@ -75,8 +75,8 @@ signIn.on('connection', (socket) => {
         });
       } else {
         for (var i in rows) {
-          if (rows[i].userId == userInfo.userId) {
-            if (rows[i].userId == userInfo.userId && rows[i].password == userInfo.password && rows[i].userUuid == userInfo.userUuid) {
+          if (rows[i].e_mail == userInfo.e_mail) {
+            if (rows[i].password == userInfo.password && rows[i].userUuid == userInfo.userUuid) {
               socket.emit('signedUser', {
                 result: 'ok'
               });
@@ -89,7 +89,7 @@ signIn.on('connection', (socket) => {
   })
   socket.on('signInRequest', (signInData) => {
     console.log(TAG + '**SIGN IN ** Client request SIGN IN');
-    sqlConnection.query('SELECT userId, password, userUuid FROM myMember WHERE userId=?', signInData.userId, (err, rows, fields) => {
+    sqlConnection.query('SELECT userName, e_mail, password, userUuid FROM member WHERE e_mail=?', signInData.e_mail, (err, rows, fields) => {
       if (err) {
         console.log(err);
       } else {
@@ -99,10 +99,11 @@ signIn.on('connection', (socket) => {
           });
           console.log(TAG + '**SIGN IN ** SIGN IN Failed');
         } else {
-          if (rows[0].userId == signInData.userId && rows[0].password == signInData.password) {
+          if (rows[0].e_mail == signInData.e_mail && rows[0].password == signInData.password) {
             socket.emit('signInSuccess', rows);
             console.log(TAG + '**SIGN IN ** SIGN IN SUCCESS');
           } else {
+            console.log(TAG + '!!SIGN IN ** FAILED');
             socket.emit('signInFailed', {
               result: 'ok'
             });
@@ -122,7 +123,6 @@ signUp.on('connection', (socket) => {
       (callback) => {
         sqlConnection.query('commit', (err, rows, fields) => {
           if (err) {
-            console.log('sql에러1??');
             callback('commitError');
           } else {
             callback(null, 'commitSuccess');
@@ -130,37 +130,48 @@ signUp.on('connection', (socket) => {
         })
       },
       (arg, callback) => {
-        sqlConnection.query('SELECT * FROM member WHERE userId=?', signUpData.userId, (err, rows, fields) => {
+        sqlConnection.query('SELECT * FROM member WHERE e_mail=?', signUpData.e_mail, (err, rows, fields) => {
           if (err) {
             callback('sqlError');
+            console.log(err);
             console.log('sql에러 2???');
           } else {
+            var userUuid = uuid1();
+            console.log('헬로1');
             if (rows[0] == undefined) {
+              console.log('헬로2');
               if (signUpData.hasOwnProperty('profile')) {
-                fs.writeFile('profile/' + signUpData.userId + '.jpeg', signUpData.profile, 'binary', (err) => {
+                fs.writeFile('profile/' + userUuid + '.jpeg', signUpData.profile, 'binary', (err) => {
                   if (err) {
                     callback('make profile image failed');
+                    console.log(err);
                   } else {
-                    callback(null, 'success');
+                    callback(null, 'success', userUuid);
                   }
                 })
+              } else {
+                callback(null, 'success', userUuid);
               }
             } else {
               callback('already exist user');
+              console.log('exist user');
             }
           }
         })
       },
-      (arg, callback) => {
-        var userUuid = uuid1();
+      (arg, userUuid, callback) => {
         var sqlInsertMemberParams = new Array();
-        sqlInsertMemberParams.push(signUpData.userId);
+        sqlInsertMemberParams.push(signUpData.userName);
         sqlInsertMemberParams.push(signUpData.password);
-        sqlInsertMemberParams.push(signUpData.nickName);
+        sqlInsertMemberParams.push(signUpData.e_mail);
         sqlInsertMemberParams.push(socket.id);
         sqlInsertMemberParams.push(userUuid);
+        sqlInsertMemberParams.push(signUpData.gender);
+        sqlInsertMemberParams.push(signUpData.DOB);
+        console.log('**************');
+        console.log(sqlInsertMemberParams);
         if (arg == 'success') {
-          sqlConnection.query('INSERT INTO member(userId, password, nickname, socketId, userUuid) VALUES(?, ?, ?, ? ,?)', sqlInsertMemberParams, (err, rows, fileds) => {
+          sqlConnection.query('INSERT INTO member(userName, password, e_mail, socketId, userUuid, gender, DOB) VALUES(?, ?, ?, ? ,?, ?, ?)', sqlInsertMemberParams, (err, rows, fileds) => {
             if (err) {
               console.log(err);
               callback('sqlError');
@@ -198,19 +209,19 @@ signUp.on('connection', (socket) => {
 
 var chat = io.of('/chat');
 chat.on('connection', (socket) => {
-  socket.on('test', (test) => {
-    console.log('!!!!!!!!! 10초에 한번씩 옵니다 !!!!!!!!!!!!');
-  })
   socket.on('reconnect', () => {
     console.log('리컨넥중');
   })
   console.log(socket.adapter.rooms);
   console.log('!*!*  CHAT SOCKET.ID >>' + socket.id + '  !*!*');
   socket.on('chatConnected', (userInfo) => {
+    console.log('헤이1');
     if (userInfo != null && userInfo != undefined) {
+      console.log('헤이2');
       try {
-        members[userInfo.userId] = socket;
-        sqlConnection.query('SELECT room FROM myMember WHERE userUuid =? ', userInfo.userUuid, (err, rows, fields) => {
+        members[userInfo.userUuid] = socket;
+        console.log('헤이3' + userInfo.userUuid);
+        sqlConnection.query('SELECT room FROM member WHERE userUuid =? ', userInfo.userUuid, (err, rows, fields) => {
           if (err) {
             console.log(err);
             socket.emit('chatConnectedFailed');
@@ -252,7 +263,7 @@ chat.on('connection', (socket) => {
       for (var i = 0; i < makeRoomData.length; i++) {
         ((i) => {
           asyncParallelList.push((callback) => {
-            sqlConnection.query('SELECT room FROM myMember WHERE userId = ?', makeRoomData[i], (err, rows, fields) => {
+            sqlConnection.query('SELECT room FROM member WHERE userUuid = ?', makeRoomData[i], (err, rows, fields) => {
               if (err) {
                 console.log(err);
                 callback('sqlError');
@@ -270,7 +281,7 @@ chat.on('connection', (socket) => {
                   updateParams.push(makeRoomData[i]);
                 }
                 console.log(updateParams);
-                sqlConnection.query('UPDATE member SET room = ? WHERE userId = ?', updateParams, (err, rows, fields) => {
+                sqlConnection.query('UPDATE member SET room = ? WHERE userUuid = ?', updateParams, (err, rows, fields) => {
                   if (err) {
                     console.log(err);
                     callback('sqlError');
@@ -286,7 +297,7 @@ chat.on('connection', (socket) => {
       asyncParallelList.push((callback) => {
         console.log(stringifyIds.join(','));
         var uuids = new Array();
-        sqlConnection.query('SELECT userUuid FROM myMember WHERE userId IN (' + stringifyIds.join(',') + ')', (err, rows, fields) => {
+        sqlConnection.query('SELECT userUuid FROM member WHERE userUuid IN (' + stringifyIds.join(',') + ')', (err, rows, fields) => {
           if (err) {
             console.log(err);
             callback('sqlError');
@@ -433,11 +444,10 @@ chat.on('connection', (socket) => {
 
 var map = io.of('/chat/map');
 map.on('connection', (socket) => {
-  socket.on('reconnect', () => {
-    console.log('리컨넥중');
-  })
   console.log('!*!*  MAP SOCKET.ID >>' + socket.id + '  !*!*');
-  socket.on('saveLocation', (locationData) => {
+  socket.on('getUserLocation', (locationData) => {
+    console.log('&&&&&&&&&&&&&&&&&&&&&');
+    console.log('jobService');
     async.waterfall([
       (callback) => {
         sqlConnection.query('commit', (err, rows, fields) => {
@@ -446,20 +456,22 @@ map.on('connection', (socket) => {
         });
       },
       (arg, callback) => {
-        sqlConnection.query('SELECT * FROM userLocation WHERE userId=?', locationData.userId, (err, rows, fields) => {
+        sqlConnection.query('SELECT * FROM userLocation WHERE userUuid=?', locationData.userUuid, (err, rows, fields) => {
           if (err) {
+            console.log('에러1');
             callback('sqlError');
           } else {
             var sqlParams = new Array();
             if (rows[0] == undefined) {
-              sqlParams.push(locationData.userId);
+              sqlParams.push(locationData.userName);
+              sqlParams.push(locationData.userUuid);
               sqlParams.push(locationData.latitude);
               sqlParams.push(locationData.longitude);
               callback(null, 'not exist userLocation', sqlParams);
             } else {
               sqlParams.push(locationData.latitude);
               sqlParams.push(locationData.longitude);
-              sqlParams.push(locationData.userId);
+              sqlParams.push(locationData.userUuid);
               callback(null, 'exist userLocation', sqlParams);
             }
           }
@@ -467,16 +479,19 @@ map.on('connection', (socket) => {
       },
       (flag, params, callback) => {
         if (flag == 'not exist userLocation') {
-          sqlConnection.query('INSERT INTO userLocation(userId, latitude, longitude) VALUES(?, ?, ?)', params, (err, rows, fields) => {
+          sqlConnection.query('INSERT INTO userLocation(userName, userUuid, latitude, longitude) VALUES(?, ?, ?, ?)', params, (err, rows, fields) => {
             if (err) {
+              console.log('에러2');
+              console.log(err);
               callback('sqlError');
             } else {
               callback(null, 'success');
             }
           })
         } else {
-          sqlConnection.query('UPDATE userLocation SET latitude=?, longitude=? WHERE userId=?', params, (err, rows, fields) => {
+          sqlConnection.query('UPDATE userLocation SET latitude=?, longitude=? WHERE userUuid=?', params, (err, rows, fields) => {
             if (err) {
+              console.log('에러3');
               callback('sqlError');
             } else {
               callback(null, 'success');
@@ -489,9 +504,100 @@ map.on('connection', (socket) => {
         selectUserLocationParams.push(locationData.latitude);
         selectUserLocationParams.push(locationData.longitude);
         selectUserLocationParams.push(locationData.latitude);
-        selectUserLocationParams.push(locationData.userId);
-        sqlConnection.query('select userId, nickName, distance, latitude, longitude from member Natural join (SELECT *,(6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude))))AS distance FROM userLocation HAVING distance <= 5.0 ORDER BY distance LIMIT 0,5000) AS T WHERE userId <> ?', selectUserLocationParams, (err, rows, fields) => {
+        selectUserLocationParams.push(locationData.userUuid);
+        sqlConnection.query('select userName, userUuid, distance, latitude, longitude from member Natural join (SELECT *,(6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude))))AS distance FROM userLocation HAVING distance <= 7 ORDER BY distance LIMIT 0,5000) AS T WHERE userUuid <> ?', selectUserLocationParams, (err, rows, fields) => {
           if (err) {
+            console.log(err);
+            console.log('에러4');
+            callback('rollback');
+          } else {
+            if (rows != undefined) {
+              socket.binary(true).emit('getUserLocationSuccess', rows);
+              console.log(TAG + 'near user query finished and emit');
+            } else {
+              socket.emit('noNearUser', {
+                result: null
+              });
+              console.log(TAG + 'near user query finished and emit but null');
+            }
+          }
+        })
+      }
+    ], (err, result) => {
+      if (err == 'sqlError') {
+        socket.emit('sqlError');
+      } else if (err == 'rollback') {
+        sqlConnection.query('rollback', (err, rows, fields) => {});
+      }
+    })
+  })
+
+
+
+  socket.on('saveLocation', (locationData) => {
+    console.log(TAG + 'user emit saveLocation' + locationData);
+    async.waterfall([
+      (callback) => {
+        sqlConnection.query('commit', (err, rows, fields) => {
+          if (err) callback('commitError');
+          else callback(null, 'commitSuccess');
+        });
+      },
+      (arg, callback) => {
+        sqlConnection.query('SELECT * FROM userLocation WHERE userUuid=?', locationData.userUuid, (err, rows, fields) => {
+          if (err) {
+            console.log('에러1');
+            callback('sqlError');
+          } else {
+            var sqlParams = new Array();
+            if (rows[0] == undefined) {
+              sqlParams.push(locationData.userName);
+              sqlParams.push(locationData.userUuid);
+              sqlParams.push(locationData.latitude);
+              sqlParams.push(locationData.longitude);
+              callback(null, 'not exist userLocation', sqlParams);
+            } else {
+              sqlParams.push(locationData.latitude);
+              sqlParams.push(locationData.longitude);
+              sqlParams.push(locationData.userUuid);
+              callback(null, 'exist userLocation', sqlParams);
+            }
+          }
+        })
+      },
+      (flag, params, callback) => {
+        if (flag == 'not exist userLocation') {
+          sqlConnection.query('INSERT INTO userLocation(userName, userUuid, latitude, longitude) VALUES(?, ?, ?, ?)', params, (err, rows, fields) => {
+            if (err) {
+              console.log('에러2');
+              console.log(err);
+              callback('sqlError');
+            } else {
+              callback(null, 'success');
+            }
+          })
+        } else {
+          sqlConnection.query('UPDATE userLocation SET latitude=?, longitude=? WHERE userUuid=?', params, (err, rows, fields) => {
+            if (err) {
+              console.log('에러3');
+              callback('sqlError');
+            } else {
+              callback(null, 'success');
+            }
+          })
+        }
+      },
+      (status, callback) => {
+        var selectUserLocationParams = new Array();
+        selectUserLocationParams.push(locationData.latitude);
+        selectUserLocationParams.push(locationData.longitude);
+        selectUserLocationParams.push(locationData.latitude);
+        selectUserLocationParams.push(locationData.distance);
+        selectUserLocationParams.push(locationData.userUuid);
+        sqlConnection.query('select userName, userUuid, distance, latitude, longitude from member Natural join (SELECT *,(6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude))))AS distance FROM userLocation HAVING distance <= ? ORDER BY distance LIMIT 0,5000) AS T WHERE userUuid <> ?', selectUserLocationParams, (err, rows, fields) => {
+          if (err) {
+            console.log(err);
+            console.log('에러4');
             callback('rollback');
           } else {
             if (rows != undefined) {
