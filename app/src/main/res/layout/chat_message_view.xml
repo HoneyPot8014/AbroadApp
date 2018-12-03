@@ -3,21 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/messageCardView"
@@ -26,7 +12,7 @@
         android:layout_marginLeft="16dp"
         android:background="@color/lightGray"
         app:cardBackgroundColor="@color/cardview_light_background"
-        app:cardCornerRadius="25dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -51,7 +37,8 @@
         android:background="@color/lightGray"
         app:cardBackgroundColor="@color/lightGray"
         app:cardCornerRadius="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintWidth_max="wrap"
         app:layout_constraintStart_toEndOf="@+id/messageCardView"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -62,7 +49,8 @@
             android:layout_margin="5dp"
             android:background="@color/lightGray"
             android:fontFamily="@font/aller_bd"
-            android:textSize="24sp"
+            android:textSize="20sp"
+            android:padding="3dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toEndOf="@+id/messageCardView"
             app:layout_constraintTop_toTopOf="parent" />
@@ -72,23 +60,26 @@
         android:id="@+id/myCardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:gravity="right"
         app:cardBackgroundColor="@color/cBlue"
         app:cardCornerRadius="20dp"
-        app:layout_constraintLeft_toRightOf="@id/guideline2"
+        android:layout_marginRight="8dp"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintWidth_max="wrap"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/my_message_text_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:background="@color/cBlue"
             android:gravity="right"
-            android:textSize="24sp"
-            app:layout_constraintLeft_toRightOf="@id/guideline2"
+            android:textSize="20sp"
+            android:textColor="@color/cardview_light_background"
+            android:padding="3dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.v7.widget.CardView>

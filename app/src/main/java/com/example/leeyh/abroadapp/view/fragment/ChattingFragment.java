@@ -36,6 +36,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class ChattingFragment extends Fragment implements OnResponseReceivedListener {
 
@@ -163,6 +164,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
         JSONObject sendMessageData = new JSONObject();
         try {
             sendMessageData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
+            sendMessageData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
             sendMessageData.put(ROOM_NAME, mRoomName);
             sendMessageData.put(MESSAGE, mChatMessageEditText.getText().toString());
         } catch (JSONException e) {
