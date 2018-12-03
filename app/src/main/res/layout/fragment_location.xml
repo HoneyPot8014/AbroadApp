@@ -15,7 +15,7 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/location_tool_bar"
@@ -25,12 +25,13 @@
             tools:layout_editor_absoluteY="12dp">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/searchButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/setting"
+                android:onClick="onSearchClicked"
+                android:src="@drawable/searching"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -69,41 +70,107 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/location_menu_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="10dp"
-        android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:visibility="gone">
+        android:paddingRight="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/location_distance_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3km"
-            android:textSize="20sp"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/aller_rg"
+            android:text="Region"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location_distance_7" />
 
         <TextView
             android:id="@+id/location_distance_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5km"
-            android:textSize="20sp"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/aller_rg"
+            android:text="Location"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/location_distance_7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="7km"
-            android:textSize="20sp"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/aller_rg"
+            android:text="Age"
+            android:textColor="@color/textColor"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location_distance_5" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/searchButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aller_rg"
+            android:text="Search"
+            android:textAllCaps="false"
+            android:textColor="@color/cBlue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <SeekBar
+            android:id="@+id/seekBar2"
+            style="@android:style/Widget.Material.SeekBar"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:max="30"
+            android:progress="5"
+            android:thumb="@android:drawable/presence_invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/location_distance_5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar2" />
+
+        <Spinner
+            android:id="@+id/spinner3"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
     <!--

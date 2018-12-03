@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,6 +71,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private ImageButton mSettingButton;
     private boolean mIsShown = false;
     private double mDistance = 5.0;
+    private Button searchButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,13 +84,14 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
         mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
         mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-
+        searchButton = view.findViewById(R.id.searchButton);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.memberRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -104,6 +108,16 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                searchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+                        dialog.setContentView(view);
+
+                        dialog.show();
+                    }
+                });
 
 
                 /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -142,7 +156,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mSettingButton = view.findViewById(R.id.imageButton);
+        //mSettingButton = view.findViewById(R.id.imageButton);
         final LinearLayout settingMenu = view.findViewById(R.id.location_menu_layout);
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
