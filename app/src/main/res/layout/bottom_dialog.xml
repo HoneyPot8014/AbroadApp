@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -70,19 +71,24 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <SeekBar
-            android:id="@+id/seekBar2"
-            style="@android:style/Widget.Material.SeekBar"
+            android:id="@+id/locSeekBar"
+            style="@style/Base.Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            android:max="30"
-            android:progress="5"
+            android:max="4"
+            android:progress="1"
+            android:progressBackgroundTint="@color/tinderBack"
+            android:progressTint="@color/textColor"
             android:thumb="@android:drawable/presence_invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/location_distance_5"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
         <Spinner
             android:id="@+id/spinner2"
@@ -92,7 +98,7 @@
             android:layout_marginTop="32dp"
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seekBar2" />
+            app:layout_constraintTop_toBottomOf="@+id/locSeekBar" />
 
         <Spinner
             android:id="@+id/spinner3"
@@ -103,6 +109,20 @@
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+
+        <TextView
+            android:id="@+id/infoText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="33dp"
+            android:fontFamily="@font/aller_bd"
+            android:textColor="@color/textColor"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location_distance_3" />
 
     </android.support.constraint.ConstraintLayout>
 

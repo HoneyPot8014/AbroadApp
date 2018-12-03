@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +72,13 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private ImageButton mSettingButton;
     private boolean mIsShown = false;
     private double mDistance = 5.0;
-    private ImageButton searchButton;
+    private ImageButton fragSearchButton;
+    private View diag;
+    private SeekBar seekBar;
+    private TextView infoText;
+    private BottomSheetDialog dialog;
+    private int locData;
+    private Button searchButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +98,14 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location, container, false);
-        searchButton =  view.findViewById(R.id.searchButton);
+        diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
+        dialog = new BottomSheetDialog(getActivity());
+        dialog.setContentView(diag);
+        fragSearchButton =  view.findViewById(R.id.fragSearchButton);
+        searchButton =  diag.findViewById(R.id.searchButton);
+        seekBar = (SeekBar) diag.findViewById(R.id.locSeekBar);
+
+        infoText = diag.findViewById(R.id.infoText);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.memberRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -137,14 +151,46 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
-                View diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
-                dialog.setContentView(diag);
+                mDistance = locData;
+                mAppManager.routeSocket(ROUTE_MAP);
+                mAppManager.onResponseFromServer(SQL_ERROR);
+                mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
+                mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
+                getLocationPermission();
+                dialog.dismiss();
+            }
+        });
+
+        fragSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
                 dialog.show();
             }
         });
 
-        recyclerView.setAdapter(mAdapter);
+
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                               @Override
+                                               public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                                                   infoText.setText("location in "+i*5+" km");
+                                                   locData = i * 5;
+                                               }
+
+                                               @Override
+                                               public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                               }
+
+                                               @Override
+                                               public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                               }
+                                           }
+        );
+
+                recyclerView.setAdapter(mAdapter);
         DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(myDivider);
         getLocationPermission();
@@ -158,41 +204,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //mSettingButton = view.findViewById(R.id.imageButton);
-      /*  final LinearLayout settingMenu = view.findViewById(R.id.location_menu_layout);
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mDistance = ((TextView) view).getText().toString().charAt(0);
-                mAppManager.routeSocket(ROUTE_MAP);
-                mAppManager.onResponseFromServer(SQL_ERROR);
-                mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
-                mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
-                getLocationPermission();
-                settingMenu.setVisibility(View.GONE);
-                mIsShown = !mIsShown;
-            }
-        };
-        TextView distance3 = view.findViewById(R.id.location_distance_3);
-        distance3.setOnClickListener(clickListener);
-        TextView distance5 = view.findViewById(R.id.location_distance_5);
-        distance5.setOnClickListener(clickListener);
-        TextView distance7 = view.findViewById(R.id.location_distance_7);
-        distance7.setOnClickListener(clickListener);
 
-        mSettingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mIsShown) {
-                    settingMenu.setVisibility(View.VISIBLE);
-                    mIsShown = !mIsShown;
-                } else {
-                    settingMenu.setVisibility(View.GONE);
-                    mIsShown = !mIsShown;
-                }
-            }
-        });
-*/
         return view;
     }
 
