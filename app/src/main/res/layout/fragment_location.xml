@@ -30,7 +30,7 @@
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
                 android:background="@android:color/transparent"
-                android:onClick="onSearchClicked"
+
                 android:src="@drawable/searching"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

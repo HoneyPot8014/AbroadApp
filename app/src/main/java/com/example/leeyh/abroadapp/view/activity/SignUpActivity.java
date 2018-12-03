@@ -250,7 +250,8 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
                 Glide.with(this).asBitmap().load(data.getData()).into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        mProfileBitmap = Bitmap.createScaledBitmap(resource, (int)(resource.getHeight() * 0.5), (int)(resource.getWidth() * 0.5), true);
+                        mProfileBitmap = Bitmap.createScaledBitmap(resource, (int)(resource.getWidth() / 2), (int)(resource.getHeight() / 2),true);
+                        Toast.makeText(mAppManager, "width"+resource.getWidth()+ "height "+resource.getHeight(), Toast.LENGTH_SHORT).show();
                         mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
                         mProfileImageView.setImageBitmap(mProfileBitmap);
                     }
