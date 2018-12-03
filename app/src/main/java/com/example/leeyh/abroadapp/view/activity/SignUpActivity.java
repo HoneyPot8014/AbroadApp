@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         mProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent getPhoto = new Intent(Intent.ACTION_PICK);
+                Intent getPhoto = new Intent(Intent.ACTION_GET_CONTENT);
                 getPhoto.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 getPhoto.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(getPhoto, CAMERA_CODE);
@@ -242,31 +242,8 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Uri uri = data.getData();
-                String imagePath = uri.getPath();
-                Bitmap image = BitmapFactory.decodeFile(imagePath);
-
-                ExifInterface exif = null;
-                try {
-                    exif = new ExifInterface(imagePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                int exifOrientation = exif.getAttributeInt(
-                        ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                int exifDegree = exifOrientationToDegrees(exifOrientation);
-//                image = rotate(image, exifDegree);
-                mProfileImageView.setImageBitmap(image);
+                Glide.with(this).load(data.getData()).into(mProfileImageView);
             }
-//                try {
-//                    mProfileBitmap = DataConverter.handleSamplingAndRotationBitmap(getApplicationContext(), uri);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                mProfileBitmap = DataConverter.getRotatedBitmap(uri, getApplicationContext());
-//                    mProfileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-//                mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
-            mProfileImageView.setImageBitmap(mProfileBitmap);
         }
     }
 
