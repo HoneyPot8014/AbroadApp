@@ -56,6 +56,8 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
+import static com.example.leeyh.abroadapp.constants.StaticString.DOB;
+import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
@@ -118,6 +120,14 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                 try {
                     Intent intent = new Intent(getActivity(), MemberDetailViewActivity.class);
                     intent.putExtra("name",item.getString(USER_UUID));
+                    intent.putExtra("realName",item.getString(USER_NAME));
+                    intent.putExtra("dob",item.getString(DOB));
+                    intent.putExtra("distance",item.getString(DISTANCE));
+                    intent.putExtra("lat",item.getString(LATITUDE));
+                    intent.putExtra("long",item.getString(LONGITUDE));
+                    intent.putExtra("gen",item.getString(GENDER));
+                    //intent.putExtra("onoff",item.getString());
+
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -148,6 +148,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/nameAndAgeTextView" />
 
             <TextView
+                android:id="@+id/distanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/aller_rg"
+                app:layout_constraintStart_toEndOf="@+id/memberCardView"
+                app:layout_constraintTop_toBottomOf="@+id/jobTextView" />
+
+            <TextView
                 android:id="@+id/planTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -27,12 +27,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
          import com.google.android.gms.maps.MapView;
          import com.google.android.gms.maps.OnMapReadyCallback;
          import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM;
+import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
+import static com.example.leeyh.abroadapp.constants.StaticString.DOB;
+import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
+import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
+import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class MemberDetailViewActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -40,12 +47,19 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
     private MapView mapView;
     private GoogleMap gmap;
     private String UUID;
+    private String uName;
+    private String uDob;
+    private String uDistance;
+    private String uLat;
+    private String uLong;
+    private String uGender;
     private ImageView profileImg;
     private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyD3q4iAopnm9lr3CHbGXpfBFfnhBAY4w2c";
     private Button messageButton;
     private SharedPreferences mSharedPreferences;
     private ApplicationManagement mAppManager;
     private TextView nameAndAgeTextView;
+    private TextView distanceText;
 
 
     @Override
@@ -56,6 +70,7 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
         messageButton = findViewById(R.id.messageButton);
         mSharedPreferences = getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
         mAppManager = (ApplicationManagement) getApplicationContext();
+        distanceText = findViewById(R.id.distanceText);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
@@ -96,8 +111,19 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
        mapView.onResume();
         Intent intent = getIntent();
         UUID = intent.getStringExtra("name");
+        uName = intent.getStringExtra("realName");
+        uDob = intent.getStringExtra("dob");
+
+        int age = -Integer.valueOf(uDob.split("-")[0]) + 2019;
+
+        uDistance = intent.getStringExtra("distance");
+        uLat = intent.getStringExtra("lat");
+        uLong = intent.getStringExtra("long");
+        uGender = intent.getStringExtra("gen");
         profileImg = findViewById(R.id.profileImg);
-        nameAndAgeTextView.setText(mSharedPreferences+", 25(M)");
+        nameAndAgeTextView.setText(uName+", "+age+"("+uGender+")");
+
+        distanceText.setText(Double.valueOf(uDistance).intValue()+" km");
         Glide.with(getApplicationContext()).load("http://49.236.137.55/profile?id=" + UUID + ".jpeg").into(profileImg);
     }
 
@@ -133,7 +159,9 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
         gmap.setMinZoomPreference(12);
-        LatLng ny = new LatLng(40.7143528, -74.0059731);
+        LatLng ny = new LatLng(Double.valueOf(uLat), Double.valueOf(uLong));
+        googleMap.addMarker(new MarkerOptions().position(ny)
+                .title("Marker in Korea"));
         gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
 }

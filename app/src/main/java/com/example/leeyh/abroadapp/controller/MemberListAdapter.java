@@ -17,6 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
+import static com.example.leeyh.abroadapp.constants.StaticString.DOB;
+import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
+import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
+import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -65,6 +70,8 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
         // - replace the contents of the view with that element
         try {
             final JSONObject item = mItems.getJSONObject(position);
+
+
             holder.nameTextView.setText(item.getString(USER_NAME));
             Glide.with(mContext).load("http://49.236.137.55/profile?id=" + item.getString(USER_UUID) + ".jpeg")
                     .into(holder.mImageView);
