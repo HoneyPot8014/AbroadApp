@@ -36,6 +36,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.RECEIVE_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SIGNED_USER;
 import static com.example.leeyh.abroadapp.constants.StaticString.CACHE_SIZE;
+import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
 import static com.example.leeyh.abroadapp.constants.StaticString.PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.RECEIVED_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
@@ -76,7 +77,6 @@ public class ApplicationManagement extends Application implements SocketResponse
         final Intent intent = new Intent(getApplicationContext(), BackgroundChattingService.class);
         startService(intent);
         jobSetting();
-
     }
 
     public void autoSignIn(Socket socket) {
@@ -97,8 +97,8 @@ public class ApplicationManagement extends Application implements SocketResponse
         socket.on(SIGNED_USER, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.d("서비스 채팅으로 가세요", "call: ");
                 routeSocket(ROUTE_CHAT);
+                routeChatInBackground();
             }
         });
     }
@@ -115,6 +115,7 @@ public class ApplicationManagement extends Application implements SocketResponse
             try {
                 chatConnectData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
                 chatConnectData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+                chatConnectData.put(IS_FOREGROUND, true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -129,6 +130,29 @@ public class ApplicationManagement extends Application implements SocketResponse
                 }
             });
         }
+    }
+
+    public void routeChatInBackground() {
+        mSocket.off();
+        mSocket = mSocket.io().socket(ROUTE_CHAT).connect();
+        JSONObject chatConnectData = new JSONObject();
+        try {
+            chatConnectData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
+            chatConnectData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+            chatConnectData.put(IS_FOREGROUND, false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mSocket.emit(CHAT_CONNECT, chatConnectData);
+        mSocket.on(RECEIVE_MESSAGE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject receivedData = (JSONObject) args[0];
+                Intent service = new Intent(getApplicationContext(), BackgroundChattingService.class);
+                service.putExtra(RECEIVED_DATA, receivedData.toString());
+                startService(service);
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.O)

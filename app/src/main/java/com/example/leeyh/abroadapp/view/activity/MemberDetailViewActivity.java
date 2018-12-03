@@ -35,7 +35,6 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
         setContentView(R.layout.activity_member_detail_view);
 
 
-
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);

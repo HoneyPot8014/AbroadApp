@@ -43,7 +43,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
     private String mRoomName;
     private OnFragmentInteractionListener mListener;
     private ApplicationManagement mAppManager;
-    ListView mChatMessageListView;
+    private ListView mChatMessageListView;
     private ChatMessageAdapter mChatMessageAdaptor;
     private EditText mChatMessageEditText;
     private SharedPreferences mSharedPreferences;
@@ -171,5 +171,6 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
             e.printStackTrace();
         }
         mAppManager.emitRequestToServer(SEND_MESSAGE, sendMessageData);
+        mChatMessageEditText.setText("");
     }
 }

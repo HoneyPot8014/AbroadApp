@@ -132,7 +132,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
                 }.sendEmptyMessage(0);
                 break;
             case SIGNED_USER:
-                goToMainActivity();
+//                goToMainActivity();
                 break;
         }
     }

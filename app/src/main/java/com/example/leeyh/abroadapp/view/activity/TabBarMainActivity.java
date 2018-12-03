@@ -24,6 +24,7 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAI
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
+import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
@@ -92,6 +93,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         try {
             requestChatConnectData.put(USER_NAME, sharedPreferences.getString(USER_NAME, null));
             requestChatConnectData.put(USER_UUID, sharedPreferences.getString(USER_UUID, null));
+            requestChatConnectData.put(IS_FOREGROUND, true);
             mAppManager.emitRequestToServer(CHAT_CONNECT, requestChatConnectData);
         } catch (JSONException e) {
             e.printStackTrace();

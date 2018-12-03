@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -31,6 +32,7 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
         private ImageView mImageView;
         private TextView nameTextView;
         private TextView descriptionTextView;
+        private ImageView onButton;
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         private MemberListViewHolder(View v) {
@@ -39,6 +41,7 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
             mImageView.setClipToOutline(true);
             nameTextView = v.findViewById(R.id.member_name_text_view);
             descriptionTextView = v.findViewById(R.id.member_discription_text_view);
+            onButton = v.findViewById(R.id.onButtonImg);
         }
     }
 
@@ -68,6 +71,11 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
             holder.nameTextView.setText(item.getString(USER_NAME));
             Glide.with(mContext).load("http://49.236.137.55/profile?id=" + item.getString(USER_UUID) + ".jpeg")
                     .into(holder.mImageView);
+            if(item.getString(IS_FOREGROUND).equals("1")) {
+                holder.onButton.setImageResource(R.drawable.onbutton);
+            } else {
+                holder.onButton.setImageResource(R.drawable.offbutton);
+            }
 //            holder.descriptionTextView.setText(DataConverter.convertAddress(mContext
 //                    , Double.parseDouble(item.getString(LATITUDE)), Double.parseDouble(item.getString(LONGITUDE))));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
