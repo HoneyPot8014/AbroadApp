@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +60,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
 import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
+import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
@@ -81,6 +81,18 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     private BottomSheetDialog dialog;
     private int locData;
     private Button searchButton;
+    private OnNewChatRoomMaked mOnNewChatRoomMaked;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnChatListItemClicked) {
+            mOnNewChatRoomMaked = (OnNewChatRoomMaked) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnChatListItemClicked");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,8 +115,8 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
         dialog = new BottomSheetDialog(getActivity());
         dialog.setContentView(diag);
-        fragSearchButton =  view.findViewById(R.id.fragSearchButton);
-        searchButton =  diag.findViewById(R.id.searchButton);
+        fragSearchButton = view.findViewById(R.id.fragSearchButton);
+        searchButton = diag.findViewById(R.id.searchButton);
         seekBar = (SeekBar) diag.findViewById(R.id.locSeekBar);
 
         infoText = diag.findViewById(R.id.infoText);
@@ -119,16 +131,16 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             public void onItemClicked(View view, int position, final JSONObject item) {
                 try {
                     Intent intent = new Intent(getActivity(), MemberDetailViewActivity.class);
-                    intent.putExtra("name",item.getString(USER_UUID));
-                    intent.putExtra("realName",item.getString(USER_NAME));
-                    intent.putExtra("dob",item.getString(DOB));
-                    intent.putExtra("distance",item.getString(DISTANCE));
-                    intent.putExtra("lat",item.getString(LATITUDE));
-                    intent.putExtra("long",item.getString(LONGITUDE));
-                    intent.putExtra("gen",item.getString(GENDER));
+                    intent.putExtra("name", item.getString(USER_UUID));
+                    intent.putExtra("realName", item.getString(USER_NAME));
+                    intent.putExtra("dob", item.getString(DOB));
+                    intent.putExtra("distance", item.getString(DISTANCE));
+                    intent.putExtra("lat", item.getString(LATITUDE));
+                    intent.putExtra("long", item.getString(LONGITUDE));
+                    intent.putExtra("gen", item.getString(GENDER));
                     //intent.putExtra("onoff",item.getString());
 
-                    startActivity(intent);
+                    startActivityForResult(intent, 101);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -180,11 +192,10 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         });
 
 
-
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                                @Override
                                                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                                                   infoText.setText("location in "+i*5+" km");
+                                                   infoText.setText("location in " + i * 5 + " km");
                                                    locData = i * 5;
                                                }
 
@@ -200,7 +211,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                                            }
         );
 
-                recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
         DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(myDivider);
         getLocationPermission();
@@ -245,17 +256,17 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
                     }
                 }.sendEmptyMessage(0);
                 break;
-            case MAKE_CHAT_ROOM_SUCCESS:
-                JSONObject makeRoomSuccessObject = (JSONObject) object[0];
-                Log.d("룸생성", "onResponseReceived: " + makeRoomSuccessObject.optString("roomName"));
-                new Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        super.handleMessage(msg);
-                        Toast.makeText(mAppManager, "성공", Toast.LENGTH_SHORT).show();
-                    }
-                }.sendEmptyMessage(0);
-                break;
+//            case MAKE_CHAT_ROOM_SUCCESS:
+//                JSONObject makeRoomSuccessObject = (JSONObject) object[0];
+//                Log.d("룸생성", "onResponseReceived: " + makeRoomSuccessObject.optString("roomName"));
+//                new Handler(Looper.getMainLooper()) {
+//                    @Override
+//                    public void handleMessage(Message msg) {
+//                        super.handleMessage(msg);
+//                        Toast.makeText(mAppManager, "성공", Toast.LENGTH_SHORT).show();
+//                    }
+//                }.sendEmptyMessage(0);
+//                break;
             case MAKE_CHAT_ROOM_FAILED:
                 break;
         }
@@ -321,6 +332,7 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_SUCCESS);
         mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_FAILED);
     }
+
     /*public void onSearchClicked(View view) {
         BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         View diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
@@ -338,5 +350,19 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            if(data != null) {
+                if(data.getStringExtra(ROOM_NAME) != null) {
+                    String roomName = data.getStringExtra(ROOM_NAME);
+                    Log.d("이상해2", "onResponseReceived: " + roomName);
+                    mOnNewChatRoomMaked.onNewChatRoomCreated(roomName);
+                }
+            }
+        }
     }
 }

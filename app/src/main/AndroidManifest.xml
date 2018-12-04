@@ -25,13 +25,14 @@
         <!-- android:name=".background.BackgroundService" -->
         <!-- android:enabled="true" -->
         <!-- android:exported="true" /> -->
-        <activity android:name=".view.activity.SignInActivity">
+        <activity android:name=".view.activity.WelcomingActiviy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.activity.SignInActivity"/>
         <activity android:name=".view.activity.SignUpActivity" />
         <activity
             android:name=".view.activity.TabBarMainActivity"

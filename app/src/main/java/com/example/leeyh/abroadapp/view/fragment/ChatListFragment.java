@@ -45,6 +45,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
             JSONObject fromService = new JSONObject();
             try {
                 fromService.put(ROOM_NAME, getArguments().getString(ROOM_NAME));
+                Log.d("이상해4", "onResponseReceived: " + getArguments().getString(ROOM_NAME));
                 mChatListItemListener.onChatItemClicked(fromService);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRoomName = getArguments().getString(ROOM_NAME);
+            Log.d("이상해6", "onResponseReceived: " + mRoomName);
         }
         mAppManager = (ApplicationManagement) getContext().getApplicationContext();
         mAppManager.setOnResponseReceivedListener(this);

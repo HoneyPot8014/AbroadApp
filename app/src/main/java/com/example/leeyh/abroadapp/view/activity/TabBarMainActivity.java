@@ -1,12 +1,15 @@
 package com.example.leeyh.abroadapp.view.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
@@ -15,6 +18,7 @@ import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
 import com.example.leeyh.abroadapp.view.fragment.ChattingFragment;
 import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
 import com.example.leeyh.abroadapp.view.fragment.OnChatListItemClicked;
+import com.example.leeyh.abroadapp.view.fragment.OnNewChatRoomMaked;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +26,7 @@ import org.json.JSONObject;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
@@ -32,7 +37,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener, OnChatListItemClicked {
+public class TabBarMainActivity extends AppCompatActivity implements OnResponseReceivedListener, OnChatListItemClicked, OnNewChatRoomMaked {
 
     private ApplicationManagement mAppManager;
     private FragmentManager mFragmentManager;
@@ -77,6 +82,11 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onResponseReceived(String onEvent, Object[] object) {
         switch (onEvent) {
             case CHAT_CONNECT_SUCCESS:
@@ -110,9 +120,23 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     public void onChatItemClicked(JSONObject chatListModel) {
         try {
             String roomName = chatListModel.getString(ROOM_NAME);
+            Log.d("이상해5", "onResponseReceived: " + roomName);
             mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).addToBackStack(null).commitAllowingStateLoss();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 101) {
+//            Toast.makeText(mAppManager, data.getStringExtra(MAKE_CHAT_ROOM_SUCCESS), Toast.LENGTH_SHORT).show();
+//        }
+    }
+
+    @Override
+    public void onNewChatRoomCreated(String roomName) {
+        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
     }
 }
