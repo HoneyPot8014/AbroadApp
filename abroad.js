@@ -7,6 +7,7 @@ const async = require('async')
 const fs = require('fs');
 const uuid1 = require('uuid/v1');
 const uuid2 = require('uuid/v4');
+const _ = require('lodash');
 const sqlConnection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -45,7 +46,7 @@ io.on('connection', (socket) => {
         });
       } else {
         for (var i in rows) {
-          if (rows[i].e_mail == userInfo.e_mail) {
+          if (rows[i].userUuid == userInfo.userUuid) {
             if (rows[i].password == userInfo.password && rows[i].userUuid == userInfo.userUuid) {
               socket.emit('signedUser', {
                 result: 'ok'
@@ -66,8 +67,8 @@ var signIn = io.of('/signIn');
 signIn.on('connection', (socket) => {
   console.log('*!*  SIGN IN SOCKET.ID >>' + socket.id + '  *!*!');
   socket.on('checkSignedUser', (userInfo) => {
-    console.log(TAG + 'sing in checkSignedUser client emit');
-    sqlConnection.query('SELECT userName, password, userUuid FROM member', (err, rows, fields) => {
+    console.log(TAG + 'signIn checkSignedUser client emit');
+    sqlConnection.query('SELECT userName, e_mail, password, userUuid FROM member', (err, rows, fields) => {
       if (err) {
         console.log(err);
         socket.emit('sqlError', {
@@ -75,12 +76,12 @@ signIn.on('connection', (socket) => {
         });
       } else {
         for (var i in rows) {
-          if (rows[i].e_mail == userInfo.e_mail) {
+          if (rows[i].userUuid == userInfo.userUuid) {
             if (rows[i].password == userInfo.password && rows[i].userUuid == userInfo.userUuid) {
               socket.emit('signedUser', {
                 result: 'ok'
               });
-              console.log('ok - signed User');
+              console.log('ok - no name signed User');
             }
           }
         }
@@ -215,9 +216,7 @@ chat.on('connection', (socket) => {
   console.log(socket.adapter.rooms);
   console.log('!*!*  CHAT SOCKET.ID >>' + socket.id + '  !*!*');
   socket.on('chatConnected', (userInfo) => {
-    console.log('헤이1');
     if (userInfo != null && userInfo != undefined) {
-      console.log('헤이2');
       try {
         members[userInfo.userUuid] = socket;
         console.log('헤이3' + userInfo.userUuid);
@@ -230,7 +229,20 @@ chat.on('connection', (socket) => {
               var userRoom = JSON.parse(rows[0].room);
               socket.join(userRoom);
             }
-            socket.emit('chatConnectedSuccess')
+            var foreground;
+            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+            if (userInfo.foreground == true) {
+              foreground = "1";
+            } else {
+              foreground = "0";
+            }
+            sqlConnection.query('UPDATE member set foreground = ? WHERE userUuid = ?', [foreground, userInfo.userUuid], (err, rows, fields) => {
+              if (err) {
+                console.log(err);
+              } else {
+                socket.emit('chatConnectedSuccess');
+              }
+            })
           }
         })
       } catch (exception) {
@@ -245,105 +257,181 @@ chat.on('connection', (socket) => {
     }
   }) //chatConnected event Handle
   socket.on('makeChatRoom', (makeRoomData) => {
-    var makeRoomFlag = true;
-    var asyncParallelList = new Array();
-    sqlConnection.query('commit');
-    var stringifyIds = new Array();
-    for (let i = 0; i < makeRoomData.length; i++) {
-      if (members[makeRoomData[i]] == undefined || members[makeRoomData[i]] == null) {
-        console.log('유저 접속 아님');
-        socket.emit('makeRoomFailed');
-        makeRoomFlag = false;
-        return;
-      }
-      stringifyIds.push(JSON.stringify(makeRoomData[i]))
-    }
-    if (makeRoomFlag) {
-      var roomName = uuid2();
-      for (var i = 0; i < makeRoomData.length; i++) {
-        ((i) => {
-          asyncParallelList.push((callback) => {
-            sqlConnection.query('SELECT room FROM member WHERE userUuid = ?', makeRoomData[i], (err, rows, fields) => {
-              if (err) {
-                console.log(err);
-                callback('sqlError');
-              } else {
-                var updateParams = new Array();
-                if (rows[0].room == null) {
-                  var userRoom = new Array();
-                  userRoom.push(roomName);
-                  updateParams.push(JSON.stringify(userRoom));
-                  updateParams.push(makeRoomData[i]);
-                } else {
-                  var userRoom = JSON.parse(rows[0].room);
-                  userRoom.push(roomName);
-                  updateParams.push(JSON.stringify(userRoom));
-                  updateParams.push(makeRoomData[i]);
-                }
-                console.log(updateParams);
-                sqlConnection.query('UPDATE member SET room = ? WHERE userUuid = ?', updateParams, (err, rows, fields) => {
-                  if (err) {
-                    console.log(err);
-                    callback('sqlError');
-                  } else {
-                    callback(null, 'success');
-                  }
-                })
-              }
-            })
-          })
-        })(i);
-      }
-      asyncParallelList.push((callback) => {
-        console.log(stringifyIds.join(','));
-        var uuids = new Array();
-        sqlConnection.query('SELECT userUuid FROM member WHERE userUuid IN (' + stringifyIds.join(',') + ')', (err, rows, fields) => {
-          if (err) {
-            console.log(err);
-            callback('sqlError');
-          } else {
-            for (let i = 0; i < rows.length; i++) {
-              uuids.push(rows[i].userUuid);
-            }
-            sqlConnection.query('INSERT INTO chatList VALUES(?, ?, ?)', [roomName, JSON.stringify(uuids), JSON.stringify(makeRoomData)], (err, rows, fields) => {
-              if (err) {
-                console.log(err);
-                callback('sqlError')
-              } else {
-                callback(null, 'success');
-              }
-            })
-          }
-        })
-      })
-      async.parallel(asyncParallelList, (err, result) => {
-        if (err) {
-          console.log(err);
-          console.log('룸만들기 실패');
-          sqlConnection.query('rollback', (err, rows, fields) => {
-            socket.emit('sqlError');
-          })
-        } else {
-          console.log('룸만들기 성공');
-          for (let i = 0; i < makeRoomData.length; i++) {
-            if (i == 0) {
-              members[makeRoomData[i]].join(roomName);
-              socket.emit('makeRoomSuccess', {
-                roomName: roomName,
-                joinMembers: makeRoomData
-              });
-            } else {
-              members[makeRoomData[i]].join(roomName);
-              members[makeRoomData[i]].emit('newRoomChat', {
-                roomName: roomName,
-                joinMembers: makeRoomData
-              });
-            }
-          }
-        }
-      })
-    }
-  }) //EVENT MAKE CHAT ROOM END
+    console.log('룸 만들기 요청');
+     var makeRoomFlag = true;
+     var asyncParallelList = new Array();
+     var asnycWaterfallListl = new Array();
+     sqlConnection.query('commit');
+     var stringifyIds = new Array();
+     for (let i = 0; i < makeRoomData.length; i++) {
+       if (members[makeRoomData[i]] == undefined || members[makeRoomData[i]] == null) {
+         console.log('유저 접속 아님');
+         socket.emit('makeRoomFailed');
+         makeRoomFlag = false;
+         return;
+       }
+       stringifyIds.push(JSON.stringify(makeRoomData[i]))
+     }
+     if (makeRoomFlag) {
+       var roomName = uuid2();
+       for (var i = 0; i < makeRoomData.length; i++) {
+         ((i) => {
+           asyncParallelList.push((callback) => {
+             sqlConnection.query('SELECT room FROM member WHERE userUuid = ?', makeRoomData[i], (err, rows, fields) => {
+               if (err) {
+                 console.log(err);
+                 callback('sqlError');
+               } else {
+                 var updateParams = new Array();
+                 if (rows[0].room == null) {
+                   var userRoom = new Array();
+                   userRoom.push(roomName);
+                   updateParams.push(JSON.stringify(userRoom));
+                   updateParams.push(makeRoomData[i]);
+                 } else {
+                   var userRoom = JSON.parse(rows[0].room);
+                   userRoom.push(roomName);
+                   updateParams.push(JSON.stringify(userRoom));
+                   updateParams.push(makeRoomData[i]);
+                 }
+                 console.log(updateParams);
+                 sqlConnection.query('UPDATE member SET room = ? WHERE userUuid = ?', updateParams, (err, rows, fields) => {
+                   if (err) {
+                     console.log(err);
+                     callback('sqlError');
+                   } else {
+                     callback(null, 'success');
+                   }
+                 })
+               }
+             })
+           })
+         })(i);
+       }
+       asyncParallelList.push((callback) => {
+         console.log(stringifyIds.join(','));
+         var userName = new Array();
+         sqlConnection.query('SELECT userName FROM member WHERE userUuid IN (' + stringifyIds.join(',') + ')', (err, rows, fields) => {
+           if (err) {
+             console.log(err);
+             callback('sqlError');
+           } else {
+             for (let i = 0; i < rows.length; i++) {
+               userName.push(rows[i].userName);
+             }
+             sqlConnection.query('INSERT INTO chatList VALUES(?, ?, ?)', [roomName, JSON.stringify(makeRoomData), JSON.stringify(userName)], (err, rows, fields) => {
+               if (err) {
+                 console.log(err);
+                 callback('sqlError')
+               } else {
+                 callback(null, userName);
+               }
+             })
+           }
+         })
+       })
+       sqlConnection.query('SELECT room FROM member WHERE userUuid =?', makeRoomData[0], (err, rows, fileds) => {
+         if(err) {
+           console.log(err);
+           socket.emit('sqlError');
+         } else {
+           console.log('1번');
+           if(rows[0].room != null || rows[0].room != undefined) {
+             var userRoomList = JSON.parse(rows[0].room);
+             for(let k = 0; k < userRoomList.length; k++) {
+               asnycWaterfallListl.push((callback) => {
+                 sqlConnection.query('SELECT * FROM chatList WHERE roomName = ?', userRoomList[k], (err, rows, fields) => {
+                   if(err){
+                     console.log(err);
+                   } else {
+                     var listUuid = JSON.parse(rows[0].memberUuid);
+                     var listUuidToSet = new Set(listUuid);
+                     var memberUuidToSet = new Set(makeRoomData);
+                     if(_.isEqual(listUuidToSet, memberUuidToSet)) {
+                       console.log('중복 룸이여서 생성 안함.');
+                       socket.emit('makeRoomSuccess', {roomName: userRoomList[k], joinMembers: rows[0].joinMembers});
+                       callback('existRoom');
+                     } else {
+                       callback(null, 'ok');
+                     }
+                   }
+                 })
+               })
+             }
+             async.waterfall(asnycWaterfallListl, (err) => {
+               if(err) {
+                 console.log(err);
+               } else {
+                 async.parallel(asyncParallelList, (err, result) => {
+                   if (err) {
+                     console.log(err);
+                     console.log('룸만들기 실패');
+                     sqlConnection.query('rollback', (err, rows, fields) => {
+                       socket.emit('sqlError');
+                     })
+                   } else {
+                     console.log('룸만들기 성공');
+                     for (let i = 0; i < makeRoomData.length; i++) {
+                       if (i == 0) {
+                         members[makeRoomData[i]].join(roomName);
+                         socket.emit('makeRoomSuccess', {
+                           roomName: roomName,
+                           memberUuid: makeRoomData,
+                           joinMembers: result[result.length - 1]
+                         });
+                       } else {
+                         members[makeRoomData[i]].join(roomName);
+                         members[makeRoomData[i]].emit('newRoomChat', {
+                           roomName: roomName,
+                           memberUuid: makeRoomData,
+                           joinMembers: result[result.length - 1]
+                         });
+                       }
+                     }
+                   }
+                 })
+               }
+             })
+           } else {
+             async.waterfall(asnycWaterfallListl, (err) => {
+               if(err) {
+                 console.log(err);
+               } else {
+                 async.parallel(asyncParallelList, (err, result) => {
+                   if (err) {
+                     console.log(err);
+                     console.log('룸만들기 실패');
+                     sqlConnection.query('rollback', (err, rows, fields) => {
+                       socket.emit('sqlError');
+                     })
+                   } else {
+                     console.log('룸만들기 성공');
+                     for (let i = 0; i < makeRoomData.length; i++) {
+                       if (i == 0) {
+                         members[makeRoomData[i]].join(roomName);
+                         socket.emit('makeRoomSuccess', {
+                           roomName: roomName,
+                           memberUuid: makeRoomData,
+                           joinMembers: result[result.length - 1]
+                         });
+                       } else {
+                         members[makeRoomData[i]].join(roomName);
+                         members[makeRoomData[i]].emit('newRoomChat', {
+                           roomName: roomName,
+                           memberUuid: makeRoomData,
+                           joinMembers: result[result.length - 1]
+                         });
+                       }
+                     }
+                   }
+                 })
+               }
+             })
+           }
+         }
+       })
+     }
+   }) //EVENT MAKE CHAT ROOM END
   socket.on('chatList', (chatListData) => {
     if (chatListData != undefined && chatListData != null && chatListData.userUuid != null && chatListData.userUuid != undefined) {
       var chatListParams = '%' + chatListData.userUuid + '%';
@@ -360,6 +448,7 @@ chat.on('connection', (socket) => {
                 asyncParallelFunct.push((callback) => {
                   var result = {
                     roomName: rows[i].roomName,
+                    memberUuid: JSON.parse(rows[i].memberUuid),
                     // joinMembers: rows[i].joinMembers,
                     joinMembers: JSON.parse(rows[i].joinMembers),
                     lastMessage: undefined
@@ -403,34 +492,29 @@ chat.on('connection', (socket) => {
     }
   })
   socket.on('chatMessage', (chatMessageData) => {
-    sqlConnection.query('SELECT sendMessageId, timestamp, message FROM chatMessage WHERE room = ? ORDER BY timestamp', chatMessageData.roomName, (err, rows, fields) => {
+    sqlConnection.query('SELECT sendMessageId, sendMessageUuid, timestamp, message FROM chatMessage WHERE room = ? ORDER BY timestamp', chatMessageData.roomName, (err, rows, fields) => {
       if (err) {
         socket.emit('sqlError');
         console.log(err);
       } else {
-        console.log('여기여기' + rows[0]);
         socket.emit('chatMessageSuccess', rows);
       }
     })
   })
   socket.on('sendMessage', (messageData) => {
-    sqlConnection.query('INSERT INTO chatMessage(sendMessageId, room, message) VALUES(?, ?, ?)', [messageData.userId, messageData.roomName, messageData.message], (err, rows, fields) => {
+    sqlConnection.query('INSERT INTO chatMessage(sendMessageId, sendMessageUuid, room, message) VALUES(?, ?, ?, ?)', [messageData.userName, messageData.userUuid, messageData.roomName, messageData.message], (err, rows, fields) => {
       if (err) {
         console.log(err);
         socket.emit('sendMessageFailed');
       } else {
-        if (members[messageData.userId] === socket) {
-          console.log('true');
-        } else {
-          console.log('false');
-        }
-        console.log(messageData.roomName);
+        console.log('0000 -> 메세지 보내기에서 보내려고 하는 룸네임2' + messageData.roomName);
         io.of('/chat').to(messageData.roomName).adapter.clients((err, clients) => {
           console.log('접속된 소켓들!         ' + clients);
         })
         socket.emit('sendMessageSuccess');
         chat.to(messageData.roomName).emit('receiveMessage', {
-          sendMessageId: messageData.userId,
+          sendMessageId: messageData.userName,
+          sendMessageUuid: messageData.userUuid,
           roomName: messageData.roomName,
           message: messageData.message
         });
@@ -531,9 +615,6 @@ map.on('connection', (socket) => {
       }
     })
   })
-
-
-
   socket.on('saveLocation', (locationData) => {
     console.log(TAG + 'user emit saveLocation' + locationData);
     async.waterfall([
@@ -594,7 +675,7 @@ map.on('connection', (socket) => {
         selectUserLocationParams.push(locationData.latitude);
         selectUserLocationParams.push(locationData.distance);
         selectUserLocationParams.push(locationData.userUuid);
-        sqlConnection.query('select userName, userUuid, distance, latitude, longitude from member Natural join (SELECT *,(6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude))))AS distance FROM userLocation HAVING distance <= ? ORDER BY distance LIMIT 0,5000) AS T WHERE userUuid <> ?', selectUserLocationParams, (err, rows, fields) => {
+        sqlConnection.query('select userName, userUuid, distance, latitude, longitude, gender, DOB, foreground from member Natural join (SELECT *,(6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude))))AS distance FROM userLocation HAVING distance <= ? ORDER BY distance LIMIT 0,5000) AS T WHERE userUuid <> ?', selectUserLocationParams, (err, rows, fields) => {
           if (err) {
             console.log(err);
             console.log('에러4');
