@@ -58,29 +58,7 @@ public class NearLocationItemView extends LinearLayout {
 
         RequestProfileAndCaching requestProfileAndCaching = new RequestProfileAndCaching(mImageView, context);
         requestProfileAndCaching.execute(id);
-//        if(mAppStatic.getBitmapFromMemoryCache(id) == null) {
-//            Network.getProfile(mAppStatic, context, mImageView, id);
-//        } else {
-//            mImageView.setImageBitmap(mAppStatic.getBitmapFromMemoryCache(id));
-//        }
-//        Glide.with(context).load("http://49.236.137.55/profile?id=" + id + ".jpeg").into(mImageView);
-//        Html.ImageGetter imageGetter = new Html.ImageGetter() {
-//            @Override
-//            public Drawable getDrawable(String s) {
-//                try {
-//                    InputStream inputStream = (InputStream) new URL(s).getContent();
-//                    Drawable drawable = Drawable.createFromStream(inputStream, "test");
-//                    mImageView.setImageDrawable(drawable);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                Log.d("이미지", "getDrawable: " + s);
-////                Bitmap bitmap = BitmapFactory.decodeFile(s);
-////                mImageView.setImageBitmap(bitmap);
-//                return null;
-//            }
-//        };
-//        imageGetter.getDrawable("http://49.236.137.55/profile?id=" + id + ".jpeg");
+
     }
 
     public void setNickName(String nickName) {
