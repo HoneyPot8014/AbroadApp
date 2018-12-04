@@ -32,24 +32,17 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class ChatListFragment extends Fragment implements OnResponseReceivedListener {
 
-    private ListView mChattingListListView;
     private ChatListAdapter mChatListAdapter;
     private ApplicationManagement mAppManager;
     private SharedPreferences mSharedPreferences;
-    private OnChatListItemClicked mChatListItemListener;
+    private OnChatListItemClicked mChatListListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            JSONObject fromService = new JSONObject();
-            try {
-                fromService.put(ROOM_NAME, getArguments().getString(ROOM_NAME));
-                Log.d("이상해4", "onResponseReceived: " + getArguments().getString(ROOM_NAME));
-                mChatListItemListener.onChatItemClicked(fromService);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            String roomName = getArguments().getString(ROOM_NAME);
+            mChatListListener.onChatNewChatMessage(roomName);
         }
     }
 
@@ -63,13 +56,13 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         getChattingList();
         mAppManager.onResponseFromServer(CHAT_LIST_SUCCESS);
         mChatListAdapter = new ChatListAdapter();
-        mChattingListListView = rootView.findViewById(R.id.chatting_list_view);
-        mChattingListListView.setAdapter(mChatListAdapter);
-        mChattingListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListView chattingListListView = rootView.findViewById(R.id.chatting_list_view);
+        chattingListListView.setAdapter(mChatListAdapter);
+        chattingListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 JSONObject chatListModel = (JSONObject) mChatListAdapter.getItem(i);
-                mChatListItemListener.onChatItemClicked(chatListModel);
+                mChatListListener.onChatItemClicked(chatListModel);
             }
         });
 
@@ -86,7 +79,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnChatListItemClicked) {
-            mChatListItemListener = (OnChatListItemClicked) context;
+            mChatListListener = (OnChatListItemClicked) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnChatListItemClicked");

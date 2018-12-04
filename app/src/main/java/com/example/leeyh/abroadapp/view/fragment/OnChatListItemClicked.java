@@ -5,4 +5,5 @@ import org.json.JSONObject;
 public interface OnChatListItemClicked {
 
     void onChatItemClicked(JSONObject chatListModel);
+    void onChatNewChatMessage(String roomName);
 }

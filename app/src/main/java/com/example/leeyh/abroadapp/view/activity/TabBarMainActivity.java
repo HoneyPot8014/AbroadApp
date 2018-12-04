@@ -6,16 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
-import com.example.leeyh.abroadapp.view.fragment.ChattingFragment;
 import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
 import com.example.leeyh.abroadapp.view.fragment.OnChatListItemClicked;
 import com.example.leeyh.abroadapp.view.fragment.OnNewChatRoomMaked;
@@ -26,7 +23,6 @@ import org.json.JSONObject;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAILED;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
@@ -82,6 +78,15 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra(MESSAGE_FROM_SERVICE) != null) {
+            String roomName = intent.getStringExtra(ROOM_NAME);
+            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
     }
@@ -120,11 +125,21 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
     public void onChatItemClicked(JSONObject chatListModel) {
         try {
             String roomName = chatListModel.getString(ROOM_NAME);
-            Log.d("이상해5", "onResponseReceived: " + roomName);
-            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).addToBackStack(null).commitAllowingStateLoss();
+//            mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChattingFragment.newChattingFragmentInstance(roomName)).addToBackStack(null).commitAllowingStateLoss();
+            Intent goToChatting = new Intent(getApplicationContext(), ChattingActivity.class);
+            goToChatting.putExtra(ROOM_NAME, roomName);
+            startActivity(goToChatting);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onChatNewChatMessage(String roomName) {
+        Intent goToChattingActivity = new Intent(getApplicationContext(), ChattingActivity.class);
+        goToChattingActivity.putExtra(ROOM_NAME, roomName);
+        goToChattingActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(goToChattingActivity);
     }
 
     @Override

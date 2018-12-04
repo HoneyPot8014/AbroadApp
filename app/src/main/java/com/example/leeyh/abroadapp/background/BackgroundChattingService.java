@@ -1,5 +1,6 @@
 package com.example.leeyh.abroadapp.background;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -15,10 +16,13 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.example.leeyh.abroadapp.view.activity.ChattingActivity;
 import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
@@ -32,8 +36,6 @@ public class BackgroundChattingService extends Service {
 
     private NotificationManager notificationManager;
     private NotificationCompat.Builder builder;
-    private PendingIntent pendingIntent;
-    private Intent notificationIntent;
 
     public BackgroundChattingService() {
     }
@@ -52,11 +54,6 @@ public class BackgroundChattingService extends Service {
             notificationManager.createNotificationChannel(mChannel);
         }
         builder = new NotificationCompat.Builder(getApplicationContext(), "channel");
-        notificationIntent = new Intent(getApplicationContext()
-                , TabBarMainActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
     }
 
     @Override
@@ -73,10 +70,22 @@ public class BackgroundChattingService extends Service {
                     String roomName = jsonObject.getString(ROOM_NAME);
                     String message = jsonObject.getString(MESSAGE);
                     if(!sharedPreferences.getString(USER_NAME, null).equals(sendMessageId)) {
+
+                        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
+                        ActivityManager.RunningTaskInfo runningTaskInfo = info.get(0);
+                        Intent notificationIntent;
+                        if(runningTaskInfo.topActivity.getClassName().equals("com.example.leeyh.abroadapp.view.activity.ChattingActivity")) {
+                            notificationIntent = new Intent(getApplicationContext(), ChattingActivity.class);
+                        } else {
+                            notificationIntent = new Intent(getApplicationContext(), TabBarMainActivity.class);
+                        }
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         notificationIntent.putExtra(MESSAGE_FROM_SERVICE, MESSAGE_FROM_SERVICE);
                         notificationIntent.putExtra(ROOM_NAME, roomName);
                         int requestID = (int) System.currentTimeMillis();
-                        pendingIntent = PendingIntent.getActivity(getApplicationContext()
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext()
                                 , requestID
                                 , notificationIntent
                                 , PendingIntent.FLAG_UPDATE_CURRENT);

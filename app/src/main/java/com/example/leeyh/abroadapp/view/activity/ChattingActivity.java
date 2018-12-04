@@ -1,17 +1,13 @@
-package com.example.leeyh.abroadapp.view.fragment;
+package com.example.leeyh.abroadapp.view.activity;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -25,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_MESSAGE_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.RECEIVE_MESSAGE;
@@ -35,79 +30,62 @@ import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE_FAI
 import static com.example.leeyh.abroadapp.constants.SocketEvent.SEND_MESSAGE_SUCCESS;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class ChattingFragment extends Fragment implements OnResponseReceivedListener {
+public class ChattingActivity extends AppCompatActivity implements OnResponseReceivedListener{
 
     private String mRoomName;
-    private OnFragmentInteractionListener mListener;
+    private ChattingFragment.OnFragmentInteractionListener mListener;
     private ApplicationManagement mAppManager;
     private ListView mChatMessageListView;
     private ChatMessageAdapter mChatMessageAdaptor;
     private EditText mChatMessageEditText;
     private SharedPreferences mSharedPreferences;
 
-    public static ChattingFragment newChattingFragmentInstance(String param1) {
-        ChattingFragment fragment = new ChattingFragment();
-        Bundle args = new Bundle();
-        args.putString(ROOM_NAME, param1);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mRoomName = getArguments().getString(ROOM_NAME);
-            Log.d("이상해6", "onResponseReceived: " + mRoomName);
+        setContentView(R.layout.activity_chatting);
+
+        if(getIntent().getStringExtra(ROOM_NAME) != null) {
+            mRoomName = getIntent().getStringExtra(ROOM_NAME);
         }
-        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
+
+        mAppManager = (ApplicationManagement) getApplicationContext().getApplicationContext();
         mAppManager.setOnResponseReceivedListener(this);
         mAppManager.routeSocket(ROUTE_CHAT);
-        mSharedPreferences = getContext().getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        mSharedPreferences = getApplicationContext().getSharedPreferences(USER_INFO, MODE_PRIVATE);
         mChatMessageAdaptor = new ChatMessageAdapter();
-        getChattingMessage();
         mAppManager.onResponseFromServer(CHAT_MESSAGE_SUCCESS);
         mAppManager.onResponseFromServer(SEND_MESSAGE_SUCCESS);
         mAppManager.onResponseFromServer(SEND_MESSAGE_FAILED);
         mAppManager.onResponseFromServer(RECEIVE_MESSAGE);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chatting, container, false);
-        mChatMessageListView = view.findViewById(R.id.room_chat_message_list_view);
+        mChatMessageListView = findViewById(R.id.room_chat_message_list_view);
         mChatMessageListView.setAdapter(mChatMessageAdaptor);
-        mChatMessageEditText = view.findViewById(R.id.room_chat_message_edit_text);
-        Button sendMessageButton = view.findViewById(R.id.room_chat_send_button);
+        mChatMessageEditText = findViewById(R.id.room_chat_message_edit_text);
+        Button sendMessageButton = findViewById(R.id.room_chat_send_button);
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMessage();
             }
         });
-        return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        getChattingMessage();
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    protected void onStop() {
+        super.onStop();
+        Log.d("hel", "onStop: ");
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    protected void onResume() {
+        super.onResume();
+        Log.d("hel", "onResume: ");
     }
 
     @Override
@@ -145,11 +123,6 @@ public class ChattingFragment extends Fragment implements OnResponseReceivedList
             case SEND_MESSAGE_FAILED:
                 break;
         }
-
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 
     public void getChattingMessage() {
