@@ -13,14 +13,16 @@
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:padding="2dp"
         app:cardBackgroundColor="@color/cardview_light_background"
         app:cardCornerRadius="8dp"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="8dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/memberImage"
+            android:id="@+id/countryImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:background="@drawable/rounded"
@@ -31,17 +33,15 @@
     </android.support.v7.widget.CardView>
 
     <TextView
-        android:id="@+id/member_discription_text_view"
+        android:id="@+id/dateTextView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/hel_basic"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/aller_rg"
+        android:text="2016.02.23 ~ 2016.07.10"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/cardView"
@@ -54,20 +54,26 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="BUM, 25"
-        android:textSize="18sp"
+        android:fontFamily="@font/aller_bd"
+        android:text="Japan"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/onButtonImg"
+        app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/onButtonImg"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="14dp"
+    <TextView
+        android:id="@+id/budgetTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/aller_bd"
+        android:text="$1000"
+        android:textColor="@color/textColor"
+        android:textSize="30sp"
         app:layout_constraintStart_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/onbutton"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+
 </android.support.constraint.ConstraintLayout>
