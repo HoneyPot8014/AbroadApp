@@ -49,17 +49,10 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 public class MemberDetailViewActivity extends AppCompatActivity implements OnMapReadyCallback, OnResponseReceivedListener {
     //implements OnMapReadyCallback
     private MapView mapView;
-    private GoogleMap gmap;
     private String UUID;
-    private String uName;
-    private String uDob;
-    private String uDistance;
     private String uLat;
     private String uLong;
-    private String uGender;
-    private ImageView profileImg;
     private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyD3q4iAopnm9lr3CHbGXpfBFfnhBAY4w2c";
-    private Button messageButton;
     private SharedPreferences mSharedPreferences;
     private ApplicationManagement mAppManager;
     private TextView nameAndAgeTextView;
@@ -71,7 +64,7 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_detail_view);
         nameAndAgeTextView = findViewById(R.id.nameAndAgeTextView);
-        messageButton = findViewById(R.id.messageButton);
+        Button messageButton = findViewById(R.id.messageButton);
         mSharedPreferences = getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
         mAppManager = (ApplicationManagement) getApplicationContext();
         mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_SUCCESS);
@@ -119,16 +112,16 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
         mapView.onResume();
         Intent intent = getIntent();
         UUID = intent.getStringExtra("name");
-        uName = intent.getStringExtra("realName");
-        uDob = intent.getStringExtra("dob");
+        String uName = intent.getStringExtra("realName");
+        String uDob = intent.getStringExtra("dob");
 
         int age = -Integer.valueOf(uDob.split("-")[0]) + 2019;
 
-        uDistance = intent.getStringExtra("distance");
+        String uDistance = intent.getStringExtra("distance");
         uLat = intent.getStringExtra("lat");
         uLong = intent.getStringExtra("long");
-        uGender = intent.getStringExtra("gen");
-        profileImg = findViewById(R.id.profileImg);
+        String uGender = intent.getStringExtra("gen");
+        ImageView profileImg = findViewById(R.id.profileImg);
         nameAndAgeTextView.setText(uName + ", " + age + "(" + uGender + ")");
 
         distanceText.setText(Double.valueOf(uDistance).intValue() + " km");
@@ -168,7 +161,7 @@ public class MemberDetailViewActivity extends AppCompatActivity implements OnMap
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        gmap = googleMap;
+        GoogleMap gmap = googleMap;
         gmap.setMinZoomPreference(12);
         LatLng ny = new LatLng(Double.valueOf(uLat), Double.valueOf(uLong));
         googleMap.addMarker(new MarkerOptions().position(ny)

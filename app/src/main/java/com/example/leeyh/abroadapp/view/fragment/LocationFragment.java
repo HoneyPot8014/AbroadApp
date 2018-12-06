@@ -225,7 +225,6 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         return view;
     }
 
@@ -359,7 +358,6 @@ public class LocationFragment extends Fragment implements OnResponseReceivedList
             if(data != null) {
                 if(data.getStringExtra(ROOM_NAME) != null) {
                     String roomName = data.getStringExtra(ROOM_NAME);
-                    Log.d("이상해2", "onResponseReceived: " + roomName);
                     mOnNewChatRoomMaked.onNewChatRoomCreated(roomName);
                 }
             }

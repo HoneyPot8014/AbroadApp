@@ -37,7 +37,6 @@ import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 public class ChattingActivity extends AppCompatActivity implements OnResponseReceivedListener{
 
     private String mRoomName;
-    private ChattingFragment.OnFragmentInteractionListener mListener;
     private ApplicationManagement mAppManager;
     private ListView mChatMessageListView;
     private ChatMessageAdapter mChatMessageAdaptor;
