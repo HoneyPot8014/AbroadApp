@@ -17,6 +17,7 @@ import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
 import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
 import com.example.leeyh.abroadapp.view.fragment.OnChatListItemClicked;
 import com.example.leeyh.abroadapp.view.fragment.OnNewChatRoomMaked;
+import com.example.leeyh.abroadapp.view.fragment.TravelPlanFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
+import static com.example.leeyh.abroadapp.constants.StaticString.TRAVEL_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
@@ -76,6 +78,19 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
             String roomName = getIntent().getStringExtra(ROOM_NAME);
             mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
         }
+
+        Button manage_travel_tab_button = findViewById(R.id.manage_travel_tab_button);
+        manage_travel_tab_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof ChatListFragment)
+                    return;
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new TravelPlanFragment(),TRAVEL_LIST_FRAGMENT ).commitAllowingStateLoss();
+
+            }
+        });
+
+
     }
 
     @Override

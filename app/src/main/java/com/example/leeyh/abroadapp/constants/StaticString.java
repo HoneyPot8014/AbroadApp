@@ -26,6 +26,7 @@ public class StaticString {
     public static final String JOIN_MEMBERS = "joinMembers";
     public static final String LOCATION_FRAGMENT = "locationFragment";
     public static final String CHAT_LIST_FRAGMENT = "chatListFragment";
+    public static final String TRAVEL_LIST_FRAGMENT = "travelListFragment";
     public static final String MESSAGE = "message";
     public static final String LAST_MESSAGE = "lastMessage";
     public static final String SEND_MESSAGE_ID = "sendMessageId";
