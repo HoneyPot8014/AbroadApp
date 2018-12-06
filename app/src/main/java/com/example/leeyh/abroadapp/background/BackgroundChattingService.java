@@ -13,10 +13,9 @@ import android.media.RingtoneManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateUtils;
-import android.util.Log;
 
-import com.example.leeyh.abroadapp.view.activity.ChattingActivity;
 import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 
 import org.json.JSONException;
@@ -69,41 +68,44 @@ public class BackgroundChattingService extends Service {
                     String sendMessageId = jsonObject.getString(SEND_MESSAGE_ID);
                     String roomName = jsonObject.getString(ROOM_NAME);
                     String message = jsonObject.getString(MESSAGE);
-                    if(!sharedPreferences.getString(USER_NAME, null).equals(sendMessageId)) {
+                    if (!sharedPreferences.getString(USER_NAME, null).equals(sendMessageId)) {
 
                         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                         List<ActivityManager.RunningTaskInfo> info = activityManager.getRunningTasks(1);
                         ActivityManager.RunningTaskInfo runningTaskInfo = info.get(0);
-                        Intent notificationIntent;
-                        if(runningTaskInfo.topActivity.getClassName().equals("com.example.leeyh.abroadapp.view.activity.ChattingActivity")) {
-                            notificationIntent = new Intent(getApplicationContext(), ChattingActivity.class);
-                        } else {
-                            notificationIntent = new Intent(getApplicationContext(), TabBarMainActivity.class);
-                        }
-                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        notificationIntent.putExtra(MESSAGE_FROM_SERVICE, MESSAGE_FROM_SERVICE);
-                        notificationIntent.putExtra(ROOM_NAME, roomName);
-                        int requestID = (int) System.currentTimeMillis();
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext()
-                                , requestID
-                                , notificationIntent
-                                , PendingIntent.FLAG_UPDATE_CURRENT);
-
-                        wakeLock.acquire(DateUtils.SECOND_IN_MILLIS * 5);
-                        builder.setContentTitle(sendMessageId) // required
-                                .setContentText(message)  // required
-                                .setDefaults(Notification.DEFAULT_ALL) // 알림, 사운드 진동 설정
-                                .setAutoCancel(true) // 알림 터치시 반응 후 삭제
-                                .setSound(RingtoneManager
-                                        .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                                .setSmallIcon(android.R.drawable.btn_star)
+                        if (!runningTaskInfo.topActivity.getClassName().equals("com.example.leeyh.abroadapp.view.activity.ChattingActivity")) {
+                            Intent mNotificationIntent = new Intent(getApplicationContext(), TabBarMainActivity.class);
+                            mNotificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                    Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            mNotificationIntent.putExtra(MESSAGE_FROM_SERVICE, MESSAGE_FROM_SERVICE);
+                            mNotificationIntent.putExtra(ROOM_NAME, roomName);
+                            int requestID = (int) System.currentTimeMillis();
+                            PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext()
+                                    , requestID
+                                    , mNotificationIntent
+                                    , PendingIntent.FLAG_UPDATE_CURRENT);
+                            wakeLock.acquire(DateUtils.SECOND_IN_MILLIS * 5);
+                            builder.setContentTitle(sendMessageId) // required
+                                    .setContentText(message)  // required
+                                    .setDefaults(Notification.DEFAULT_ALL) // 알림, 사운드 진동 설정
+                                    .setAutoCancel(true) // 알림 터치시 반응 후 삭제
+                                    .setSound(RingtoneManager
+                                            .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                                    .setSmallIcon(android.R.drawable.btn_star)
 //                            .setLargeIcon(BitmapFactory.decodeResource(getResources()
 //                                    , R.drawable.msg_icon))
 //                            .setBadgeIconType(R.drawable.msg_icon)
-                                .setContentIntent(pendingIntent);
-                        notificationManager.notify(0, builder.build());
-                        wakeLock.release();
+                                    .setContentIntent(mPendingIntent);
+                            notificationManager.notify(0, builder.build());
+                            wakeLock.release();
+                        } else {
+                            LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+                            Intent broadCast = new Intent(MESSAGE_FROM_SERVICE);
+                            broadCast.putExtra(ROOM_NAME, roomName);
+                            broadCast.putExtra(SEND_MESSAGE_ID, sendMessageId);
+                            broadCast.putExtra(MESSAGE, message);
+                            broadcastManager.sendBroadcast(broadCast);
+                        }
                     }
 
                 } catch (JSONException e) {

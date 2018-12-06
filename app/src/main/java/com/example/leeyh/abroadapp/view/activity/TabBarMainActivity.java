@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -71,16 +72,29 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
             }
         });
 
-        if(getIntent().getStringExtra(MESSAGE_FROM_SERVICE) != null) {
+        if (getIntent().getStringExtra(MESSAGE_FROM_SERVICE) != null) {
             String roomName = getIntent().getStringExtra(ROOM_NAME);
             mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
         }
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mFragmentManager.putFragment(outState, "fragment", mFragmentManager.findFragmentById(R.id.main_activity_container));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Fragment fragment = mFragmentManager.getFragment(savedInstanceState, "fragment");
+        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, fragment);
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent.getStringExtra(MESSAGE_FROM_SERVICE) != null) {
+        if (intent.getStringExtra(MESSAGE_FROM_SERVICE) != null) {
             String roomName = intent.getStringExtra(ROOM_NAME);
             mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
         }
@@ -141,14 +155,6 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         goToChattingActivity.putExtra(ROOM_NAME, roomName);
         goToChattingActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(goToChattingActivity);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == 101) {
-//            Toast.makeText(mAppManager, data.getStringExtra(MAKE_CHAT_ROOM_SUCCESS), Toast.LENGTH_SHORT).show();
-//        }
     }
 
     @Override

@@ -40,6 +40,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("11chatList", "onCreate: ");
         if(getArguments() != null) {
             String roomName = getArguments().getString(ROOM_NAME);
             mChatListListener.onChatNewChatMessage(roomName);
@@ -48,14 +49,9 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
-        mAppManager.setOnResponseReceivedListener(this);
-        mAppManager.routeSocket(ROUTE_CHAT);
-        mSharedPreferences = getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-        View rootView = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        getChattingList();
-        mAppManager.onResponseFromServer(CHAT_LIST_SUCCESS);
         mChatListAdapter = new ChatListAdapter();
+
+        View rootView = inflater.inflate(R.layout.fragment_chat_list, container, false);
         ListView chattingListListView = rootView.findViewById(R.id.chatting_list_view);
         chattingListListView.setAdapter(mChatListAdapter);
         chattingListListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,10 +65,22 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         return rootView;
     }
 
+
+
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("test", "onStart: ");
+        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
+        mAppManager.setOnResponseReceivedListener(this);
+        mAppManager.routeSocket(ROUTE_CHAT);
+        mSharedPreferences = getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+        mAppManager.onResponseFromServer(CHAT_LIST_SUCCESS);
+        getChattingList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
