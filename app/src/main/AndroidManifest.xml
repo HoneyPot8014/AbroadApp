@@ -31,8 +31,7 @@
         <activity android:name=".view.activity.SignInActivity" />
         <activity android:name=".view.activity.SignUpActivity" />
         <activity
-            android:name=".view.activity.TabBarMainActivity"
-            android:configChanges="screenSize|orientation" />
+            android:name=".view.activity.TabBarMainActivity" />
 
         <service
             android:name=".background.GpsService"

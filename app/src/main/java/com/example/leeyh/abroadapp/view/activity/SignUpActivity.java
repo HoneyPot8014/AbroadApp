@@ -90,6 +90,14 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
         setContentView(R.layout.activity_sign_up);
         password = (EditText) findViewById(R.id.password);
         passwordConfirm = (EditText) findViewById(R.id.passwordConfirm);
+        check = findViewById(R.id.check);
+        check.setVisibility(View.INVISIBLE);
+        nextBtn = findViewById(R.id.signUpBtn);
+        // nextBtn.setEnabled(false);
+        // checkEmailAddress = (ImageView) findViewById(R.id.checkEmail);
+
+        //spinner
+        yearSpinner = (Spinner) findViewById(R.id.year);
 
 //set the default according to value
         passwordConfirm.addTextChangedListener(new TextWatcher() {
@@ -152,14 +160,6 @@ public class SignUpActivity extends AppCompatActivity implements OnResponseRecei
     protected void onResume() {
 
         super.onResume();
-        check = findViewById(R.id.check);
-        check.setVisibility(View.INVISIBLE);
-        nextBtn = findViewById(R.id.signUpBtn);
-        // nextBtn.setEnabled(false);
-        // checkEmailAddress = (ImageView) findViewById(R.id.checkEmail);
-
-        //spinner
-        yearSpinner = (Spinner) findViewById(R.id.year);
         ArrayAdapter yearAdapter = ArrayAdapter.createFromResource(this,
                 R.array.date_year, R.layout.simple_spinner_item);
 

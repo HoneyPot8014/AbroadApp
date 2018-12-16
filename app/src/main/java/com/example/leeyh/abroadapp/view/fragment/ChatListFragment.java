@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_LIST;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_LIST_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.RECEIVE_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
@@ -75,6 +76,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         mAppManager.routeSocket(ROUTE_CHAT);
         mSharedPreferences = getContext().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
         mAppManager.onResponseFromServer(CHAT_LIST_SUCCESS);
+        mAppManager.onResponseFromServer(RECEIVE_MESSAGE);
         getChattingList();
     }
 
@@ -99,6 +101,7 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
         switch (onEvent) {
             case CHAT_LIST_SUCCESS:
                 JSONArray chatListArray = (JSONArray) args[0];
+                mChatListAdapter.setList(chatListArray);
                 mChatListAdapter.addList(chatListArray);
                 new Handler(Looper.getMainLooper()) {
                     @Override
@@ -107,6 +110,9 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
                         mChatListAdapter.notifyDataSetChanged();
                     }
                 }.sendEmptyMessage(0);
+                break;
+            case RECEIVE_MESSAGE:
+                getChattingList();
                 break;
         }
     }

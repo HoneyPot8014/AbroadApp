@@ -168,7 +168,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
 //        mFragmentManager.beginTransaction().replace(R.id.main_activity_container, ChatListFragment.newChattingFragmentInstance(roomName)).commitAllowingStateLoss();
         Intent goToChattingActivity = new Intent(getApplicationContext(), ChattingActivity.class);
         goToChattingActivity.putExtra(ROOM_NAME, roomName);
-        goToChattingActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        goToChattingActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP & Intent.FLAG_ACTIVITY_SINGLE_TOP & Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(goToChattingActivity);
     }
 

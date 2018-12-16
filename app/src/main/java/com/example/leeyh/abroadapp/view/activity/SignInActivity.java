@@ -143,7 +143,7 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
         if (powerManager != null && (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || powerManager.isIgnoringBatteryOptimizations("package:" + packageName))) {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this)
-                    .setMessage("Abroad를 사용하기 위해서는 위치권한과 배터리 사용량 최적화 설정 안함이 필요합니다. 설정화면으로 이동??")
+                    .setMessage("Abroad를 사용하기 위해서는 위치권한과 배터리 사용량 최적화 설정 안함이 필요합니다. 설정화면으로 이동하시겠습니까??")
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

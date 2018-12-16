@@ -18,6 +18,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.LAST_MESSAGE;
 import static com.example.leeyh.abroadapp.constants.StaticString.MEMBER_UUID;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class ChatListAdapter extends BaseAdapter {
 
@@ -62,14 +63,16 @@ public class ChatListAdapter extends BaseAdapter {
             JSONArray joinMembers = (JSONArray) item.get(JOIN_MEMBERS);
             JSONArray joinUuid = (JSONArray) item.get(MEMBER_UUID);
             String profileId;
-            if(sharedPreferences.getString(USER_NAME, null).equals(joinUuid.getString(0))) {
+            if (sharedPreferences.getString(USER_UUID, null).equals(joinUuid.getString(0))) {
                 profileId = joinUuid.getString(1);
             } else {
                 profileId = joinUuid.getString(0);
             }
             StringBuilder members = new StringBuilder();
-            for(int k = 0; k < joinMembers.length(); k ++) {
-                members.append(joinMembers.getString(k)).append(" ");
+            for (int k = 0; k < joinMembers.length(); k++) {
+                if (!sharedPreferences.getString(USER_NAME, null).equals(joinMembers.get(k))){
+                    members.append(joinMembers.getString(k)).append(" ");
+                }
             }
             itemView.setChatListRoomNickName(members.toString());
             itemView.setChatListProfileImage(profileId, viewGroup.getContext());
@@ -82,5 +85,13 @@ public class ChatListAdapter extends BaseAdapter {
 
     public void addList(JSONArray chattingList) {
         items = chattingList;
+    }
+
+    public JSONArray getList() {
+        return this.items;
+    }
+
+    public void setList(JSONArray chattingList) {
+        this.items = chattingList;
     }
 }
