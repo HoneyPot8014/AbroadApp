@@ -50,4 +50,11 @@ public class SocketEvent {
     public static final String NO_NEAR_USER = "noNearUser";
     public static final String GET_LOCATION_USER = "getUserLocation";
     public static final String GET_LOCATION_USER_SUCCESS = "getUserLocationSuccess";
+
+    //MyPage
+    public static final String ROUTE_MY_PAGE = "/myPage";
+    public static final String GET_MY_PLAN = "getMyPlan";
+    public static final String GET_MY_PLAN_SUCCESS = "getMyPlanSuccess";
+    public static final String SAVE_PLAN = "savePlan";
+    public static final String SAVE_PLAN_SUCCESS = "savePlanSuccess";
 }

@@ -1,76 +1,48 @@
 package com.example.leeyh.abroadapp.view.fragment;
 
-        import android.Manifest;
-        import android.app.AlertDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.content.pm.PackageManager;
-        import android.location.Location;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.os.Handler;
-        import android.os.Looper;
-        import android.os.Message;
-        import android.support.annotation.RequiresApi;
-        import android.support.design.widget.BottomSheetDialog;
-        import android.support.v4.app.ActivityCompat;
-        import android.support.v4.app.Fragment;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.DividerItemDecoration;
-        import android.support.v7.widget.LinearLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.support.v7.widget.Toolbar;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import android.widget.Button;
-        import android.widget.ImageButton;
-        import android.widget.SeekBar;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.example.leeyh.abroadapp.R;
-        import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
-        import com.example.leeyh.abroadapp.controller.MemberListAdapter;
-        import com.example.leeyh.abroadapp.controller.RecyclerItemClickListener;
-        import com.example.leeyh.abroadapp.controller.TravelPlanAdapter;
-        import com.example.leeyh.abroadapp.helper.ApplicationManagement;
-        import com.example.leeyh.abroadapp.view.activity.MemberDetailViewActivity;
-        import com.google.android.gms.location.FusedLocationProviderClient;
-        import com.google.android.gms.location.LocationServices;
-        import com.google.android.gms.tasks.OnSuccessListener;
+import com.bumptech.glide.Glide;
+import com.example.leeyh.abroadapp.R;
+import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
+import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_FAILED;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.MAKE_CHAT_ROOM_SUCCESS;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.NEW_ROOM_CHAT;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_MAP;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_LOCATION_SUCCESS;
-        import static com.example.leeyh.abroadapp.constants.SocketEvent.SQL_ERROR;
-        import static com.example.leeyh.abroadapp.constants.StaticString.DISTANCE;
-        import static com.example.leeyh.abroadapp.constants.StaticString.DOB;
-        import static com.example.leeyh.abroadapp.constants.StaticString.GENDER;
-        import static com.example.leeyh.abroadapp.constants.StaticString.LATITUDE;
-        import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
-        import static com.example.leeyh.abroadapp.constants.StaticString.LONGITUDE;
-        import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
-        import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
-        import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
-        import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.GET_MY_PLAN;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.GET_MY_PLAN_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_MY_PAGE;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_PLAN;
+import static com.example.leeyh.abroadapp.constants.SocketEvent.SAVE_PLAN_SUCCESS;
+import static com.example.leeyh.abroadapp.constants.StaticString.PLAN;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
+import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
-public class MyPageFragment extends Fragment {
+public class MyPageFragment extends Fragment implements OnResponseReceivedListener {
 
     private ApplicationManagement mAppManager;
-    private Button makePlanButton;
+    private Button mMakePlanButton;
+    private SharedPreferences mSharedPreferences;
+    private TextView mInputTextView;
 
 
     @Override
@@ -87,14 +59,19 @@ public class MyPageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAppManager = (ApplicationManagement) getContext().getApplicationContext();
-       // mAppManager.setOnResponseReceivedListener(this);
+        mAppManager.routeSocket(ROUTE_MY_PAGE);
+        mAppManager.setOnResponseReceivedListener(this);
+        mAppManager.onResponseFromServer(GET_MY_PLAN_SUCCESS);
+        mAppManager.onResponseFromServer(SAVE_PLAN_SUCCESS);
+        mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+        getMyPlan();
+        // mAppManager.setOnResponseReceivedListener(this);
         //mAppManager.routeSocket(ROUTE_MAP);
-      //  mAppManager.onResponseFromServer(SQL_ERROR);
-     //   mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
-     //   mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
-       // mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
+        //  mAppManager.onResponseFromServer(SQL_ERROR);
+        //   mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
+        //   mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
+        // mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
 
     }
 
@@ -102,29 +79,80 @@ public class MyPageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_page, container, false);
-       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mMakePlanButton = view.findViewById(R.id.save_plan_button);
+        ImageView profile = view.findViewById(R.id.profileImg);
+        mInputTextView = view.findViewById(R.id.inputTextView);
+        Glide.with(getContext()).load("http://49.236.137.55/profile?id="
+                + mSharedPreferences.getString(USER_UUID, null) + ".jpeg").into(profile);
+        mMakePlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSaveBtnClicked();
+            }
+        });
+        // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         return view;
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    private void onSaveBtnClicked() {
+        JSONObject savePlanData = new JSONObject();
+        try {
+            savePlanData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+            savePlanData.put(PLAN, mInputTextView.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mAppManager.emitRequestToServer(SAVE_PLAN, savePlanData);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onStop() {
+        super.onStop();
+    }
+
+    private void getMyPlan() {
+        JSONObject getMyPlanData = new JSONObject();
+        try {
+            getMyPlanData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mAppManager.emitRequestToServer(GET_MY_PLAN, getMyPlanData);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
-            if(data != null) {
-
+            if (data != null) {
             }
+        }
+    }
+
+    @Override
+    public void onResponseReceived(String onEvent, Object[] object) {
+        switch (onEvent) {
+            case SAVE_PLAN_SUCCESS:
+                new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        Toast.makeText(getContext(), "저장 완료", Toast.LENGTH_SHORT).show();
+                    }
+                };
+                break;
+            case GET_MY_PLAN_SUCCESS:
+                JSONArray receivedArrayDat = (JSONArray) object[0];
+                try {
+                    JSONObject jsonObject = receivedArrayDat.getJSONObject(0);
+                    String data = jsonObject.getString(PLAN);
+                    if(data != null || !data.equals("")) {
+                        mInputTextView.setText(data);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 }

@@ -35,6 +35,7 @@ public class StaticString {
     public static final String MEMBER_UUID = "memberUuid";
     public static final String SEND_MESSAGE_UUID = "sendMessageUuid";
     public static final String IS_FOREGROUND = "foreground";
+    public static final String PLAN = "plan";
 
     public static final int CAMERA_CODE = 1111;
     public static final int SIGN_UP_CODE = 1112;
