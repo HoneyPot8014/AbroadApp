@@ -1,5 +1,6 @@
 package com.example.leeyh.abroadapp.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
 
     private ApplicationManagement mAppManager;
     private FragmentManager mFragmentManager;
+//    private int travelCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
         manage_travel_tab_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof ChatListFragment)
+                if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof TravelPlanFragment)
                     return;
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new TravelPlanFragment(),TRAVEL_LIST_FRAGMENT ).commitAllowingStateLoss();
             }
@@ -101,6 +103,7 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
             }
         });
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
