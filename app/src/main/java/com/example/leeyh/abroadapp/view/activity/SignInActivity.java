@@ -20,8 +20,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,13 +60,14 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
     private EditText mPasswordEditTextView;
     private ApplicationManagement mAppManagement;
     private String packageName;
+    private CheckBox showPassword;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
+        showPassword = findViewById(R.id.showPassword);
         packageName = getPackageName();
         mIdEditTextView = findViewById(R.id.editTextId);
         mPasswordEditTextView = findViewById(R.id.editTextPassword);
@@ -82,6 +87,19 @@ public class SignInActivity extends AppCompatActivity implements OnResponseRecei
             @Override
             public void onClick(View view) {
                 emitRequestSignIn();
+            }
+        });
+        showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (showPassword.isChecked()) {
+                    // show password
+                    mPasswordEditTextView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    // hide password
+                    mPasswordEditTextView.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+
             }
         });
     }
