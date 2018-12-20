@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/nextlayout"
+    tools:context=".mypage.NextActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_main_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintVertical_weight="9"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="5dp"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbars="vertical"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/recyclerview_main_list"
+        android:id="@+id/add_layout">
+
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableFormoney"
+            android:padding="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dp"
+                    android:background="@drawable/cell_shape"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:gravity="center"
+                    android:text="Money Spent"
+                    android:fontFamily="@font/aller_bd"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/cell_shape"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:padding="1dp"
+                    android:gravity="center"
+                    android:text="Money Left"
+                    android:fontFamily="@font/aller_bd"/>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1dp"
+                    android:background="@drawable/cell_shape"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/moneySpent"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:fontFamily="@font/aller_bd"
+                    android:text="0" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/cell_shape"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/moneyLeft"
+                    android:padding="1dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="30dp"
+                    android:fontFamily="@font/aller_bd"/>
+            </TableRow>
+
+        </TableLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

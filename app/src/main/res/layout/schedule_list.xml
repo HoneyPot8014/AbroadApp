@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/schedule_list">
+
+    <ImageView
+        android:id="@+id/type"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="title"
+        android:layout_marginTop="37dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="37dp"
+        android:fontFamily="@font/aller_rg"
+        android:layout_toRightOf="@+id/type"/>
+
+    <ImageView
+        android:id="@+id/choiceImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@+id/money"
+        android:background="@drawable/rounded"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="37dp"
+        android:layout_marginBottom="37dp"
+        android:fontFamily="@font/aller_bd"
+        android:layout_alignParentRight="true"
+        android:text="money"/>
+
+</RelativeLayout>
