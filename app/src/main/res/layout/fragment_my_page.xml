@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:fontFamily="@font/aller_bd"
                 android:text="my plan"
                 android:textColor="@color/textColor"
@@ -63,7 +63,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/inputTextView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -71,8 +71,13 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
+                android:background="@android:color/transparent"
                 android:editable="true"
+                android:fontFamily="@font/aller_rg"
+                android:gravity="top"
                 android:text="inputTextView"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +96,21 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView5" />
+
+            <Button
+                android:id="@+id/button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/aller_bd"
+                android:text="save"
+                android:textAllCaps="false"
+                android:textColor="@color/cBlue"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/inputTextView"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
