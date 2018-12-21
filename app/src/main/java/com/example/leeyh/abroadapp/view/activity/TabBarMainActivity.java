@@ -16,6 +16,7 @@ import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
 import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
+import com.example.leeyh.abroadapp.view.fragment.MyPageFragment;
 import com.example.leeyh.abroadapp.view.fragment.OnChatListItemClicked;
 import com.example.leeyh.abroadapp.view.fragment.OnNewChatRoomMaked;
 import com.example.leeyh.abroadapp.view.fragment.TravelPlanFragment;
@@ -31,6 +32,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGM
 import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
+import static com.example.leeyh.abroadapp.constants.StaticString.MYPAGE_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.TRAVEL_LIST_FRAGMENT;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
@@ -88,11 +90,18 @@ public class TabBarMainActivity extends AppCompatActivity implements OnResponseR
                 if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof TravelPlanFragment)
                     return;
                 mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new TravelPlanFragment(),TRAVEL_LIST_FRAGMENT ).commitAllowingStateLoss();
-
             }
         });
 
-
+        Button my_page_tab_button = findViewById(R.id.my_page_tab_button);
+        my_page_tab_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mFragmentManager.findFragmentById(R.id.main_activity_container) instanceof MyPageFragment)
+                    return;
+                mFragmentManager.beginTransaction().replace(R.id.main_activity_container, new MyPageFragment(),MYPAGE_FRAGMENT ).commitAllowingStateLoss();
+            }
+        });
     }
 
 

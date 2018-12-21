@@ -27,6 +27,7 @@ public class StaticString {
     public static final String LOCATION_FRAGMENT = "locationFragment";
     public static final String CHAT_LIST_FRAGMENT = "chatListFragment";
     public static final String TRAVEL_LIST_FRAGMENT = "travelListFragment";
+    public static final String MYPAGE_FRAGMENT = "myPageFragment";
     public static final String MESSAGE = "message";
     public static final String LAST_MESSAGE = "lastMessage";
     public static final String SEND_MESSAGE_ID = "sendMessageId";
@@ -34,6 +35,7 @@ public class StaticString {
     public static final String MEMBER_UUID = "memberUuid";
     public static final String SEND_MESSAGE_UUID = "sendMessageUuid";
     public static final String IS_FOREGROUND = "foreground";
+    public static final String PLAN = "plan";
 
     public static final int CAMERA_CODE = 1111;
     public static final int SIGN_UP_CODE = 1112;

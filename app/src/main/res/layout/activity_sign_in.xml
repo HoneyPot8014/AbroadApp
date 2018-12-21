@@ -57,7 +57,7 @@
             android:backgroundTint="@android:color/darker_gray"
             android:ems="10"
             android:fontFamily="@font/aller_rg"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:outlineAmbientShadowColor="?attr/colorButtonNormal"
             android:textAlignment="textStart"
             android:textColorLink="?attr/colorButtonNormal"
@@ -72,13 +72,13 @@
             android:id="@+id/signUpTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
             android:clickable="true"
             android:text="you don't have an account yet?"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/showPassword" />
 
 
         <Button
@@ -121,6 +121,18 @@
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextId" />
+
+        <CheckBox
+            android:id="@+id/showPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/aller_rg"
+            android:text="show password"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
 
     </android.support.constraint.ConstraintLayout>
