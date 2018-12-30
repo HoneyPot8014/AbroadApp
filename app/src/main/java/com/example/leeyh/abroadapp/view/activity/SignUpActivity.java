@@ -29,13 +29,15 @@ import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding mBinding;
+    private SignViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
-        SignViewModel viewModel = ViewModelProviders.of(this).get(SignViewModel.class);
+        SignViewModel.SignViewModelFactory factory = new SignViewModel.SignViewModelFactory(this);
+        viewModel = ViewModelProviders.of(this, factory).get(SignViewModel.class);
         mBinding.setHandler(viewModel);
         mBinding.setLifecycleOwner(this);
 
@@ -79,19 +81,20 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Glide.with(this).asBitmap().load(data.getData()).into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        Bitmap profileBitmap = Bitmap.createScaledBitmap(resource, (int) (resource.getWidth() / 2), (int) (resource.getHeight() / 2), true);
-                        mBinding.signUpProfileImageView.setImageBitmap(profileBitmap);
-//                        mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
-//                        mProfileImageView.setImageBitmap(mProfileBitmap);
-                    }
-                });
-            }
-        }
+        viewModel.getImageBitmap(requestCode, resultCode, data);
+//        if (requestCode == CAMERA_CODE) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                Glide.with(this).asBitmap().load(data.getData()).into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        Bitmap profileBitmap = Bitmap.createScaledBitmap(resource, (int) (resource.getWidth() / 2), (int) (resource.getHeight() / 2), true);
+//                        mBinding.signUpProfileImageView.setImageBitmap(profileBitmap);
+////                        mProfileByteArray = DataConverter.getByteArrayToStringFromBitmap(mProfileBitmap);
+////                        mProfileImageView.setImageBitmap(mProfileBitmap);
+//                    }
+//                });
+//            }
+//        }
     }
 
 //    public void onClickedSend(View v) {
@@ -104,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
 //                    public void onClick(DialogInterface dialog, int which) {
 //                        if (!editText_email.getText().toString().equals("") && !editText_name.getText().toString().equals("")
 //                                && editText_password.getText().toString().length() >= 6) {
-//                            UserModel user = new UserModel();
+//                            UserModel2 user = new UserModel2();
 //
 //                            String email = editText_email.getText().toString();
 //                            String password = editText_password.getText().toString();
