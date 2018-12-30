@@ -79,7 +79,7 @@ public class MyPageFragment extends Fragment implements OnResponseReceivedListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_page, container, false);
-        mMakePlanButton = view.findViewById(R.id.save_plan_button);
+        mMakePlanButton = view.findViewById(R.id.button);
         ImageView profile = view.findViewById(R.id.profileImg);
         mInputTextView = view.findViewById(R.id.inputTextView);
         Glide.with(getContext()).load("http://49.236.137.55/profile?id="
@@ -145,9 +145,15 @@ public class MyPageFragment extends Fragment implements OnResponseReceivedListen
                 JSONArray receivedArrayDat = (JSONArray) object[0];
                 try {
                     JSONObject jsonObject = receivedArrayDat.getJSONObject(0);
-                    String data = jsonObject.getString(PLAN);
+                    final String data = jsonObject.getString(PLAN);
                     if(data != null || !data.equals("")) {
-                        mInputTextView.setText(data);
+                        new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                mInputTextView.setText(data);
+                            }
+                        }.sendEmptyMessage(0);
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
+import static com.example.leeyh.abroadapp.constants.StaticString.PLAN;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
 import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
@@ -76,8 +77,12 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
             } else {
                 holder.onButton.setImageResource(R.drawable.offbutton);
             }
-//            holder.descriptionTextView.setText(DataConverter.convertAddress(mContext
-//                    , Double.parseDouble(item.getString(LATITUDE)), Double.parseDouble(item.getString(LONGITUDE))));
+            String plan = item.getString(PLAN);
+            if(plan == "null") {
+                holder.descriptionTextView.setText("");
+            } else {
+                holder.descriptionTextView.setText(plan);
+            }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

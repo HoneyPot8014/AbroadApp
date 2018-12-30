@@ -1,318 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
-    tools:context=".view.activity.SignUpActivity"
-    tools:layout_editor_absoluteY="81dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="handler"
+            type="com.example.leeyh.abroadapp.viewmodel.SignViewModel" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cardview_light_background">
+        android:background="@color/cardview_light_background"
+        tools:context=".view.activity.SignUpActivity"
+        tools:layout_editor_absoluteY="81dp">
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/stroke_lower"
-            android:ems="10"
-            android:textCursorDrawable="@android:color/darker_gray"
-            android:fontFamily="@font/aller_rg"
-            android:inputType="textPersonName"
-            android:paddingLeft="50dp"
-            android:textColor="@color/textColor"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/name_text"
-            app:layout_constraintTop_toBottomOf="@+id/signUpImageView" />
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/cardview_light_background">
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-            android:background="@drawable/stroke_test"
-            android:ems="10"
-            android:fontFamily="@font/aller_rg"
-            android:textCursorDrawable="@android:color/darker_gray"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="50dp"
-            android:textColor="@color/textColor"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/email_text"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
-
-        <TextView
-            android:id="@+id/name_text"
-            android:layout_width="80dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/stroke_lower"
-            android:fontFamily="@font/aller_rg"
-            android:gravity="center"
-            android:text="name"
-            android:textColor="@color/textColor"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signUpImageView" />
-
-        <TextView
-            android:id="@+id/email_text"
-            android:layout_width="80dp"
-            android:layout_height="49dp"
-
-            android:background="@android:color/background_light"
-            android:fontFamily="@font/aller_rg"
-            android:gravity="center"
-            android:text="email"
-            android:textColor="@color/textColor"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name_text" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/stroke_lower"
-            android:ems="10"
-            android:textCursorDrawable="@android:color/darker_gray"
-            android:fontFamily="@font/aller_rg"
-            android:inputType="textPassword"
-            android:paddingLeft="50dp"
-            android:textColor="@color/textColor"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/password_text"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
-
-        <TextView
-            android:id="@+id/DateofBirth"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/stroke_test"
-            android:fontFamily="@fonts/Swagger"
-            android:textAlignment="center"
-            android:textColor="@color/textColor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/dateOfBirth"
-            app:layout_constraintTop_toBottomOf="@+id/setBack" />
-
-        <TextView
-            android:id="@+id/password_text"
-            android:layout_width="80dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/stroke_lower"
-            android:fontFamily="@font/aller_rg"
-            android:gravity="center"
-            android:text="password"
-            android:textColor="@color/textColor"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_text" />
-
-        <TextView
-            android:id="@+id/passwordConfirm_text"
-            android:layout_width="80dp"
-            android:layout_height="49dp"
-            android:background="@android:color/background_light"
-            android:fontFamily="@font/aller_rg"
-            android:gravity="center"
-            android:text="check"
-            android:textColor="@color/textColor"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_text" />
-
-        <EditText
-            android:id="@+id/passwordConfirm"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-            android:background="@drawable/stroke_test"
-            android:ems="10"
-            android:textCursorDrawable="@android:color/darker_gray"
-            android:fontFamily="@font/aller_rg"
-            android:inputType="textPassword"
-            android:paddingLeft="50dp"
-            android:textColor="@color/textColor"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/passwordConfirm_text"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
-
-        <TextView
-            android:id="@+id/sex"
-            android:layout_width="80dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="32dp"
-            android:background="@android:color/background_light"
-            android:fontFamily="@font/aller_rg"
-            android:gravity="center"
-            android:text="gender"
-            android:textColor="@color/textColor"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordConfirm_text" />
-
-        <TextView
-            android:id="@+id/dateOfBirth"
-            android:layout_width="80dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/background_light"
-            android:fontFamily="@font/aller_rg"
-            android:gravity="center"
-            android:text="date of birth"
-            android:textColor="@color/textColor"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sex" />
-
-        <Button
-            android:id="@+id/signUpBtn"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-
-            android:layout_marginTop="32dp"
-            android:background="@android:color/background_light"
-            android:fontFamily="@font/aller_bd"
-            android:onClick="onClickedSend"
-            android:text="Sign Up"
-            android:textAllCaps="false"
-            android:textColor="@color/cBlue"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/DateofBirth" />
-
-        <TextView
-            android:id="@+id/setBack"
-            android:layout_width="0dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="32dp"
-            android:background="@android:color/background_light"
-            android:fontFamily="@fonts/Swagger"
-            android:textColor="@color/textColor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/sex"
-            app:layout_constraintTop_toBottomOf="@+id/passwordConfirm" />
-
-        <RadioGroup
-            android:id="@+id/radio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/setBack"
-            app:layout_constraintStart_toStartOf="@+id/setBack"
-            app:layout_constraintTop_toBottomOf="@+id/setBack">
-
-            <RadioButton
-                android:id="@+id/radioBtnMan"
-                style="@android:style/Widget.Material.Light.CompoundButton.RadioButton"
-                android:layout_width="100dp"
+            <TextView
+                android:id="@+id/sign_up_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/aller_rg"
-                android:text="men"
-                android:textAlignment="center"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="48dp"
+                android:fontFamily="@font/aller_bd"
+                android:text="@string/sign_up_title"
                 android:textColor="@color/textColor"
-                android:textSize="18sp" />
+                android:textSize="36sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/radioBtnWoman"
+            <ImageView
+                android:id="@+id/sign_up_profile_image_view"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="100dp"
+                android:layout_marginTop="32dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_title"
+                app:srcCompat="@drawable/user" />
+
+            <TextView
+                android:id="@+id/sign_up_name_text_view"
+                android:layout_width="80dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/stroke_lower"
                 android:fontFamily="@font/aller_rg"
-                android:text="woman"
-                android:textAlignment="center"
+                android:gravity="center"
+                android:text="@string/sign_up_name_field"
                 android:textColor="@color/textColor"
-                android:textSize="18sp" />
-        </RadioGroup>
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_profile_image_view" />
 
-        <Spinner
-            android:id="@+id/year"
-            android:layout_width="wrap_content"
-            android:layout_height="29dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="48dp"
-            android:dropDownWidth="match_parent"
-            android:spinnerMode="dialog"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@+id/DateofBirth"
-            app:layout_constraintStart_toStartOf="@+id/DateofBirth" />
+            <EditText
+                android:id="@+id/sing_up_name_edit_text_view"
+                android:layout_width="0dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/stroke_lower"
+                android:ems="10"
+                android:text="@={handler.mName}"
+                android:fontFamily="@font/aller_rg"
+                android:inputType="textPersonName"
+                android:paddingLeft="50dp"
+                android:textColor="@color/textColor"
+                android:textCursorDrawable="@android:color/darker_gray"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/sign_up_name_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_profile_image_view" />
 
-        <Spinner
-            android:id="@+id/day"
-            android:layout_width="wrap_content"
-            android:layout_height="29dp"
-            android:layout_marginBottom="8dp"
-            android:spinnerMode="dialog"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@+id/DateofBirth"
-            app:layout_constraintStart_toEndOf="@+id/month" />
+            <TextView
+                android:id="@+id/sing_up_emai_text_view"
+                android:layout_width="80dp"
+                android:layout_height="49dp"
+                android:background="@android:color/background_light"
+                android:fontFamily="@font/aller_rg"
+                android:gravity="center"
+                android:text="@string/sign_up_email_field"
+                android:textColor="@color/textColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_name_text_view" />
 
-        <Spinner
-            android:id="@+id/month"
-            android:layout_width="wrap_content"
-            android:layout_height="29dp"
-            android:layout_marginBottom="8dp"
-            android:spinnerMode="dialog"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@+id/DateofBirth"
-            app:layout_constraintStart_toEndOf="@+id/year" />
+            <EditText
+                android:id="@+id/sign_up_email_edit_text_view"
+                android:layout_width="0dp"
+                android:layout_height="49dp"
+                android:background="@drawable/stroke_test"
+                android:ems="10"
+                android:fontFamily="@font/aller_rg"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="50dp"
+                android:text="@={handler.mEMail}"
+                android:textColor="@color/textColor"
+                android:textCursorDrawable="@android:color/darker_gray"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/sing_up_emai_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/sing_up_name_edit_text_view" />
 
-        <ImageView
-            android:id="@+id/check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="@+id/passwordConfirm"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            <TextView
+                android:id="@+id/sign_up_password_text_view"
+                android:layout_width="80dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/stroke_lower"
+                android:fontFamily="@font/aller_rg"
+                android:gravity="center"
+                android:text="@string/sign_up_password_field"
+                android:textColor="@color/textColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sing_up_emai_text_view" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="48dp"
-            android:fontFamily="@font/aller_bd"
-            android:text="Sign Up"
-            android:textColor="@color/textColor"
-            android:textSize="36sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/sign_up_password_edit_text_view"
+                android:layout_width="0dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/stroke_lower"
+                android:ems="10"
+                android:fontFamily="@font/aller_rg"
+                android:text="@={handler.mPassword}"
+                android:inputType="textPassword"
+                android:paddingLeft="50dp"
+                android:textColor="@color/textColor"
+                android:textCursorDrawable="@android:color/darker_gray"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/sign_up_password_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_email_edit_text_view" />
 
-        <ImageView
-            android:id="@+id/signUpImageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="32dp"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4"
-            app:srcCompat="@drawable/user" />
+            <TextView
+                android:id="@+id/sign_up_password_confirm_text_view"
+                android:layout_width="80dp"
+                android:layout_height="49dp"
+                android:background="@android:color/background_light"
+                android:fontFamily="@font/aller_rg"
+                android:gravity="center"
+                android:text="@string/sign_up_password_confirm_field"
+                android:textColor="@color/textColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_text_view" />
 
+            <EditText
+                android:id="@+id/sign_up_password_confirm_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="49dp"
+                android:background="@drawable/stroke_test"
+                android:ems="10"
+                android:fontFamily="@font/aller_rg"
+                android:inputType="textPassword"
+                android:paddingLeft="50dp"
+                android:text="@={handler.mConfirmPassword}"
+                android:textColor="@color/textColor"
+                android:textCursorDrawable="@android:color/darker_gray"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/sign_up_password_confirm_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_edit_text_view" />
 
-    </android.support.constraint.ConstraintLayout>
+            <ImageView
+                android:id="@+id/sign_up_password_confirm_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:src="@drawable/checked"
+                android:visibility="@{handler.mPassword.equals(handler.mConfirmPassword)? View.VISIBLE : View.INVISIBLE, default=gone}"
+                app:layout_constraintEnd_toEndOf="@+id/sign_up_password_confirm_edit_text"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_edit_text_view" />
 
-</ScrollView>
+            <TextView
+                android:id="@+id/sign_up_gender_text_view"
+                android:layout_width="80dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="32dp"
+                android:background="@android:color/background_light"
+                android:fontFamily="@font/aller_rg"
+                android:gravity="center"
+                android:text="@string/sign_up_gender_field"
+                android:textColor="@color/textColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_confirm_text_view" />
+
+            <RadioGroup
+                android:id="@+id/sign_up_radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:orientation="horizontal"
+                android:onCheckedChanged="@{handler.onGenderCheckChanged}"
+                app:layout_constraintBottom_toBottomOf="@id/sign_up_gender_text_view"
+                app:layout_constraintStart_toEndOf="@+id/sign_up_gender_text_view"
+                app:layout_constraintTop_toTopOf="@id/sign_up_gender_text_view"
+                tools:layout_editor_absoluteY="513dp">
+
+                <RadioButton
+                    android:id="@+id/sign_up_man_radio_button"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/aller_rg"
+                    android:text="men"
+                    android:textAlignment="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/sign_up_woman_radio_button"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/aller_rg"
+                    android:text="woman"
+                    android:textAlignment="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/sign_up_date_of_birth_text_view"
+                android:layout_width="80dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/background_light"
+                android:fontFamily="@font/aller_rg"
+                android:gravity="center"
+                android:text="@string/sign_up_dob_field"
+                android:textColor="@color/textColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign_up_gender_text_view" />
+
+            <Spinner
+                android:id="@+id/sign_up_year_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="29dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginBottom="8dp"
+                android:dropDownWidth="match_parent"
+                android:spinnerMode="dialog"
+                android:onItemSelected="@{handler::onYearSpinnerItemSelected}"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"
+                app:layout_constraintStart_toEndOf="@id/sign_up_date_of_birth_text_view"
+                app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />
+
+            <Spinner
+                android:id="@+id/sign_up_month_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="29dp"
+                android:layout_marginBottom="8dp"
+                android:spinnerMode="dialog"
+                android:textAlignment="center"
+                android:onItemSelected="@{handler::onMonthSpinnerItemSelected}"
+                app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"
+                app:layout_constraintStart_toEndOf="@+id/sign_up_year_spinner"
+                app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />
+
+            <Spinner
+                android:id="@+id/sign_up_day_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="29dp"
+                android:layout_marginBottom="8dp"
+                android:spinnerMode="dialog"
+                android:textAlignment="center"
+                android:onItemSelected="@{handler::onDaySpinnerItemSelected}"
+                app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"
+                app:layout_constraintStart_toEndOf="@+id/sign_up_month_spinner"
+                app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />
+
+            <Button
+                android:id="@+id/sign_up_button"
+                android:layout_width="0dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="32dp"
+                android:background="@android:color/background_light"
+                android:fontFamily="@font/aller_bd"
+                android:onClick="@{handler::onCreateUser}"
+                android:text="Sign Up"
+                android:textAllCaps="false"
+                android:textColor="@color/cBlue"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sign_up_date_of_birth_text_view" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</layout>

@@ -7,6 +7,26 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_test">TESTActivity</string>
     <string name="title_activity_member_filtering">MemberFilteringActivity</string>
-
+    <string name="splash_sign_in">Sign in</string>
+    <string name="splash_sign_up">you don\'t have an account yet?</string>
+    <string name="splash_title">abroadApp</string>
+    <string name="sign_in_title">Log in</string>
+    <string name="sign_in_request_sign_up">you don\'t have an account yet?</string>
+    <string name="sign_in_request_sign_in">Log in</string>
+    <string name="sign_in_email">EMAIL ADDRESS</string>
+    <string name="sign_in_password">PASSWORD</string>
+    <string name="sign_in_show_password">show password</string>
+    <string name="request_location_permission">Abroad를 사용하기 위해서는 위치권한이 필요합니다. 설정화면으로 이동하시겠습니까??</string>
+    <string name="permission_positive">네</string>
+    <string name="permission_negative">아니오</string>
+    <string name="permission_negative_response">권한설정을 취소했습니다.</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="sign_up_name_field">name</string>
+    <string name="sign_up_email_field">email</string>
+    <string name="sign_up_password_field">password</string>
+    <string name="sign_up_password_confirm_field">check</string>
+    <string name="sign_up_gender_field">gender</string>
+    <string name="sign_up_dob_field">date of birth</string>
+    <string name="fragment_location_title">Friends near by you</string>
 
 </resources>

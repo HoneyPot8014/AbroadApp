@@ -1,92 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".view.activity.TabBarMainActivity">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+    <data>
+        <variable
+            name="handler"
+            type="com.example.leeyh.abroadapp.viewmodel.UserViewModel"/>
+    </data>
 
-    <FrameLayout
-        android:id="@+id/main_activity_container"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/guideline"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </FrameLayout>
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/main_activity_tab_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9" />
 
-        android:orientation="horizontal"
-        android:background="@drawable/stroke_lower"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+        <FrameLayout
+            android:id="@+id/main_activity_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/guideline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/location_tab_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="2sp"
-            android:drawableTop="@drawable/home"
-            android:fontFamily="@font/hel_basic"
-            android:text="home"
-            android:textAllCaps="false"
-            android:textSize="10sp" />
+        <LinearLayout
+            android:id="@+id/main_activity_tab_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
 
-        <Button
-            android:id="@+id/chat_tab_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="2sp"
-            android:drawableTop="@drawable/chat"
-            android:fontFamily="@font/hel_basic"
-            android:text="chat list"
-            android:textAllCaps="false"
-            android:textSize="10sp" />
+            android:background="@drawable/stroke_lower"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline">
 
-        <Button
-            android:id="@+id/manage_travel_tab_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="2sp"
-            android:drawableTop="@drawable/planet"
-            android:fontFamily="@font/hel_basic"
-            android:text="world"
-            android:textAllCaps="false"
-            android:textSize="10sp" />
+            <Button
+                android:id="@+id/location_tab_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/home"
+                android:drawablePadding="2sp"
+                android:fontFamily="@font/hel_basic"
+                android:text="home"
+                android:textAllCaps="false"
+                android:textSize="10sp" />
 
-        <Button
-            android:id="@+id/my_page_tab_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="2sp"
-            android:drawableTop="@drawable/users"
-            android:fontFamily="@font/hel_basic"
-            android:text="mypage"
-            android:textAllCaps="false"
-            android:textSize="10sp" />
+            <Button
+                android:id="@+id/chat_tab_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/chat"
+                android:drawablePadding="2sp"
+                android:fontFamily="@font/hel_basic"
+                android:text="chat list"
+                android:textAllCaps="false"
+                android:textSize="10sp" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/manage_travel_tab_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/planet"
+                android:drawablePadding="2sp"
+                android:fontFamily="@font/hel_basic"
+                android:text="world"
+                android:textAllCaps="false"
+                android:textSize="10sp" />
 
-</android.support.constraint.ConstraintLayout>
+            <Button
+                android:id="@+id/my_page_tab_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/users"
+                android:drawablePadding="2sp"
+                android:fontFamily="@font/hel_basic"
+                android:text="mypage"
+                android:textAllCaps="false"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
