@@ -127,10 +127,10 @@ public class TravelPlanFragment extends Fragment implements OnResponseReceivedLi
         mContext = getContext();
         mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, MODE_PRIVATE);
         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//        SharedPreferences sp = getActivity().getSharedPreferences("travelplan", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        editor.clear();
-//        editor.commit();
+        SharedPreferences sp = getActivity().getSharedPreferences("travelplan", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
     }
 
     public TravelPlanFragment(){
