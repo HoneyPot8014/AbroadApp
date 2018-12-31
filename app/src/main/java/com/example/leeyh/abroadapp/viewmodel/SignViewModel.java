@@ -8,7 +8,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,35 +21,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.model.UserModel;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.example.leeyh.abroadapp.repository.SignRepository;
 
 import java.io.ByteArrayOutputStream;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.DOB_ERROR;
-import static com.example.leeyh.abroadapp.constants.StaticString.ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.INSUFFICIENT_DATA;
-import static com.example.leeyh.abroadapp.constants.StaticString.NOT_FORMATTED_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.NOT_MATCH_PASSWORD;
 import static com.example.leeyh.abroadapp.constants.StaticString.WEAK_PASSWORD;
 
 public class SignViewModel extends AndroidViewModel {
 
     private Application mApplication;
-    private MutableLiveData<String> mHandlingErrorFlag;
+    private SignRepository mRepository;
     public MutableLiveData<String> mName;
     public MutableLiveData<String> mEMail;
     public MutableLiveData<String> mPassword;
@@ -60,15 +44,11 @@ public class SignViewModel extends AndroidViewModel {
     private MutableLiveData<String> mDOBMonth;
     private MutableLiveData<String> mDOBDay;
     public MutableLiveData<Bitmap> mProfileBitmap;
-    public MutableLiveData<Boolean> mIsRequesting;
-    private FirebaseAuth mAuth;
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
 
-    public SignViewModel(Application application) {
+    public SignViewModel(Application application, SignRepository repository) {
         super(application);
         mApplication = application;
-        mHandlingErrorFlag = new MutableLiveData<>();
+        mRepository = repository;
         mName = new MutableLiveData<>();
         mEMail = new MutableLiveData<>();
         mPassword = new MutableLiveData<>();
@@ -78,16 +58,6 @@ public class SignViewModel extends AndroidViewModel {
         mDOBMonth = new MutableLiveData<>();
         mDOBDay = new MutableLiveData<>();
         mProfileBitmap = new MutableLiveData<>();
-        mIsRequesting = new MutableLiveData<>();
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        mStorageRef = storage.getReference().child("userProfileImage");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mDatabaseRef = database.getReference("users");
-    }
-
-    public MutableLiveData<String> getHandlingErrorFlag() {
-        return mHandlingErrorFlag;
     }
 
     public void onGenderCheckChanged(RadioGroup group, int id) {
@@ -110,7 +80,7 @@ public class SignViewModel extends AndroidViewModel {
     }
 
     public void onDaySpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mDOBMonth.setValue(parent.getSelectedItem().toString());
+        mDOBDay.setValue(parent.getSelectedItem().toString());
     }
 
     public void getImageBitmap(int requestCode, int resultCode, Intent data) {
@@ -132,98 +102,37 @@ public class SignViewModel extends AndroidViewModel {
         return outputStream.toByteArray();
     }
 
-    private void storageProfileToServer() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        final StorageReference myProfileStorage = mStorageRef.child(user.getUid());
-        UploadTask uploadTask = myProfileStorage.putBytes(getBitmapArray());
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                mHandlingErrorFlag.setValue(ERROR);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-            }
-        });
-        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-
-                    return null;
-                }
-                return myProfileStorage.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                Uri downloadUri = task.getResult();
-                saveUserInfoToServerDB(downloadUri);
-            }
-        });
-    }
-
-    private void saveUserInfoToServerDB(@Nullable Uri profileUri) {
-        String uid = mAuth.getCurrentUser().getUid();
-        UserModel myInfo;
-        if (profileUri != null) {
-            myInfo = new UserModel(uid, mEMail.getValue(), profileUri.toString());
-        } else {
-            myInfo = new UserModel(uid, mEMail.getValue(), null);
-        }
-        mDatabaseRef.child(uid).setValue(myInfo);
-        mIsRequesting.setValue(false);
-    }
-
     public void onCreateUser(View view) {
-        if (mName.getValue() == null && mEMail.getValue() == null && mPassword.getValue() == null && mConfirmPassword.getValue() == null
-                && mGender.getValue() == null && mDOBYear.getValue() == null && mDOBMonth.getValue() == null && mDOBDay.getValue() == null) {
-            mHandlingErrorFlag.setValue(INSUFFICIENT_DATA);
+        if (mName.getValue() == null || mEMail.getValue() == null || mPassword.getValue() == null || mConfirmPassword.getValue() == null
+                || mGender.getValue() == null || mDOBYear.getValue() == null || mDOBMonth.getValue() == null || mDOBDay.getValue() == null) {
+            mRepository.getListener().onTaskFinished(INSUFFICIENT_DATA);
             return;
         }
         if (mDOBYear.getValue().equals("Year") || mDOBMonth.getValue().equals("Month") || mDOBMonth.getValue().equals("day")) {
-            mHandlingErrorFlag.setValue(DOB_ERROR);
+            mRepository.getListener().onTaskFinished(DOB_ERROR);
             return;
         }
         if (mPassword.getValue().length() < 6) {
-            mHandlingErrorFlag.setValue(WEAK_PASSWORD);
+            mRepository.getListener().onTaskFinished(WEAK_PASSWORD);
             return;
         }
-
-        mIsRequesting.setValue(true);
-        mAuth.createUserWithEmailAndPassword(mEMail.getValue(), mPassword.getValue()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    //storage user profile
-                    if (mProfileBitmap.getValue() == null) {
-                        saveUserInfoToServerDB(null);
-                    } else {
-                        storageProfileToServer();
-                    }
-                } else {
-
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if(e instanceof FirebaseAuthInvalidCredentialsException) {
-                    mHandlingErrorFlag.setValue(NOT_FORMATTED_EMAIL);
-                }
-            }
-        });
+        if (!mPassword.getValue().equals(mConfirmPassword.getValue())) {
+            mRepository.getListener().onTaskFinished(NOT_MATCH_PASSWORD);
+            return;
+        }
+        mRepository.getListener().onTaskStarted();
+        mRepository.createUser(mEMail.getValue(), mPassword.getValue(), getBitmapArray());
     }
 
     public static class SignViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
         @NonNull
         private Application mApplication;
+        private SignRepository mRepository;
 
-        public SignViewModelFactory(@NonNull Application application) {
-            mApplication = application;
+        public SignViewModelFactory(@NonNull Application application, SignRepository repository) {
+            this.mApplication = application;
+            this.mRepository = repository;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -231,7 +140,7 @@ public class SignViewModel extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass.isAssignableFrom(SignViewModel.class)) {
-                return (T) new SignViewModel(mApplication);
+                return (T) new SignViewModel(mApplication, mRepository);
             }
             throw new Fragment.InstantiationException("not viewModel class", null);
         }

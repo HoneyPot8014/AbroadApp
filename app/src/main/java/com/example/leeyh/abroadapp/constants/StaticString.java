@@ -5,8 +5,10 @@ public class StaticString {
     public static final String INSUFFICIENT_DATA = "insufficientData";
     public static final String DOB_ERROR = "dobError";
     public static final String WEAK_PASSWORD = "passwordError";
+    public static final String NOT_MATCH_PASSWORD = "notMatchPassword";
     public static final String NOT_FORMATTED_EMAIL = "notFormattedEmail";
     public static final String ERROR = "error";
+    public static final String SUCCESS = "success";
 
     public static final String EMIT_EVENT = "event";
     public static final String BROADCAST = "broadCast";

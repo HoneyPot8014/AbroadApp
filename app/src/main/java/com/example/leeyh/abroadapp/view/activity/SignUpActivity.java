@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySignUpBinding;
+import com.example.leeyh.abroadapp.repository.RepositoryListener;
+import com.example.leeyh.abroadapp.repository.SignRepository;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.CAMERA_CODE;
@@ -23,6 +25,8 @@ import static com.example.leeyh.abroadapp.constants.StaticString.ERROR;
 import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
 import static com.example.leeyh.abroadapp.constants.StaticString.INSUFFICIENT_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.NOT_FORMATTED_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.NOT_MATCH_PASSWORD;
+import static com.example.leeyh.abroadapp.constants.StaticString.SUCCESS;
 import static com.example.leeyh.abroadapp.constants.StaticString.WEAK_PASSWORD;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -35,7 +39,52 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
-        SignViewModel.SignViewModelFactory factory = new SignViewModel.SignViewModelFactory(getApplication());
+
+        //instance repository
+        SignRepository repository = new SignRepository();
+        repository.setRepositoryListener(new RepositoryListener() {
+            @Override
+            public void onTaskStarted() {
+                mBinding.getRoot().setAlpha(0.6f);
+                mBinding.signUpProgressBar.setVisibility(View.VISIBLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+
+            @Override
+            public void onTaskFinished(String status) {
+                mBinding.getRoot().setAlpha(1.0f);
+                mBinding.signUpProgressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                switch (status) {
+                    case INSUFFICIENT_DATA:
+                        Toast.makeText(SignUpActivity.this, "fill the blank", Toast.LENGTH_SHORT).show();
+                        break;
+                    case DOB_ERROR:
+                        Toast.makeText(SignUpActivity.this, "check Date Of Birth", Toast.LENGTH_SHORT).show();
+                        break;
+                    case WEAK_PASSWORD:
+                        Toast.makeText(SignUpActivity.this, "password require more than 6", Toast.LENGTH_SHORT).show();
+                        break;
+                    case NOT_MATCH_PASSWORD:
+                        Toast.makeText(SignUpActivity.this, "not match password. check the password", Toast.LENGTH_SHORT).show();
+                        break;
+                    case NOT_FORMATTED_EMAIL:
+                        Toast.makeText(SignUpActivity.this, "not formatted email", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(SignUpActivity.this, "failed to create", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SUCCESS:
+                        Intent result = new Intent();
+                        result.putExtra(E_MAIL, mBinding.signUpEmailEditTextView.getText().toString());
+                        setResult(RESULT_OK, result);
+                        finish();
+                        break;
+                }
+            }
+        });
+        SignViewModel.SignViewModelFactory factory = new SignViewModel.SignViewModelFactory(getApplication(), repository);
         viewModel = ViewModelProviders.of(this, factory).get(SignViewModel.class);
         mBinding.setHandler(viewModel);
         mBinding.setLifecycleOwner(this);
@@ -55,16 +104,6 @@ public class SignUpActivity extends AppCompatActivity {
         mBinding.signUpMonthSpinner.setAdapter(monthSpinnerAdapter);
         mBinding.signUpDaySpinner.setAdapter(daySpinnerAdapter);
 
-        mBinding.signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent result = new Intent();
-                result.putExtra(E_MAIL, mBinding.signUpEmailEditTextView.getText().toString());
-                setResult(RESULT_OK, result);
-                finish();
-            }
-        });
-
         mBinding.signUpProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,41 +112,6 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivityForResult(getPhoto, CAMERA_CODE);
             }
         });
-
-        viewModel.mIsRequesting.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                } else {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                }
-            }
-        });
-
-        viewModel.getHandlingErrorFlag().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                switch (s) {
-                    case INSUFFICIENT_DATA:
-                        Toast.makeText(SignUpActivity.this, "fill the blank", Toast.LENGTH_SHORT).show();
-                        break;
-                    case DOB_ERROR:
-                        Toast.makeText(SignUpActivity.this, "check Date Of Birth", Toast.LENGTH_SHORT).show();
-                        break;
-                    case WEAK_PASSWORD:
-                        Toast.makeText(SignUpActivity.this, "password require more than 6", Toast.LENGTH_SHORT).show();
-                        break;
-                    case NOT_FORMATTED_EMAIL:
-                        Toast.makeText(SignUpActivity.this, "not formatted email", Toast.LENGTH_SHORT).show();
-                        break;
-                    case ERROR:
-                        Toast.makeText(SignUpActivity.this, "failed to create", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
-
     }// end of onCreate
 
 
