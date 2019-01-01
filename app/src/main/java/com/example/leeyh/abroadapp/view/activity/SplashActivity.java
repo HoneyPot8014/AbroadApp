@@ -55,5 +55,8 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
+
+//        FacebookSdk.sdkInitialize(getApplicationContext());
+//        AppEventsLogger.activateApp(this);
     }
 }

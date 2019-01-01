@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Abroad</string>
     <string name="sign_up_button">회원가입하기</string>
+    <string name="facebook_application_id" translatable="false">276691663030008</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb276691663030008</string>
+    <string name="twitter_consumer_key" translatable="false">kQnjh8R0Of1yn0nODX3gJssO6</string>
+    <string name="twitter_consumer_secret" translatable="false">EbWUHraoasmMiZwHQOftOFSSIbBQ7FWGtmvWfvuphwwTr4yZSD</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,7 +14,7 @@
     <string name="splash_sign_in">Sign in</string>
     <string name="splash_sign_up">you don\'t have an account yet?</string>
     <string name="splash_title">abroadApp</string>
-    <string name="sign_in_title">Log in</string>
+    <string name="sign_in_title">Abroad</string>
     <string name="sign_in_request_sign_up">you don\'t have an account yet?</string>
     <string name="sign_in_request_sign_in">Log in</string>
     <string name="sign_in_email">EMAIL ADDRESS</string>

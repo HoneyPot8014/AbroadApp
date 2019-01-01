@@ -199,7 +199,7 @@
 //                }
 //            mSocket.on("disconnect", new Emitter.Listener() {
 //                @Override
-//                public void call(Object... args) {
+//                public void world(Object... args) {
 //                    mSocket.open();
 //                }
 //            });
@@ -231,7 +231,7 @@
 //    private void defaultNameSpaceSocketOnEvent() {
 //        mSocket.on(SIGN_UP_SUCCESS, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                Intent broadCast = new Intent(SIGN_UP_SUCCESS);
 //                sendBroadcast(broadCast);
 //            }
@@ -239,7 +239,7 @@
 //
 //        mSocket.on(SIGN_UP_FAILED, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                Intent broadCast = new Intent(SIGN_UP_FAILED);
 //                sendBroadcast(broadCast);
 //            }
@@ -247,24 +247,24 @@
 //
 //        mSocket.on(RESPONSE_CHECK_USER, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
-//                Log.d(TAG, "call: 유저 확인");
+//            public void world(Object... args) {
+//                Log.d(TAG, "world: 유저 확인");
 //
 //            }
 //        });
 //
 //        mSocket.on(CHECK_USER, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
-//                Log.d(TAG, "call: CHECK USER 처리해야함.");
+//            public void world(Object... args) {
+//                Log.d(TAG, "world: CHECK USER 처리해야함.");
 //                checkUserSignIned();
 //            }
 //        });
 //
 //        mSocket.on("goToChat", new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
-//                Log.d(TAG, "call: goToChat 응답 받음.");
+//            public void world(Object... args) {
+//                Log.d(TAG, "world: goToChat 응답 받음.");
 //                SharedPreferences preferences = getSharedPreferences("userInfo", MODE_PRIVATE);
 //                String userId = preferences.getString(USER_ID, null);
 //                JSONObject data = new JSONObject();
@@ -276,14 +276,14 @@
 //                Socket newSocket = mSocket.io().socket(CHAT_ROUTE);
 //                newSocket.connect();
 //                newSocket.emit("storedUser", data);
-//                Log.d(TAG, "call: storedUser 요청함");
+//                Log.d(TAG, "world: storedUser 요청함");
 //                Intent broadCast = new Intent("goToChat");
 //                sendBroadcast(broadCast);
 //
 //                newSocket.on(RECEIVE_CHAT, new Emitter.Listener() {
 //                    @Override
-//                    public void call(Object... args) {
-//                        Log.d(TAG, "call: receive chat 채팅 받아라");
+//                    public void world(Object... args) {
+//                        Log.d(TAG, "world: receive chat 채팅 받아라");
 //                        JSONObject receivedData = (JSONObject) args[0];
 //                        String userId = receivedData.optString(USER_ID);
 //                        String message = receivedData.optString(MESSAGE);
@@ -319,7 +319,7 @@
 //
 //        mSocket.on(SIGN_IN_FAILED, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                Intent broadCast = new Intent(SIGN_IN_FAILED);
 //                sendBroadcast(broadCast);
 //            }
@@ -327,7 +327,7 @@
 //
 //        mSocket.on(SIGN_IN_SUCCESS, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                JSONObject receivedData = (JSONObject) args[0];
 //                SharedPreferences preferences = getSharedPreferences("userInfo", MODE_PRIVATE);
 //                SharedPreferences.Editor editor = preferences.edit();
@@ -342,7 +342,7 @@
 //
 ////        mSocket.on("test", new Emitter.Listener() {
 ////            @Override
-////            public void call(Object... args) {
+////            public void world(Object... args) {
 ////
 ////            }
 ////        });
@@ -352,7 +352,7 @@
 //
 //        mSocket.on(SET_CHAT_LIST, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                JSONArray receivedData = (JSONArray) args[0];
 //                Intent broadCast = new Intent(SET_CHAT_LIST);
 //                broadCast.putExtra(CHATS, receivedData.toString());
@@ -362,7 +362,7 @@
 //
 //        mSocket.on(INVITED_JOIN, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                JSONObject receivedData = (JSONObject) args[0];
 //                Intent broadCast = new Intent(INVITED_JOIN);
 //                broadCast.putExtra(ROOM_NAME, receivedData.optString(ROOM_NAME));
@@ -373,7 +373,7 @@
 //
 //        mSocket.on(JOIN_SUCCESS, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                JSONObject receivedData = (JSONObject) args[0];
 //                Intent broadCast = new Intent(JOIN_SUCCESS);
 //                broadCast.putExtra(USER_NAME, receivedData.optString(USER_NAME));
@@ -384,7 +384,7 @@
 //
 //        mSocket.on(GET_STORED_CHAT, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
+//            public void world(Object... args) {
 //                JSONArray receivedData = (JSONArray) args[0];
 //                Intent broadCast = new Intent(GET_STORED_CHAT);
 //                broadCast.putExtra(CHATS, receivedData.toString());
@@ -394,8 +394,8 @@
 //
 //        mSocket.on(RECEIVE_CHAT, new Emitter.Listener() {
 //            @Override
-//            public void call(Object... args) {
-//                Log.d(TAG, "call: receive chat 채팅 받아라");
+//            public void world(Object... args) {
+//                Log.d(TAG, "world: receive chat 채팅 받아라");
 //                JSONObject receivedData = (JSONObject) args[0];
 //                String userId = receivedData.optString(USER_ID);
 //                String message = receivedData.optString(MESSAGE);

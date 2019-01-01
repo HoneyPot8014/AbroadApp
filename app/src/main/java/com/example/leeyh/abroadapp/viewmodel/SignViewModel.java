@@ -22,6 +22,10 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.repository.SignRepository;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.io.ByteArrayOutputStream;
 
@@ -122,6 +126,14 @@ public class SignViewModel extends AndroidViewModel {
         }
         mRepository.getListener().onTaskStarted();
         mRepository.createUser(mEMail.getValue(), mPassword.getValue(), getBitmapArray());
+    }
+
+    public GoogleSignInClient getGoogleSignInClient() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mApplication.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        return GoogleSignIn.getClient(mApplication, gso);
     }
 
     public static class SignViewModelFactory extends ViewModelProvider.NewInstanceFactory {

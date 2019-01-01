@@ -2,9 +2,7 @@ package com.example.leeyh.abroadapp.view.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,9 +20,11 @@ import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySignInBinding;
+import com.example.leeyh.abroadapp.repository.SignRepository;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.GOOGLE_SIGN_IN;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
 import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
 
@@ -38,7 +38,9 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
-        SignViewModel viewModel = ViewModelProviders.of(this).get(SignViewModel.class);
+        SignRepository repository = new SignRepository();
+        SignViewModel.SignViewModelFactory factory = new SignViewModel.SignViewModelFactory(getApplication(), repository);
+        final SignViewModel viewModel = ViewModelProviders.of(this, factory).get(SignViewModel.class);
         mBinding.setHandler(viewModel);
         mBinding.setLifecycleOwner(this);
         requestLocationPermission();
@@ -47,10 +49,10 @@ public class SignInActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (mBinding.showPassword.isChecked()) {
                     // show password
-                    mBinding.passwordTextView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mBinding.signInPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 } else {
                     // hide password
-                    mBinding.passwordTextView.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mBinding.signInPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
             }
         });
@@ -71,6 +73,15 @@ public class SignInActivity extends AppCompatActivity {
                 startActivityForResult(goToSignUp, SIGN_UP_CODE);
             }
         });
+
+        mBinding.signInGoogleCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = viewModel.getGoogleSignInClient().getSignInIntent();
+                startActivityForResult(intent, GOOGLE_SIGN_IN);
+            }
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -98,8 +109,12 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SIGN_UP_CODE && resultCode == RESULT_OK) {
+        if (requestCode == SIGN_UP_CODE && resultCode == RESULT_OK) {
             mBinding.signInEmailEditText.setText(data.getStringExtra(E_MAIL));
+            return;
+        }
+        if (requestCode == GOOGLE_SIGN_IN && resultCode == RESULT_OK) {
+            //sign up fragment show
         }
     }
 }

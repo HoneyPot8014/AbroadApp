@@ -9,6 +9,7 @@ public class StaticString {
     public static final String NOT_FORMATTED_EMAIL = "notFormattedEmail";
     public static final String ERROR = "error";
     public static final String SUCCESS = "success";
+    public static final int GOOGLE_SIGN_IN = 9999;
 
     public static final String EMIT_EVENT = "event";
     public static final String BROADCAST = "broadCast";
