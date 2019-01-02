@@ -11,26 +11,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySignInBinding;
 import com.example.leeyh.abroadapp.repository.SignRepository;
+import com.example.leeyh.abroadapp.view.fragment.signup.SignInFragment;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
 
-import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
-import static com.example.leeyh.abroadapp.constants.StaticString.GOOGLE_SIGN_IN;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
-import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
 
 public class SignInActivity extends AppCompatActivity {
 
     private ActivitySignInBinding mBinding;
+    private FragmentManager mFragmentManager;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -43,44 +39,19 @@ public class SignInActivity extends AppCompatActivity {
         final SignViewModel viewModel = ViewModelProviders.of(this, factory).get(SignViewModel.class);
         mBinding.setHandler(viewModel);
         mBinding.setLifecycleOwner(this);
+
         requestLocationPermission();
-        mBinding.showPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (mBinding.showPassword.isChecked()) {
-                    // show password
-                    mBinding.signInPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                } else {
-                    // hide password
-                    mBinding.signInPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-            }
-        });
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager.beginTransaction().add(R.id.sign_in_container, new SignInFragment()).commit();
 
-        mBinding.signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToMainTabActivity = new Intent(getApplicationContext(), TabBarMainActivity.class);
-                startActivity(goToMainTabActivity);
-                finish();
-            }
-        });
-
-        mBinding.signUpTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToSignUp = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivityForResult(goToSignUp, SIGN_UP_CODE);
-            }
-        });
-
-        mBinding.signInGoogleCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = viewModel.getGoogleSignInClient().getSignInIntent();
-                startActivityForResult(intent, GOOGLE_SIGN_IN);
-            }
-        });
+//
+//        mBinding.signInGoogleCardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = viewModel.getGoogleSignInClient().getSignInIntent();
+//                startActivityForResult(intent, GOOGLE_SIGN_IN);
+//            }
+//        });
 
     }
 
@@ -109,12 +80,12 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SIGN_UP_CODE && resultCode == RESULT_OK) {
-            mBinding.signInEmailEditText.setText(data.getStringExtra(E_MAIL));
-            return;
-        }
-        if (requestCode == GOOGLE_SIGN_IN && resultCode == RESULT_OK) {
-            //sign up fragment show
-        }
+//        if (requestCode == SIGN_UP_CODE && resultCode == RESULT_OK) {
+//            mBinding.signInEmailEditText.setText(data.getStringExtra(E_MAIL));
+//            return;
+//        }
+//        if (requestCode == GOOGLE_SIGN_IN && resultCode == RESULT_OK) {
+//            //sign up fragment show
+//        }
     }
 }

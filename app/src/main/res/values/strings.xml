@@ -15,7 +15,7 @@
     <string name="splash_sign_up">you don\'t have an account yet?</string>
     <string name="splash_title">abroadApp</string>
     <string name="sign_in_title">Abroad</string>
-    <string name="sign_in_request_sign_up">you don\'t have an account yet?</string>
+    <string name="sign_in_request_sign_up">don\'t have an account?</string>
     <string name="sign_in_request_sign_in">Log in</string>
     <string name="sign_in_email">EMAIL ADDRESS</string>
     <string name="sign_in_password">PASSWORD</string>
