@@ -13,15 +13,20 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySignInBinding;
 import com.example.leeyh.abroadapp.repository.SignRepository;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignInFragment;
+import com.example.leeyh.abroadapp.view.fragment.signup.SignUpDefaultFragment;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
 
+import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.GOOGLE_SIGN_IN;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
+import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -43,16 +48,6 @@ public class SignInActivity extends AppCompatActivity {
         requestLocationPermission();
         mFragmentManager = getSupportFragmentManager();
         mFragmentManager.beginTransaction().add(R.id.sign_in_container, new SignInFragment()).commit();
-
-//
-//        mBinding.signInGoogleCardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = viewModel.getGoogleSignInClient().getSignInIntent();
-//                startActivityForResult(intent, GOOGLE_SIGN_IN);
-//            }
-//        });
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -75,17 +70,5 @@ public class SignInActivity extends AppCompatActivity {
             AlertDialog alertDialog = alertBuilder.create();
             alertDialog.show();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == SIGN_UP_CODE && resultCode == RESULT_OK) {
-//            mBinding.signInEmailEditText.setText(data.getStringExtra(E_MAIL));
-//            return;
-//        }
-//        if (requestCode == GOOGLE_SIGN_IN && resultCode == RESULT_OK) {
-//            //sign up fragment show
-//        }
     }
 }

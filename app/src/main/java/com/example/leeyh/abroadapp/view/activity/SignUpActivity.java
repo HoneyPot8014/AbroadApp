@@ -1,12 +1,10 @@
 package com.example.leeyh.abroadapp.view.activity;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -46,14 +44,14 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onTaskStarted() {
                 mBinding.getRoot().setAlpha(0.6f);
-                mBinding.signUpProgressBar.setVisibility(View.VISIBLE);
+//                mBinding.signUpProgressBar.setVisibility(View.VISIBLE);
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
 
             @Override
             public void onTaskFinished(String status) {
                 mBinding.getRoot().setAlpha(1.0f);
-                mBinding.signUpProgressBar.setVisibility(View.INVISIBLE);
+//                mBinding.signUpProgressBar.setVisibility(View.INVISIBLE);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                 switch (status) {
@@ -77,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
                         break;
                     case SUCCESS:
                         Intent result = new Intent();
-                        result.putExtra(E_MAIL, mBinding.signUpEmailEditTextView.getText().toString());
+//                        result.putExtra(E_MAIL, mBinding.signUpEmailEditTextView.getText().toString());
                         setResult(RESULT_OK, result);
                         finish();
                         break;
@@ -100,9 +98,9 @@ public class SignUpActivity extends AppCompatActivity {
                 , R.array.date_day, R.layout.simple_spinner_item);
         daySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        mBinding.signUpYearSpinner.setAdapter(yearSpinnerAdapter);
-        mBinding.signUpMonthSpinner.setAdapter(monthSpinnerAdapter);
-        mBinding.signUpDaySpinner.setAdapter(daySpinnerAdapter);
+//        mBinding.signUpYearSpinner.setAdapter(yearSpinnerAdapter);
+//        mBinding.signUpMonthSpinner.setAdapter(monthSpinnerAdapter);
+//        mBinding.signUpDaySpinner.setAdapter(daySpinnerAdapter);
 
         mBinding.signUpProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override

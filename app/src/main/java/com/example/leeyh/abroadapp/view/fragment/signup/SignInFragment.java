@@ -27,6 +27,7 @@ import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.FragmentSignInBinding;
 import com.example.leeyh.abroadapp.view.activity.TabBarMainActivity;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignInFragment extends Fragment {
 
@@ -98,11 +99,6 @@ public class SignInFragment extends Fragment {
                         setReturnTransition(explode);
                         setExitTransition(explode);
 
-//                        setSharedElementReturnTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.change_image_transform));
-//                        setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.explode));
-//
-//                        fragment.setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.change_image_transform));
-
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.sign_in_container, fragment).addToBackStack(null)
                                 .addSharedElement(mBinding.signUpRequestButton, "transition_title")
@@ -110,7 +106,6 @@ public class SignInFragment extends Fragment {
                                 .addSharedElement(mBinding.signInFacebookImageView, "facebook")
                                 .addSharedElement(mBinding.signInEmailImageView, "mail")
                                 .commit();
-//                        mBinding.singUpListCardView.setVisibility(View.GONE);
                     }
 
                     @Override

@@ -64,28 +64,28 @@ public class SignViewModel extends AndroidViewModel {
         mProfileBitmap = new MutableLiveData<>();
     }
 
-    public void onGenderCheckChanged(RadioGroup group, int id) {
-        switch (id) {
-            case R.id.sign_up_man_radio_button:
-                mGender.setValue("man");
-                break;
-            case R.id.sign_up_woman_radio_button:
-                mGender.setValue("woman");
-                break;
-        }
-    }
+//    public void onGenderCheckChanged(RadioGroup group, int id) {
+//        switch (id) {
+//            case R.id.sign_up_man_radio_button:
+//                mGender.setValue("man");
+//                break;
+//            case R.id.sign_up_woman_radio_button:
+//                mGender.setValue("woman");
+//                break;
+//        }
+//    }
 
-    public void onYearSpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mDOBYear.setValue(parent.getSelectedItem().toString());
-    }
-
-    public void onMonthSpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mDOBMonth.setValue(parent.getSelectedItem().toString());
-    }
-
-    public void onDaySpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mDOBDay.setValue(parent.getSelectedItem().toString());
-    }
+//    public void onYearSpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        mDOBYear.setValue(parent.getSelectedItem().toString());
+//    }
+//
+//    public void onMonthSpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        mDOBMonth.setValue(parent.getSelectedItem().toString());
+//    }
+//
+//    public void onDaySpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        mDOBDay.setValue(parent.getSelectedItem().toString());
+//    }
 
     public void getImageBitmap(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_CODE) {

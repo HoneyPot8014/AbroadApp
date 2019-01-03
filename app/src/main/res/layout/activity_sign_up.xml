@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/cardview_light_background">
-
+w
             <ImageView
                 android:id="@+id/sign_up_profile_image_view"
                 android:layout_width="100dp"
@@ -34,264 +34,264 @@
                 app:srcCompat="@drawable/user"
                 bind:setProfileImage="@{handler.mProfileBitmap}" />
 
-            <TextView
-                android:id="@+id/sign_up_name_text_view"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/stroke_lower"
-                android:fontFamily="@font/aller_rg"
-                android:gravity="center"
-                android:text="@string/sign_up_name_field"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_profile_image_view" />
+            <!--<TextView-->
+                <!--android:id="@+id/sign_up_name_text_view"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="24dp"-->
+                <!--android:background="@drawable/stroke_lower"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/sign_up_name_field"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_profile_image_view" />-->
 
-            <EditText
-                android:id="@+id/sing_up_name_edit_text_view"
-                android:layout_width="0dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/stroke_lower"
-                android:ems="10"
-                android:fontFamily="@font/aller_rg"
-                android:inputType="textPersonName"
-                android:paddingLeft="50dp"
-                android:text="@={handler.mName}"
-                android:textColor="@color/textColor"
-                android:textCursorDrawable="@android:color/darker_gray"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/sign_up_name_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_profile_image_view" />
+            <!--<EditText-->
+                <!--android:id="@+id/sing_up_name_edit_text_view"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="24dp"-->
+                <!--android:background="@drawable/stroke_lower"-->
+                <!--android:ems="10"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:inputType="textPersonName"-->
+                <!--android:paddingLeft="50dp"-->
+                <!--android:text="@={handler.mName}"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textCursorDrawable="@android:color/darker_gray"-->
+                <!--android:textSize="20sp"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sign_up_name_text_view"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_profile_image_view" />-->
 
-            <TextView
-                android:id="@+id/sing_up_emai_text_view"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:background="@android:color/background_light"
-                android:fontFamily="@font/aller_rg"
-                android:gravity="center"
-                android:text="@string/sign_up_email_field"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_name_text_view" />
+            <!--<TextView-->
+                <!--android:id="@+id/sing_up_emai_text_view"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:background="@android:color/background_light"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/sign_up_email_field"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_name_text_view" />-->
 
-            <EditText
-                android:id="@+id/sign_up_email_edit_text_view"
-                android:layout_width="0dp"
-                android:layout_height="49dp"
-                android:background="@drawable/stroke_test"
-                android:ems="10"
-                android:fontFamily="@font/aller_rg"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="50dp"
-                android:text="@={handler.mEMail}"
-                android:textColor="@color/textColor"
-                android:textCursorDrawable="@android:color/darker_gray"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/sing_up_emai_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/sing_up_name_edit_text_view" />
+            <!--<EditText-->
+                <!--android:id="@+id/sign_up_email_edit_text_view"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:background="@drawable/stroke_test"-->
+                <!--android:ems="10"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:inputType="textEmailAddress"-->
+                <!--android:paddingLeft="50dp"-->
+                <!--android:text="@={handler.mEMail}"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textCursorDrawable="@android:color/darker_gray"-->
+                <!--android:textSize="20sp"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sing_up_emai_text_view"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sing_up_name_edit_text_view" />-->
 
-            <TextView
-                android:id="@+id/sign_up_password_text_view"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/stroke_lower"
-                android:fontFamily="@font/aller_rg"
-                android:gravity="center"
-                android:text="@string/sign_up_password_field"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sing_up_emai_text_view" />
+            <!--<TextView-->
+                <!--android:id="@+id/sign_up_password_text_view"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="32dp"-->
+                <!--android:background="@drawable/stroke_lower"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/sign_up_password_field"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sing_up_emai_text_view" />-->
 
-            <EditText
-                android:id="@+id/sign_up_password_edit_text_view"
-                android:layout_width="0dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/stroke_lower"
-                android:ems="10"
-                android:fontFamily="@font/aller_rg"
-                android:inputType="textPassword"
-                android:paddingLeft="50dp"
-                android:text="@={handler.mPassword}"
-                android:textColor="@color/textColor"
-                android:textCursorDrawable="@android:color/darker_gray"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/sign_up_password_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_email_edit_text_view" />
+            <!--<EditText-->
+                <!--android:id="@+id/sign_up_password_edit_text_view"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="32dp"-->
+                <!--android:background="@drawable/stroke_lower"-->
+                <!--android:ems="10"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:inputType="textPassword"-->
+                <!--android:paddingLeft="50dp"-->
+                <!--android:text="@={handler.mPassword}"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textCursorDrawable="@android:color/darker_gray"-->
+                <!--android:textSize="20sp"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sign_up_password_text_view"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_email_edit_text_view" />-->
 
-            <TextView
-                android:id="@+id/sign_up_password_confirm_text_view"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:background="@android:color/background_light"
-                android:fontFamily="@font/aller_rg"
-                android:gravity="center"
-                android:text="@string/sign_up_password_confirm_field"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_text_view" />
+            <!--<TextView-->
+                <!--android:id="@+id/sign_up_password_confirm_text_view"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:background="@android:color/background_light"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/sign_up_password_confirm_field"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_password_text_view" />-->
 
-            <EditText
-                android:id="@+id/sign_up_password_confirm_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="49dp"
-                android:background="@drawable/stroke_test"
-                android:ems="10"
-                android:fontFamily="@font/aller_rg"
-                android:inputType="textPassword"
-                android:paddingLeft="50dp"
-                android:text="@={handler.mConfirmPassword}"
-                android:textColor="@color/textColor"
-                android:textCursorDrawable="@android:color/darker_gray"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/sign_up_password_confirm_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_edit_text_view" />
+            <!--<EditText-->
+                <!--android:id="@+id/sign_up_password_confirm_edit_text"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:background="@drawable/stroke_test"-->
+                <!--android:ems="10"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:inputType="textPassword"-->
+                <!--android:paddingLeft="50dp"-->
+                <!--android:text="@={handler.mConfirmPassword}"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textCursorDrawable="@android:color/darker_gray"-->
+                <!--android:textSize="20sp"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sign_up_password_confirm_text_view"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_password_edit_text_view" />-->
 
-            <ImageView
-                android:id="@+id/sign_up_password_confirm_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="24dp"
-                android:src="@drawable/checked"
-                android:visibility="@{handler.mPassword.equals(handler.mConfirmPassword)? View.VISIBLE : View.INVISIBLE, default=gone}"
-                app:layout_constraintEnd_toEndOf="@+id/sign_up_password_confirm_edit_text"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_edit_text_view" />
+            <!--<ImageView-->
+                <!--android:id="@+id/sign_up_password_confirm_image_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="12dp"-->
+                <!--android:layout_marginEnd="24dp"-->
+                <!--android:layout_marginRight="24dp"-->
+                <!--android:src="@drawable/checked"-->
+                <!--android:visibility="@{handler.mPassword.equals(handler.mConfirmPassword)? View.VISIBLE : View.INVISIBLE, default=gone}"-->
+                <!--app:layout_constraintEnd_toEndOf="@+id/sign_up_password_confirm_edit_text"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_password_edit_text_view" />-->
 
-            <TextView
-                android:id="@+id/sign_up_gender_text_view"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="32dp"
-                android:background="@android:color/background_light"
-                android:fontFamily="@font/aller_rg"
-                android:gravity="center"
-                android:text="@string/sign_up_gender_field"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_password_confirm_text_view" />
+            <!--<TextView-->
+                <!--android:id="@+id/sign_up_gender_text_view"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="32dp"-->
+                <!--android:background="@android:color/background_light"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/sign_up_gender_field"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_password_confirm_text_view" />-->
 
-            <RadioGroup
-                android:id="@+id/sign_up_radio_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginLeft="48dp"
-                android:onCheckedChanged="@{handler::onGenderCheckChanged}"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@id/sign_up_gender_text_view"
-                app:layout_constraintStart_toEndOf="@+id/sign_up_gender_text_view"
-                app:layout_constraintTop_toTopOf="@id/sign_up_gender_text_view">
+            <!--<RadioGroup-->
+                <!--android:id="@+id/sign_up_radio_group"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="48dp"-->
+                <!--android:layout_marginLeft="48dp"-->
+                <!--android:onCheckedChanged="@{handler::onGenderCheckChanged}"-->
+                <!--android:orientation="horizontal"-->
+                <!--app:layout_constraintBottom_toBottomOf="@id/sign_up_gender_text_view"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sign_up_gender_text_view"-->
+                <!--app:layout_constraintTop_toTopOf="@id/sign_up_gender_text_view">-->
 
-                <RadioButton
-                    android:id="@+id/sign_up_man_radio_button"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/aller_rg"
-                    android:text="men"
-                    android:textAlignment="center"
-                    android:textColor="@color/textColor"
-                    android:textSize="18sp" />
+                <!--<RadioButton-->
+                    <!--android:id="@+id/sign_up_man_radio_button"-->
+                    <!--android:layout_width="100dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:fontFamily="@font/aller_rg"-->
+                    <!--android:text="men"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textColor="@color/textColor"-->
+                    <!--android:textSize="18sp" />-->
 
-                <RadioButton
-                    android:id="@+id/sign_up_woman_radio_button"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/aller_rg"
-                    android:text="woman"
-                    android:textAlignment="center"
-                    android:textColor="@color/textColor"
-                    android:textSize="18sp" />
-            </RadioGroup>
+                <!--<RadioButton-->
+                    <!--android:id="@+id/sign_up_woman_radio_button"-->
+                    <!--android:layout_width="100dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:fontFamily="@font/aller_rg"-->
+                    <!--android:text="woman"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textColor="@color/textColor"-->
+                    <!--android:textSize="18sp" />-->
+            <!--</RadioGroup>-->
 
-            <TextView
-                android:id="@+id/sign_up_date_of_birth_text_view"
-                android:layout_width="80dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/background_light"
-                android:fontFamily="@font/aller_rg"
-                android:gravity="center"
-                android:text="@string/sign_up_dob_field"
-                android:textColor="@color/textColor"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sign_up_gender_text_view" />
+            <!--<TextView-->
+                <!--android:id="@+id/sign_up_date_of_birth_text_view"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:background="@android:color/background_light"-->
+                <!--android:fontFamily="@font/aller_rg"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/sign_up_dob_field"-->
+                <!--android:textColor="@color/textColor"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/sign_up_gender_text_view" />-->
 
-            <Spinner
-                android:id="@+id/sign_up_year_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="29dp"
-                android:layout_marginStart="48dp"
-                android:layout_marginLeft="48dp"
-                android:layout_marginBottom="8dp"
-                android:dropDownWidth="match_parent"
-                android:onItemSelected="@{handler::onYearSpinnerItemSelected}"
-                android:spinnerMode="dialog"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"
-                app:layout_constraintStart_toEndOf="@id/sign_up_date_of_birth_text_view"
-                app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />
+            <!--<Spinner-->
+                <!--android:id="@+id/sign_up_year_spinner"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="29dp"-->
+                <!--android:layout_marginStart="48dp"-->
+                <!--android:layout_marginLeft="48dp"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:dropDownWidth="match_parent"-->
+                <!--android:onItemSelected="@{handler::onYearSpinnerItemSelected}"-->
+                <!--android:spinnerMode="dialog"-->
+                <!--android:textAlignment="center"-->
+                <!--app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"-->
+                <!--app:layout_constraintStart_toEndOf="@id/sign_up_date_of_birth_text_view"-->
+                <!--app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />-->
 
-            <Spinner
-                android:id="@+id/sign_up_month_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="29dp"
-                android:layout_marginBottom="8dp"
-                android:onItemSelected="@{handler::onMonthSpinnerItemSelected}"
-                android:spinnerMode="dialog"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"
-                app:layout_constraintStart_toEndOf="@+id/sign_up_year_spinner"
-                app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />
+            <!--<Spinner-->
+                <!--android:id="@+id/sign_up_month_spinner"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="29dp"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:onItemSelected="@{handler::onMonthSpinnerItemSelected}"-->
+                <!--android:spinnerMode="dialog"-->
+                <!--android:textAlignment="center"-->
+                <!--app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sign_up_year_spinner"-->
+                <!--app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />-->
 
-            <Spinner
-                android:id="@+id/sign_up_day_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="29dp"
-                android:layout_marginBottom="8dp"
-                android:onItemSelected="@{handler::onDaySpinnerItemSelected}"
-                android:spinnerMode="dialog"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"
-                app:layout_constraintStart_toEndOf="@+id/sign_up_month_spinner"
-                app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />
+            <!--<Spinner-->
+                <!--android:id="@+id/sign_up_day_spinner"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="29dp"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:onItemSelected="@{handler::onDaySpinnerItemSelected}"-->
+                <!--android:spinnerMode="dialog"-->
+                <!--android:textAlignment="center"-->
+                <!--app:layout_constraintBottom_toBottomOf="@id/sign_up_date_of_birth_text_view"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/sign_up_month_spinner"-->
+                <!--app:layout_constraintTop_toTopOf="@id/sign_up_date_of_birth_text_view" />-->
 
-            <Button
-                android:id="@+id/sign_up_button"
-                android:layout_width="0dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="32dp"
-                android:background="@android:color/background_light"
-                android:fontFamily="@font/aller_bd"
-                android:onClick="@{handler::onCreateUser}"
-                android:text="Sign Up"
-                android:textAllCaps="false"
-                android:textColor="@color/cBlue"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sign_up_date_of_birth_text_view" />
+            <!--<Button-->
+                <!--android:id="@+id/sign_up_button"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="49dp"-->
+                <!--android:layout_marginTop="32dp"-->
+                <!--android:background="@android:color/background_light"-->
+                <!--android:fontFamily="@font/aller_bd"-->
+                <!--android:onClick="@{handler::onCreateUser}"-->
+                <!--android:text="Sign Up"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/cBlue"-->
+                <!--android:textSize="18sp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/sign_up_date_of_birth_text_view" />-->
 
             <ProgressBar
                 android:id="@+id/sign_up_progress_bar"
