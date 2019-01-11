@@ -9,45 +9,123 @@ import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySignInBinding;
+import com.example.leeyh.abroadapp.repository.RepositoryListener;
 import com.example.leeyh.abroadapp.repository.SignRepository;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignInFragment;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignUpDefaultFragment;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import static com.example.leeyh.abroadapp.constants.StaticString.E_MAIL;
-import static com.example.leeyh.abroadapp.constants.StaticString.GOOGLE_SIGN_IN;
+import static com.example.leeyh.abroadapp.constants.StaticString.ALREADY_EXIST_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.DOB_ERROR;
+import static com.example.leeyh.abroadapp.constants.StaticString.ERROR;
+import static com.example.leeyh.abroadapp.constants.StaticString.INSUFFICIENT_DATA;
 import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_CODE;
-import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP_CODE;
+import static com.example.leeyh.abroadapp.constants.StaticString.NOT_FORMATTED_EMAIL;
+import static com.example.leeyh.abroadapp.constants.StaticString.NOT_MATCH_PASSWORD;
+import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP;
+import static com.example.leeyh.abroadapp.constants.StaticString.SUCCESS;
+import static com.example.leeyh.abroadapp.constants.StaticString.WEAK_PASSWORD;
 
 public class SignInActivity extends AppCompatActivity {
 
     private ActivitySignInBinding mBinding;
     private FragmentManager mFragmentManager;
+    public FirebaseAuth mAuth;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
+
+        init();
+        requestLocationPermission();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null) {
+            Intent goToMain = new Intent(SignInActivity.this, TabBarMainActivity.class);
+            startActivity(goToMain);
+            finish();
+        } else {
+            Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void init() {
+        mAuth = FirebaseAuth.getInstance();
         SignRepository repository = new SignRepository();
+        repository.setRepositoryListener(new RepositoryListener() {
+            @Override
+            public void onTaskStarted() {
+                mBinding.getRoot().setAlpha(0.6f);
+                mBinding.signInProgressBar.setVisibility(View.VISIBLE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+
+            @Override
+            public void onTaskFinished(String status) {
+                mBinding.getRoot().setAlpha(1.0f);
+                mBinding.signInProgressBar.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                switch (status) {
+                    case ALREADY_EXIST_EMAIL:
+                        Toast.makeText(SignInActivity.this, "already exist email use another", Toast.LENGTH_SHORT).show();
+                        break;
+                    case INSUFFICIENT_DATA:
+                        Toast.makeText(SignInActivity.this, "fill the blank", Toast.LENGTH_SHORT).show();
+                        break;
+                    case DOB_ERROR:
+                        Toast.makeText(SignInActivity.this, "check Date Of Birth", Toast.LENGTH_SHORT).show();
+                        break;
+                    case WEAK_PASSWORD:
+                        Toast.makeText(SignInActivity.this, "password require more than 6", Toast.LENGTH_SHORT).show();
+                        break;
+                    case NOT_MATCH_PASSWORD:
+                        Toast.makeText(SignInActivity.this, "not match password. check the password", Toast.LENGTH_SHORT).show();
+                        break;
+                    case NOT_FORMATTED_EMAIL:
+                        Toast.makeText(SignInActivity.this, "not formatted email", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(SignInActivity.this, "failed to create", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SUCCESS:
+                        int backStackCount = mFragmentManager.getBackStackEntryCount();
+                        for(int i = 0; i < backStackCount; i++) {
+                            mFragmentManager.popBackStack();
+                        }
+                        break;
+                }
+            }
+        });
+
         SignViewModel.SignViewModelFactory factory = new SignViewModel.SignViewModelFactory(getApplication(), repository);
         final SignViewModel viewModel = ViewModelProviders.of(this, factory).get(SignViewModel.class);
         mBinding.setHandler(viewModel);
         mBinding.setLifecycleOwner(this);
 
-        requestLocationPermission();
         mFragmentManager = getSupportFragmentManager();
-        mFragmentManager.beginTransaction().add(R.id.sign_in_container, new SignInFragment()).commit();
+        mFragmentManager.beginTransaction().replace(R.id.sign_in_container, new SignInFragment()).commit();
+        if(getIntent().getStringExtra(SIGN_UP) != null) {
+            mFragmentManager.beginTransaction().replace(R.id.sign_in_container, new SignUpDefaultFragment()).addToBackStack(null).commit();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

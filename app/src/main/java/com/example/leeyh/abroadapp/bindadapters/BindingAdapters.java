@@ -16,4 +16,11 @@ public class BindingAdapters {
             imageView.setImageBitmap(bitmap);
         }
     }
+
+    @BindingAdapter({"setSignUpExtraProfile"})
+    public static void setExtraSignUpProfile(ImageView imageView, Bitmap bitmap) {
+        if(bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        }
+    }
 }

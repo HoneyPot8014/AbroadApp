@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Abroad</string>
     <string name="sign_up_button">회원가입하기</string>
-    <string name="facebook_application_id" translatable="false">276691663030008</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb276691663030008</string>
-    <string name="twitter_consumer_key" translatable="false">kQnjh8R0Of1yn0nODX3gJssO6</string>
-    <string name="twitter_consumer_secret" translatable="false">EbWUHraoasmMiZwHQOftOFSSIbBQ7FWGtmvWfvuphwwTr4yZSD</string>
+    <!--<string name="facebook_app_id">276691663030008</string>-->
+    <!--<string name="fb_login_protocol_scheme">fb276691663030008</string>-->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -32,5 +30,4 @@
     <string name="sign_up_gender_field">gender</string>
     <string name="sign_up_dob_field">date of birth</string>
     <string name="fragment_location_title">Friends near by you</string>
-
 </resources>

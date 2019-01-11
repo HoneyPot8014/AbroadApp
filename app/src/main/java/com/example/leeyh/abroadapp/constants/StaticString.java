@@ -7,9 +7,15 @@ public class StaticString {
     public static final String WEAK_PASSWORD = "passwordError";
     public static final String NOT_MATCH_PASSWORD = "notMatchPassword";
     public static final String NOT_FORMATTED_EMAIL = "notFormattedEmail";
+    public static final String ALREADY_EXIST_EMAIL = "alreadyExistEmail";
     public static final String ERROR = "error";
     public static final String SUCCESS = "success";
+    public static final String SIGN_UP = "signUp";
+    public static final String GOOGLE = "google";
+    public static final String FACEBOOK = "facebook";
+    public static final String E_MAIL = "e_mail";
     public static final int GOOGLE_SIGN_IN = 9999;
+    public static final int FACEBOOK_SIGN_IN = 9998;
 
     public static final String EMIT_EVENT = "event";
     public static final String BROADCAST = "broadCast";
@@ -22,7 +28,6 @@ public class StaticString {
     public static final String PASSWORD = "password";
     public static final String USER_UUID = "userUuid";
     public static final String ROOM_NAME = "roomName";
-    public static final String E_MAIL = "e_mail";
     public static final String PROFILE = "profile";
     public static final String GENDER = "gender";
     public static final String DOB = "DOB";

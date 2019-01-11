@@ -53,10 +53,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/google_big"
+                    android:transitionName="google"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:transitionName="google"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/sign_up_list_google_text_view"
@@ -82,6 +82,7 @@
             android:layout_marginTop="50dp"
             android:layout_marginEnd="20dp"
             app:cardCornerRadius="8dp"
+            android:visibility="gone"
             app:cardElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -97,10 +98,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/facebook_big"
+                    android:transitionName="facebook"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:transitionName="facebook"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/sign_up_list_item_facebook_text_view"
@@ -141,10 +142,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/world_big"
+                    android:transitionName="mail"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:transitionName="mail"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/sign_up_list_item_mail_text_view"
@@ -162,6 +163,14 @@
 
         </android.support.v7.widget.CardView>
 
+        <!--<com.facebook.login.widget.LoginButton-->
+            <!--android:id="@+id/sign_up_facebook_login_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="visible"-->
+            <!--app:layout_constraintEnd_toEndOf="@id/sign_up_list_facebook_card_view"-->
+            <!--app:layout_constraintStart_toStartOf="@id/sign_up_list_facebook_card_view"-->
+            <!--app:layout_constraintTop_toTopOf="@id/sign_up_list_facebook_card_view" />-->
 
     </android.support.constraint.ConstraintLayout>
 

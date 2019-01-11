@@ -41,6 +41,7 @@
             android:drawableLeft="@drawable/email"
             android:drawablePadding="10dp"
             android:ems="10"
+            android:text="@{handler.mEMail}"
             android:fontFamily="@font/aller_rg"
             android:hint="@string/sign_in_email"
             android:inputType="textEmailAddress"
@@ -154,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:src="@drawable/google"
-                android:transitionName="google"/>
+                android:transitionName="google" />
 
             <ImageView
                 android:id="@+id/sign_in_facebook_image_view"
@@ -163,7 +164,7 @@
                 android:layout_marginStart="30dp"
                 android:padding="5dp"
                 android:src="@drawable/facebook"
-                android:transitionName="facebook"/>
+                android:transitionName="facebook" />
 
             <ImageView
                 android:id="@+id/sign_in_email_image_view"
@@ -172,7 +173,7 @@
                 android:layout_marginStart="60dp"
                 android:padding="5dp"
                 android:src="@drawable/world"
-                android:transitionName="mail"/>
+                android:transitionName="mail" />
         </android.support.v7.widget.CardView>
 
         <Button
@@ -192,6 +193,7 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>

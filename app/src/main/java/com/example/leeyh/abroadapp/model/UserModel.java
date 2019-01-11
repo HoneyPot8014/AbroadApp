@@ -5,11 +5,17 @@ public class UserModel {
     private String uid;
     private String userId;
     private String userImageUrl;
+    private String userName;
+    private String age;
+    private String sex;
 
-    public UserModel(String uid, String userId, String userImageUrl) {
+    public UserModel(String uid, String userId, String userImageUrl, String userName, String age, String sex) {
         this.uid = uid;
         this.userId = userId;
         this.userImageUrl = userImageUrl;
+        this.userName = userName;
+        this.age = age;
+        this.sex = sex;
     }
 
     public String getUid() {
@@ -34,5 +40,29 @@ public class UserModel {
 
     public void setUserImageUrl(String userImageUrl) {
         this.userImageUrl = userImageUrl;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

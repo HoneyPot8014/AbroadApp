@@ -13,6 +13,8 @@ import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySplashBinding;
 import com.example.leeyh.abroadapp.view.CyclicTransitionDrawable;
 
+import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP;
+
 /**
  * Created by bum on 2018. 11. 17..
  */
@@ -50,13 +52,11 @@ public class SplashActivity extends AppCompatActivity {
         mBinding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goToSignUp = new Intent(getApplicationContext(), SignUpActivity.class);
+                Intent goToSignUp = new Intent(getApplicationContext(), SignInActivity.class);
+                goToSignUp.putExtra(SIGN_UP, SIGN_UP);
                 startActivity(goToSignUp);
+                finish();
             }
         });
-
-
-//        FacebookSdk.sdkInitialize(getApplicationContext());
-//        AppEventsLogger.activateApp(this);
     }
 }
