@@ -88,12 +88,12 @@ public class ChatListFragment extends Fragment implements OnResponseReceivedList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnChatListItemClicked) {
-            mChatListListener = (OnChatListItemClicked) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnChatListItemClicked");
-        }
+//        if (context instanceof OnChatListItemClicked) {
+//            mChatListListener = (OnChatListItemClicked) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnChatListItemClicked");
+//        }
     }
 
     @Override

@@ -55,7 +55,6 @@ public class SignRepository {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("에러2", "onFailure: " + e.toString());
                 mListener.onTaskFinished(ERROR);
             }
         });
@@ -63,7 +62,6 @@ public class SignRepository {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
-                    Log.d("에러5", "onFailure: " + task.getException().toString());
                     mListener.onTaskFinished(ERROR);
                     return null;
                 }
@@ -88,7 +86,6 @@ public class SignRepository {
         mDatabaseRef.child(uid).setValue(userInfo).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("에러3", "onFailure: " + e.toString());
                 mListener.onTaskFinished(ERROR);
             }
         }).addOnSuccessListener(new OnSuccessListener<Void>() {

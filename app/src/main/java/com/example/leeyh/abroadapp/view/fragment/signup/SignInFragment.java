@@ -122,6 +122,7 @@ public class SignInFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
+                mAuth.updateCurrentUser(authResult.getUser());
                 Intent goToMain = new Intent(getContext(), TabBarMainActivity.class);
                 startActivity(goToMain);
                 getActivity().finish();

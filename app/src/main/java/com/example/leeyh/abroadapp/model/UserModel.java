@@ -8,14 +8,16 @@ public class UserModel {
     private String userName;
     private String age;
     private String sex;
+    private String country;
 
-    public UserModel(String uid, String userId, String userImageUrl, String userName, String age, String sex) {
+    public UserModel(String uid, String userId, String userImageUrl, String userName, String age, String sex, String country) {
         this.uid = uid;
         this.userId = userId;
         this.userImageUrl = userImageUrl;
         this.userName = userName;
         this.age = age;
         this.sex = sex;
+        this.country = country;
     }
 
     public String getUid() {
@@ -64,5 +66,13 @@ public class UserModel {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

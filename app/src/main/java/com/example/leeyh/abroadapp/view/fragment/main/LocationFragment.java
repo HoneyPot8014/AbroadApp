@@ -1,63 +1,45 @@
-package com.example.leeyh.abroadapp.view.fragment;
+package com.example.leeyh.abroadapp.view.fragment.main;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.leeyh.abroadapp.R;
+import com.example.leeyh.abroadapp.adapters.DividerDecorator;
+import com.example.leeyh.abroadapp.adapters.LocationUserAdapter;
 import com.example.leeyh.abroadapp.databinding.FragmentLocationBinding;
+import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class LocationFragment extends Fragment {
+public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     FragmentLocationBinding mBinding;
-
-//    private ApplicationManagement mAppManager;
-//    private FusedLocationProviderClient mFusedLocationClient;
-//    private MemberListAdapter mAdapter;
-//    private SharedPreferences mSharedPreferences;
-//    private ImageButton mSettingButton;
-//    private boolean mIsShown = false;
-//    private double mDistance = 5.0;
-//    private ImageButton fragSearchButton;
-//    private View diag;
-//    private SeekBar seekBar;
-//    private TextView infoText;
-//    private BottomSheetDialog dialog;
-//    private int locData;
-//    private Button searchButton;
-//    private OnNewChatRoomMaked mOnNewChatRoomMaked;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnChatListItemClicked) {
-//            mOnNewChatRoomMaked = (OnNewChatRoomMaked) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnChatListItemClicked");
-//        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        mAppManager = (ApplicationManagement) getContext().getApplicationContext();
-//        mAppManager.setOnResponseReceivedListener(this);
-//        mAppManager.routeSocket(ROUTE_MAP);
-//        mAppManager.onResponseFromServer(SQL_ERROR);
-//        mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
-//        mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
-//        mSharedPreferences = getActivity().getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -67,120 +49,39 @@ public class LocationFragment extends Fragment {
         View view = mBinding.getRoot();
         UserViewModel viewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         mBinding.setHandler(viewModel);
-//        diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
-//        dialog = new BottomSheetDialog(getActivity());
-//        dialog.setContentView(diag);
-//        fragSearchButton = view.findViewById(R.id.fragSearchButton);
-//        searchButton = diag.findViewById(R.id.searchButton);
-//        seekBar = (SeekBar) diag.findViewById(R.id.locSeekBar);
-//
-//        infoText = diag.findViewById(R.id.infoText);
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-//        RecyclerView recyclerView = view.findViewById(R.id.memberRecyclerView);
-//        recyclerView.setHasFixedSize(true);
-//        LinearLayoutManager recyclerViewManager = new LinearLayoutManager(getContext());
-//        recyclerView.setLayoutManager(recyclerViewManager);
-//        mAdapter = new MemberListAdapter(new RecyclerItemClickListener() {
-//            //when recycler view clicked handle here onItemClicked.
-//            @Override
-//            public void onItemClicked(View view, int position, final JSONObject item) {
-//                try {
-//                    Intent intent = new Intent(getActivity(), MemberDetailViewActivity.class);
-//                    intent.putExtra("name", item.getString(USER_UUID));
-//                    intent.putExtra("realName", item.getString(USER_NAME));
-//                    intent.putExtra("dob", item.getString(DOB));
-//                    intent.putExtra("distance", item.getString(DISTANCE));
-//                    intent.putExtra("lat", item.getString(LATITUDE));
-//                    intent.putExtra("long", item.getString(LONGITUDE));
-//                    intent.putExtra("gen", item.getString(GENDER));
-//                    //intent.putExtra("onoff",item.getString());
-//
-//                    startActivityForResult(intent, 101);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//
-//                /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                builder.setMessage("채팅방 개설 ㄱㄱ?").setPositiveButton("네", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        JSONArray makeRoomIdsData = new JSONArray();
-//                        try {
-//                            makeRoomIdsData.put(mSharedPreferences.getString(USER_UUID, null));
-//                            makeRoomIdsData.put(item.getString(USER_UUID));
-//                            Log.d("여기2", "onClick: " + item.getString(USER_UUID));
-//                            mAppManager.emitRequestToServer(MAKE_CHAT_ROOM, makeRoomIdsData);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.cancel();
-//                    }
-//                }).create().show();*/
-//            }
-//        });
-//
-//        searchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mDistance = locData;
-//                mAppManager.routeSocket(ROUTE_MAP);
-//                mAppManager.onResponseFromServer(SQL_ERROR);
-//                mAppManager.onResponseFromServer(SAVE_LOCATION_SUCCESS);
-//                mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
-//                getLocationPermission();
-//                dialog.dismiss();
-//            }
-//        });
-//
-//        fragSearchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                dialog.show();
-//            }
-//        });
-//
-//
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//                                               @Override
-//                                               public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//                                                   infoText.setText("location in " + i * 5 + " km");
-//                                                   locData = i * 5;
-//                                               }
-//
-//                                               @Override
-//                                               public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//                                               }
-//
-//                                               @Override
-//                                               public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//                                               }
-//                                           }
-//        );
-//
-//        recyclerView.setAdapter(mAdapter);
-//        DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-//        recyclerView.addItemDecoration(myDivider);
-//        getLocationPermission();
-//
-//        View toolView = inflater.inflate(R.layout.fragment_location, container, false);
-//        Toolbar toolbar = (Toolbar) toolView.findViewById(R.id.toolbarLoc);
-//        toolbar.setTitle("hello");
-//
-//        //for crate home button
-//        AppCompatActivity activity = (AppCompatActivity) getActivity();
-//        activity.setSupportActionBar(toolbar);
-//        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        GoogleMap gmap = googleMap;
+        gmap.setMinZoomPreference(12);
+//        LatLng ny = new LatLng(Double.valueOf(uLat), Double.valueOf(uLong));
+//        googleMap.addMarker(new MarkerOptions().position(ny)
+//                .title("Marker in Korea"));
+//        gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
+    }
+
+    private void init() {
+        DividerDecorator decorator = new DividerDecorator(3);
+        LocationUserAdapter adapter = new LocationUserAdapter();
+        mBinding.fragmentLocationRecyclerView.setAdapter(adapter);
+        mBinding.fragmentLocationRecyclerView.addItemDecoration(decorator);
+        mBinding.fragmentLocationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
+        adapter.notifyDataSetChanged();
+
+        mBinding.locationFragmentMapView.getMapAsync(this);
     }
 
 //    @Override

@@ -1,47 +1,19 @@
 package com.example.leeyh.abroadapp.view.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 
 import com.example.leeyh.abroadapp.R;
-import com.example.leeyh.abroadapp.background.OnResponseReceivedListener;
 import com.example.leeyh.abroadapp.databinding.ActivityTabBarMainBinding;
-import com.example.leeyh.abroadapp.helper.ApplicationManagement;
 import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
-import com.example.leeyh.abroadapp.view.fragment.LocationFragment;
+import com.example.leeyh.abroadapp.view.fragment.main.LocationFragment;
 import com.example.leeyh.abroadapp.view.fragment.MyPageFragment;
-import com.example.leeyh.abroadapp.view.fragment.OnChatListItemClicked;
-import com.example.leeyh.abroadapp.view.fragment.OnNewChatRoomMaked;
 import com.example.leeyh.abroadapp.view.fragment.TravelPlanFragment;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_FAILED;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.CHAT_CONNECT_SUCCESS;
-import static com.example.leeyh.abroadapp.constants.SocketEvent.ROUTE_CHAT;
-import static com.example.leeyh.abroadapp.constants.StaticString.CHAT_LIST_FRAGMENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.IS_FOREGROUND;
-import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FRAGMENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.MESSAGE_FROM_SERVICE;
-import static com.example.leeyh.abroadapp.constants.StaticString.MYPAGE_FRAGMENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.ROOM_NAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.TRAVEL_LIST_FRAGMENT;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_INFO;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_NAME;
-import static com.example.leeyh.abroadapp.constants.StaticString.USER_UUID;
 
 public class TabBarMainActivity extends AppCompatActivity {
 

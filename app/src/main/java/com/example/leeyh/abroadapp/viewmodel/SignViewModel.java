@@ -33,11 +33,11 @@ import static com.example.leeyh.abroadapp.constants.StaticString.WEAK_PASSWORD;
 public class SignViewModel extends AndroidViewModel {
 
     private String mGender;
-    private String mSignInMethod;
+    //    private String mSignInMethod;
     private Application mApplication;
     private SignRepository mRepository;
-//    private AuthCredential credential;
-    private GoogleSignInAccount googleAccount;
+    //    private AuthCredential credential;
+//    private GoogleSignInAccount googleAccount;
     public MutableLiveData<String> mName;
     public MutableLiveData<String> mEMail;
     public MutableLiveData<String> mPassword;
@@ -85,7 +85,7 @@ public class SignViewModel extends AndroidViewModel {
     }
 
     private byte[] getBitmapArray() {
-        if(mProfileBitmap == null) {
+        if (mProfileBitmap == null) {
             return null;
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -146,7 +146,7 @@ public class SignViewModel extends AndroidViewModel {
             return;
         }
         mRepository.getListener().onTaskStarted();
-        UserModel user = new UserModel(null, mEMail.getValue(), null, mName.getValue(), mAge.getValue(), mGender);
+        UserModel user = new UserModel(null, mEMail.getValue(), null, mName.getValue(), mAge.getValue(), mGender, mCountry.getValue());
         mRepository.emailCreateUser(mPassword.getValue(), getBitmapArray(), user);
 //        switch (mSignInMethod) {
 //            case GOOGLE:

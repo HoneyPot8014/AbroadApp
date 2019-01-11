@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -24,8 +22,6 @@ import com.example.leeyh.abroadapp.repository.SignRepository;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignInFragment;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignUpDefaultFragment;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.ALREADY_EXIST_EMAIL;
 import static com.example.leeyh.abroadapp.constants.StaticString.DOB_ERROR;
@@ -42,7 +38,6 @@ public class SignInActivity extends AppCompatActivity {
 
     private ActivitySignInBinding mBinding;
     private FragmentManager mFragmentManager;
-    public FirebaseAuth mAuth;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -57,18 +52,9 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null) {
-            Intent goToMain = new Intent(SignInActivity.this, TabBarMainActivity.class);
-            startActivity(goToMain);
-            finish();
-        } else {
-            Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void init() {
-        mAuth = FirebaseAuth.getInstance();
         SignRepository repository = new SignRepository();
         repository.setRepositoryListener(new RepositoryListener() {
             @Override
