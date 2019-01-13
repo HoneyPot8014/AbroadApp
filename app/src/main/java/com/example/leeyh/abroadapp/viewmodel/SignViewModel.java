@@ -146,7 +146,7 @@ public class SignViewModel extends AndroidViewModel {
             return;
         }
         mRepository.getListener().onTaskStarted();
-        UserModel user = new UserModel(null, mEMail.getValue(), null, mName.getValue(), mAge.getValue(), mGender, mCountry.getValue());
+        UserModel user = new UserModel(null, mEMail.getValue(), null, mName.getValue(), mAge.getValue(), mGender, mCountry.getValue(), null);
         mRepository.emailCreateUser(mPassword.getValue(), getBitmapArray(), user);
 //        switch (mSignInMethod) {
 //            case GOOGLE:

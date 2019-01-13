@@ -97,7 +97,7 @@ public class SignRepository {
     }
 
     public void emailCreateUser(String password, final byte[] profileByteArray, final UserModel user) {
-        mAuth.createUserWithEmailAndPassword(user.getUserId(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(user.getUserEMail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {

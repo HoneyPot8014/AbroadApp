@@ -95,6 +95,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:text="my plan is..."
+                android:maxLines="7"
+                android:ellipsize="end"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/location_profile_image_view"

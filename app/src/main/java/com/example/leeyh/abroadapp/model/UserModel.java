@@ -1,23 +1,27 @@
 package com.example.leeyh.abroadapp.model;
 
+import android.support.annotation.Nullable;
+
 public class UserModel {
 
     private String uid;
-    private String userId;
+    private String userEMail;
     private String userImageUrl;
     private String userName;
     private String age;
     private String sex;
     private String country;
+    private String plan;
 
-    public UserModel(String uid, String userId, String userImageUrl, String userName, String age, String sex, String country) {
+    public UserModel(String uid, String userEMail, String userImageUrl, String userName, String age, String sex, String country, @Nullable String plan) {
         this.uid = uid;
-        this.userId = userId;
+        this.userEMail = userEMail;
         this.userImageUrl = userImageUrl;
         this.userName = userName;
         this.age = age;
         this.sex = sex;
         this.country = country;
+        this.plan = plan;
     }
 
     public String getUid() {
@@ -28,12 +32,12 @@ public class UserModel {
         this.uid = uid;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserEMail() {
+        return userEMail;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserEMail(String userId) {
+        this.userEMail = userId;
     }
 
     public String getUserImageUrl() {
@@ -74,5 +78,13 @@ public class UserModel {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getPlan() {
+        return plan;
+    }
+
+    public void setPlan(String plan) {
+        this.plan = plan;
     }
 }

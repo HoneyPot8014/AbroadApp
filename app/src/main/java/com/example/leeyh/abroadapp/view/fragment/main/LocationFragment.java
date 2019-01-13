@@ -1,5 +1,6 @@
 package com.example.leeyh.abroadapp.view.fragment.main;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -8,17 +9,26 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.adapters.DividerDecorator;
 import com.example.leeyh.abroadapp.adapters.LocationUserAdapter;
+import com.example.leeyh.abroadapp.adapters.OnItemClickedListener;
+import com.example.leeyh.abroadapp.databinding.BottomDialogBinding;
 import com.example.leeyh.abroadapp.databinding.FragmentLocationBinding;
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
@@ -30,7 +40,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
-    FragmentLocationBinding mBinding;
+    private FragmentLocationBinding mBinding;
+    private UserViewModel mViewModel;
+    private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyD3q4iAopnm9lr3CHbGXpfBFfnhBAY4w2c";
 
     @Override
     public void onAttach(Context context) {
@@ -40,6 +52,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -47,85 +60,107 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_location, container, false);
         View view = mBinding.getRoot();
-        UserViewModel viewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
-        mBinding.setHandler(viewModel);
+        mViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        mBinding.setHandler(mViewModel);
 
+        mBinding.locationFragmentMapView.onCreate(savedInstanceState);
+        mBinding.locationToolBar.inflateMenu(R.menu.location_menu);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init();
+        init(savedInstanceState);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         GoogleMap gmap = googleMap;
         gmap.setMinZoomPreference(12);
-//        LatLng ny = new LatLng(Double.valueOf(uLat), Double.valueOf(uLong));
-//        googleMap.addMarker(new MarkerOptions().position(ny)
-//                .title("Marker in Korea"));
-//        gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
+        LatLng ny = new LatLng(37.56, 126.97);
+        googleMap.addMarker(new MarkerOptions().position(ny)
+                .title("Marker in Korea"));
+        gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
 
-    private void init() {
+    private void init(Bundle savedInstanceState) {
         DividerDecorator decorator = new DividerDecorator(3);
         LocationUserAdapter adapter = new LocationUserAdapter();
         mBinding.fragmentLocationRecyclerView.setAdapter(adapter);
         mBinding.fragmentLocationRecyclerView.addItemDecoration(decorator);
         mBinding.fragmentLocationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea"));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
+//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
         adapter.notifyDataSetChanged();
 
+        adapter.setListener(new OnItemClickedListener() {
+            @Override
+            public void onItemClicked(int position, Object binding) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, new MemberDetailFragment()).addToBackStack(null).commit();
+            }
+        });
+
+        mBinding.locationFragmentMapView.onCreate(savedInstanceState);
         mBinding.locationFragmentMapView.getMapAsync(this);
+
+        BottomDialogBinding dialogBinding = BottomDialogBinding.inflate(getActivity().getLayoutInflater());
+        dialogBinding.setHandler(mViewModel);
+
+        final BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+        dialog.setContentView(dialogBinding.getRoot());
+        mBinding.locationToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                dialog.show();
+                return true;
+            }
+        });
     }
 
-//    @Override
-//    public void onResponseReceived(String onEvent, Object[] object) {
-//        switch (onEvent) {
-//            case SQL_ERROR:
-//                break;
-//            case SAVE_LOCATION_SUCCESS:
-//                mAdapter.deleteAllItem();
-//                JSONArray receivedData = (JSONArray) object[0];
-//                mAdapter.addList(receivedData);
-//                new Handler(Looper.getMainLooper()) {
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        super.handleMessage(msg);
-//                        mAdapter.notifyDataSetChanged();
-//                    }
-//                }.sendEmptyMessage(0);
-//                routeSocketToChatting();
-//                break;
-//            case NEW_ROOM_CHAT:
-//                new Handler(Looper.getMainLooper()) {
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        super.handleMessage(msg);
-//                        Toast.makeText(mAppManager, "새로운 채팅이 도착했어요", Toast.LENGTH_SHORT).show();
-//                    }
-//                }.sendEmptyMessage(0);
-//                break;
-////            case MAKE_CHAT_ROOM_SUCCESS:
-////                JSONObject makeRoomSuccessObject = (JSONObject) object[0];
-////                Log.d("룸생성", "onResponseReceived: " + makeRoomSuccessObject.optString("roomName"));
-////                new Handler(Looper.getMainLooper()) {
-////                    @Override
-////                    public void handleMessage(Message msg) {
-////                        super.handleMessage(msg);
-////                        Toast.makeText(mAppManager, "성공", Toast.LENGTH_SHORT).show();
-////                    }
-////                }.sendEmptyMessage(0);
-////                break;
-//            case MAKE_CHAT_ROOM_FAILED:
-//                break;
-//        }
-//    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
+        }
+        mBinding.locationFragmentMapView.onSaveInstanceState(mapViewBundle);
+    }
+
 
 //    @RequiresApi(api = Build.VERSION_CODES.M)
 //    public void getLocationPermission() {
@@ -165,58 +200,5 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 //                }
 //            }
 //        });
-//    }
-//
-//    public void sendUserLocation(double latitude, double longitude) {
-//        JSONObject locationData = new JSONObject();
-//        try {
-//            locationData.put(USER_UUID, mSharedPreferences.getString(USER_UUID, null));
-//            locationData.put(USER_NAME, mSharedPreferences.getString(USER_NAME, null));
-//            locationData.put(DISTANCE, mDistance);
-//            locationData.put(LATITUDE, latitude);
-//            locationData.put(LONGITUDE, longitude);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        mAppManager.emitRequestToServer(SAVE_LOCATION, locationData);
-//    }
-//
-//    public void routeSocketToChatting() {
-//        mAppManager.routeSocket(ROUTE_CHAT);
-//        mAppManager.onResponseFromServer(NEW_ROOM_CHAT);
-//        mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_SUCCESS);
-//        mAppManager.onResponseFromServer(MAKE_CHAT_ROOM_FAILED);
-//    }
-//
-//    /*public void onSearchClicked(View view) {
-//        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
-//        View diag = getActivity().getLayoutInflater().inflate(R.layout.bottom_dialog, null);
-//        dialog.setContentView(diag);
-//        // dialog.setContentView();
-//        Log.d("button", "button func" );
-//        Toast.makeText(mAppManager, "새로운 채팅이 도착했어요", Toast.LENGTH_SHORT).show();
-//        dialog.show();
-//    }*/
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//    }
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 101) {
-//            if(data != null) {
-//                if(data.getStringExtra(ROOM_NAME) != null) {
-//                    String roomName = data.getStringExtra(ROOM_NAME);
-//                    mOnNewChatRoomMaked.onNewChatRoomCreated(roomName);
-//                }
-//            }
-//        }
 //    }
 }

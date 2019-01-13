@@ -3,6 +3,7 @@ package com.example.leeyh.abroadapp.adapters;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.leeyh.abroadapp.databinding.NearLocationItemViewBinding;
@@ -13,14 +14,26 @@ import java.util.ArrayList;
 public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapter.LocationUserViewHolder> {
 
     private ArrayList<UserModel> items = new ArrayList<>();
+    private OnItemClickedListener<NearLocationItemViewBinding> mListener;
 
     static class LocationUserViewHolder extends RecyclerView.ViewHolder {
 
         private NearLocationItemViewBinding mBinding;
+        private OnItemClickedListener<NearLocationItemViewBinding> mListener;
 
         LocationUserViewHolder(@NonNull NearLocationItemViewBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+            mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClicked(getAdapterPosition(), mBinding);
+                }
+            });
+        }
+
+        public void setListener(OnItemClickedListener listener) {
+            this.mListener = listener;
         }
     }
 
@@ -33,11 +46,13 @@ public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapte
 
     @Override
     public void onBindViewHolder(@NonNull LocationUserViewHolder locationUserViewHolder, int i) {
-        NearLocationItemViewBinding binding = locationUserViewHolder.mBinding;
-        UserModel user = items.get(i);
+        locationUserViewHolder.setListener(mListener);
+        final NearLocationItemViewBinding binding = locationUserViewHolder.mBinding;
+        final UserModel user = items.get(i);
         binding.locationUserNameTextView.setText(user.getUserName());
         binding.locationUserAgeTextView.setText(user.getAge());
         binding.locationUserCountryTextView.setText(user.getCountry());
+        binding.locationFragmentPlanTextView.setText(user.getPlan());
         binding.executePendingBindings();
     }
 
@@ -48,6 +63,10 @@ public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapte
 
     public void addItem(UserModel model) {
         items.add(model);
+    }
+
+    public void setListener(OnItemClickedListener listener) {
+        mListener = listener;
     }
 
 }
