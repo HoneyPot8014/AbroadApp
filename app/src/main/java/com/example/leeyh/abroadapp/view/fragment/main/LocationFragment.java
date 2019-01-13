@@ -1,6 +1,5 @@
 package com.example.leeyh.abroadapp.view.fragment.main;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -11,18 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.adapters.DividerDecorator;
@@ -30,7 +24,6 @@ import com.example.leeyh.abroadapp.adapters.LocationUserAdapter;
 import com.example.leeyh.abroadapp.adapters.OnItemClickedListener;
 import com.example.leeyh.abroadapp.databinding.BottomDialogBinding;
 import com.example.leeyh.abroadapp.databinding.FragmentLocationBinding;
-import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -86,48 +79,20 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     private void init(Bundle savedInstanceState) {
         DividerDecorator decorator = new DividerDecorator(3);
-        LocationUserAdapter adapter = new LocationUserAdapter();
+        final LocationUserAdapter adapter = new LocationUserAdapter();
         mBinding.fragmentLocationRecyclerView.setAdapter(adapter);
         mBinding.fragmentLocationRecyclerView.addItemDecoration(decorator);
         mBinding.fragmentLocationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is...my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
-//        adapter.addItem(new UserModel("111", "111", "111", "Bum", "26", "man", "Korea", "my plan is..."));
         adapter.notifyDataSetChanged();
 
         adapter.setListener(new OnItemClickedListener() {
             @Override
             public void onItemClicked(int position, Object binding) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_activity_container, new MemberDetailFragment()).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_activity_container, MemberDetailFragment.newInstance(adapter.getItemModel(position)))
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 

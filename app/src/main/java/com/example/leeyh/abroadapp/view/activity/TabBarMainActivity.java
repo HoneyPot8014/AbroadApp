@@ -1,21 +1,31 @@
 package com.example.leeyh.abroadapp.view.activity;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivityTabBarMainBinding;
+import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.repository.UserRepository;
 import com.example.leeyh.abroadapp.view.fragment.ChatListFragment;
 import com.example.leeyh.abroadapp.view.fragment.main.LocationFragment;
 import com.example.leeyh.abroadapp.view.fragment.MyPageFragment;
 import com.example.leeyh.abroadapp.view.fragment.TravelPlanFragment;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
+
+import java.util.ArrayList;
+
+import static com.example.leeyh.abroadapp.constants.StaticString.ERROR;
+import static com.example.leeyh.abroadapp.constants.StaticString.LOCATION_FAILED;
 
 public class TabBarMainActivity extends AppCompatActivity {
 
@@ -28,7 +38,8 @@ public class TabBarMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tab_bar_main);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_tab_bar_main);
-        UserViewModel.UserViewModelFactory factory = new UserViewModel.UserViewModelFactory(getApplication(), new UserRepository());
+        UserRepository userRepository = new UserRepository();
+        UserViewModel.UserViewModelFactory factory = new UserViewModel.UserViewModelFactory(getApplication(), userRepository);
         UserViewModel viewModel = ViewModelProviders.of(this, factory).get(UserViewModel.class);
         mBinding.setHandler(viewModel);
         mBinding.setLifecycleOwner(this);
@@ -70,5 +81,18 @@ public class TabBarMainActivity extends AppCompatActivity {
 
         viewModel.saveUserLocation();
 
+        viewModel.getStatus().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                switch (s) {
+                    case LOCATION_FAILED:
+                        Toast.makeText(TabBarMainActivity.this, "Failed to catch user Location", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ERROR:
+                        Toast.makeText(TabBarMainActivity.this, "Failed to load User", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 }

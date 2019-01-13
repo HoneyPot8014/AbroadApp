@@ -2,6 +2,7 @@ package com.example.leeyh.abroadapp.constants;
 
 public class StaticString {
 
+    public static final String MODEL = "model";
     public static final String INSUFFICIENT_DATA = "insufficientData";
     public static final String DOB_ERROR = "dobError";
     public static final String WEAK_PASSWORD = "passwordError";
@@ -9,6 +10,7 @@ public class StaticString {
     public static final String NOT_FORMATTED_EMAIL = "notFormattedEmail";
     public static final String ALREADY_EXIST_EMAIL = "alreadyExistEmail";
     public static final String ERROR = "error";
+    public static final String LOAD_IMAGE_FAILED = "loadImageFailed";
     public static final String SUCCESS = "success";
     public static final String SIGN_UP = "signUp";
     public static final String GOOGLE = "google";
@@ -16,6 +18,8 @@ public class StaticString {
     public static final String E_MAIL = "e_mail";
     public static final int GOOGLE_SIGN_IN = 9999;
     public static final int FACEBOOK_SIGN_IN = 9998;
+
+    public static final String LOCATION_FAILED = "locationFailed";
 
     public static final String EMIT_EVENT = "event";
     public static final String BROADCAST = "broadCast";

@@ -45,7 +45,7 @@ public class SocketEvent {
 
     //ROUTE_MAP
     public static final String ROUTE_MAP = "/chat/map";
-    public static final String SAVE_LOCATION = "saveLocation";
+    public static final String SAVE_LOCATION = "saveLocationQuery";
     public static final String SAVE_LOCATION_SUCCESS = "saveLocationSuccess";
     public static final String NO_NEAR_USER = "noNearUser";
     public static final String GET_LOCATION_USER = "getUserLocation";

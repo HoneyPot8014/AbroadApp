@@ -26,8 +26,8 @@
                 android:id="@+id/location_profile_image_view"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/female_gray" />
-
+                android:src="@drawable/female_gray"
+                android:transitionName="profile"/>
 
             <ImageView
                 android:id="@+id/location_fragment_status_button"

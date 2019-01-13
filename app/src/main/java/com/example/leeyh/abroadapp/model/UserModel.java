@@ -1,8 +1,10 @@
 package com.example.leeyh.abroadapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-public class UserModel {
+public class UserModel implements Parcelable {
 
     private String uid;
     private String userEMail;
@@ -13,6 +15,10 @@ public class UserModel {
     private String country;
     private String plan;
 
+    public UserModel() {
+
+    }
+
     public UserModel(String uid, String userEMail, String userImageUrl, String userName, String age, String sex, String country, @Nullable String plan) {
         this.uid = uid;
         this.userEMail = userEMail;
@@ -22,6 +28,46 @@ public class UserModel {
         this.sex = sex;
         this.country = country;
         this.plan = plan;
+    }
+
+    public static final Creator<UserModel> CREATOR = new Creator<UserModel>() {
+        @Override
+        public UserModel createFromParcel(Parcel in) {
+            return new UserModel(in);
+        }
+
+        @Override
+        public UserModel[] newArray(int size) {
+            return new UserModel[size];
+        }
+    };
+
+    protected UserModel(Parcel in) {
+        uid = in.readString();
+        userEMail = in.readString();
+        userImageUrl = in.readString();
+        userName = in.readString();
+        age = in.readString();
+        sex = in.readString();
+        country = in.readString();
+        plan = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uid);
+        dest.writeString(userEMail);
+        dest.writeString(userImageUrl);
+        dest.writeString(userName);
+        dest.writeString(age);
+        dest.writeString(sex);
+        dest.writeString(country);
+        dest.writeString(plan);
     }
 
     public String getUid() {

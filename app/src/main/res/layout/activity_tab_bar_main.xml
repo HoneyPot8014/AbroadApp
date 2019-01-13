@@ -5,9 +5,10 @@
     tools:context=".view.activity.TabBarMainActivity">
 
     <data>
+
         <variable
             name="handler"
-            type="com.example.leeyh.abroadapp.viewmodel.UserViewModel"/>
+            type="com.example.leeyh.abroadapp.viewmodel.UserViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -95,6 +96,13 @@
                 android:textSize="10sp" />
 
         </LinearLayout>
+
+
+        <FrameLayout
+            android:id="@+id/member_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

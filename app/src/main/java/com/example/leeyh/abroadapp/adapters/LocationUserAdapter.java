@@ -1,15 +1,20 @@
 package com.example.leeyh.abroadapp.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.leeyh.abroadapp.databinding.NearLocationItemViewBinding;
 import com.example.leeyh.abroadapp.model.UserModel;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapter.LocationUserViewHolder> {
 
@@ -47,8 +52,12 @@ public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapte
     @Override
     public void onBindViewHolder(@NonNull LocationUserViewHolder locationUserViewHolder, int i) {
         locationUserViewHolder.setListener(mListener);
+        Context context = locationUserViewHolder.mBinding.getRoot().getContext();
         final NearLocationItemViewBinding binding = locationUserViewHolder.mBinding;
         final UserModel user = items.get(i);
+        if(user.getUserImageUrl() != null && !user.getUserImageUrl().equals("")) {
+            Glide.with(context).load(user.getUserImageUrl()).apply(RequestOptions.bitmapTransform(new CropCircleTransformation())).into(binding.locationProfileImageView);
+        }
         binding.locationUserNameTextView.setText(user.getUserName());
         binding.locationUserAgeTextView.setText(user.getAge());
         binding.locationUserCountryTextView.setText(user.getCountry());
@@ -63,6 +72,10 @@ public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapte
 
     public void addItem(UserModel model) {
         items.add(model);
+    }
+
+    public UserModel getItemModel(int position) {
+        return items.get(position);
     }
 
     public void setListener(OnItemClickedListener listener) {
