@@ -19,6 +19,7 @@ import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.ActivitySignInBinding;
 import com.example.leeyh.abroadapp.repository.RepositoryListener;
 import com.example.leeyh.abroadapp.repository.SignRepository;
+import com.example.leeyh.abroadapp.view.fragment.signup.LoadingListener;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignInFragment;
 import com.example.leeyh.abroadapp.view.fragment.signup.SignUpDefaultFragment;
 import com.example.leeyh.abroadapp.viewmodel.SignViewModel;
@@ -34,7 +35,7 @@ import static com.example.leeyh.abroadapp.constants.StaticString.SIGN_UP;
 import static com.example.leeyh.abroadapp.constants.StaticString.SUCCESS;
 import static com.example.leeyh.abroadapp.constants.StaticString.WEAK_PASSWORD;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements LoadingListener {
 
     private ActivitySignInBinding mBinding;
     private FragmentManager mFragmentManager;
@@ -134,5 +135,19 @@ public class SignInActivity extends AppCompatActivity {
             AlertDialog alertDialog = alertBuilder.create();
             alertDialog.show();
         }
+    }
+
+    @Override
+    public void onRequesting() {
+        mBinding.getRoot().setAlpha(0.6f);
+        mBinding.signInProgressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    public void onRequestFinished() {
+        mBinding.getRoot().setAlpha(1.0f);
+        mBinding.signInProgressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 }

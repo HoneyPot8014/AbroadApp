@@ -85,7 +85,7 @@ public class SignViewModel extends AndroidViewModel {
     }
 
     private byte[] getBitmapArray() {
-        if (mProfileBitmap == null) {
+        if (mProfileBitmap.getValue() == null) {
             return null;
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -146,7 +146,7 @@ public class SignViewModel extends AndroidViewModel {
             return;
         }
         mRepository.getListener().onTaskStarted();
-        UserModel user = new UserModel(null, mEMail.getValue(), null, mName.getValue(), mAge.getValue(), mGender, mCountry.getValue(), null);
+        UserModel user = new UserModel(null, mEMail.getValue(), null, mName.getValue(), mAge.getValue(), mGender, mCountry.getValue());
         mRepository.emailCreateUser(mPassword.getValue(), getBitmapArray(), user);
 //        switch (mSignInMethod) {
 //            case GOOGLE:

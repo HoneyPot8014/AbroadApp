@@ -12,6 +12,8 @@ import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.adapters.LocationUserAdapter;
 import com.example.leeyh.abroadapp.model.UserModel;
 
+import java.util.ArrayList;
+
 public class BindingAdapters {
 
 
@@ -32,13 +34,12 @@ public class BindingAdapters {
     }
 
     @BindingAdapter({"setUser"})
-    public static void setUser(RecyclerView recyclerView, MutableLiveData<UserModel> userModel) {
+    public static void setUser(RecyclerView recyclerView, MutableLiveData<ArrayList<UserModel>> userList) {
         final LocationUserAdapter adapter = (LocationUserAdapter) recyclerView.getAdapter();
-        userModel.observeForever(new Observer<UserModel>() {
+        userList.observeForever(new Observer<ArrayList<UserModel>>() {
             @Override
-            public void onChanged(@Nullable UserModel userModel) {
-                adapter.addItem(userModel);
-                adapter.notifyDataSetChanged();
+            public void onChanged(@Nullable ArrayList<UserModel> userModels) {
+                adapter.setItems(userModels);
             }
         });
     }

@@ -14,12 +14,20 @@ public class UserModel implements Parcelable {
     private String sex;
     private String country;
     private String plan;
+    private double latitude;
+    private double longitude;
+    private CommentModel comments;
 
     public UserModel() {
 
     }
 
-    public UserModel(String uid, String userEMail, String userImageUrl, String userName, String age, String sex, String country, @Nullable String plan) {
+    public UserModel(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public UserModel(String uid, String userEMail, String userImageUrl, String userName, String age, String sex, String country) {
         this.uid = uid;
         this.userEMail = userEMail;
         this.userImageUrl = userImageUrl;
@@ -132,5 +140,29 @@ public class UserModel implements Parcelable {
 
     public void setPlan(String plan) {
         this.plan = plan;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public CommentModel getComments() {
+        return comments;
+    }
+
+    public void setComments(CommentModel comments) {
+        this.comments = comments;
     }
 }

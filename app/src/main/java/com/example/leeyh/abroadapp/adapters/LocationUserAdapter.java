@@ -2,6 +2,7 @@ package com.example.leeyh.abroadapp.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapter.LocationUserViewHolder> {
 
-    private ArrayList<UserModel> items = new ArrayList<>();
+    private ArrayList<UserModel> mItems = new ArrayList<>();
     private OnItemClickedListener<NearLocationItemViewBinding> mListener;
 
     static class LocationUserViewHolder extends RecyclerView.ViewHolder {
@@ -54,8 +55,8 @@ public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapte
         locationUserViewHolder.setListener(mListener);
         Context context = locationUserViewHolder.mBinding.getRoot().getContext();
         final NearLocationItemViewBinding binding = locationUserViewHolder.mBinding;
-        final UserModel user = items.get(i);
-        if(user.getUserImageUrl() != null && !user.getUserImageUrl().equals("")) {
+        final UserModel user = mItems.get(i);
+        if (user.getUserImageUrl() != null && !user.getUserImageUrl().equals("")) {
             Glide.with(context).load(user.getUserImageUrl()).apply(RequestOptions.bitmapTransform(new CropCircleTransformation())).into(binding.locationProfileImageView);
         }
         binding.locationUserNameTextView.setText(user.getUserName());
@@ -67,15 +68,23 @@ public class LocationUserAdapter extends RecyclerView.Adapter<LocationUserAdapte
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return mItems.size();
+    }
+
+    public void setItems(ArrayList<UserModel> list) {
+        ListDiffUtil diffCallback = new ListDiffUtil(this.mItems, list);
+        final DiffUtil.DiffResult newItems = DiffUtil.calculateDiff(diffCallback);
+        this.mItems.clear();
+        this.mItems.addAll(list);
+        newItems.dispatchUpdatesTo(this);
     }
 
     public void addItem(UserModel model) {
-        items.add(model);
+        mItems.add(model);
     }
 
     public UserModel getItemModel(int position) {
-        return items.get(position);
+        return mItems.get(position);
     }
 
     public void setListener(OnItemClickedListener listener) {

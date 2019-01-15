@@ -27,7 +27,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:src="@drawable/female_gray"
-                android:transitionName="profile"/>
+                android:transitionName="profile" />
 
             <ImageView
                 android:id="@+id/location_fragment_status_button"
@@ -45,6 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/aller_bd"
                 android:text="Bum"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@id/location_fragment_status_button"
@@ -57,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/aller_bd"
                 android:text="20"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@id/location_user_name_text_view"
@@ -69,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/aller_bd"
                 android:text="Korea"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@id/location_user_age_text_view"
@@ -94,9 +97,10 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="my plan is..."
-                android:maxLines="7"
+                android:fontFamily="@font/aller_rg"
                 android:ellipsize="end"
+                android:maxLines="7"
+                android:text="my plan is..."
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/location_profile_image_view"

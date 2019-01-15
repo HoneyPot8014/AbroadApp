@@ -2,6 +2,7 @@ package com.example.leeyh.abroadapp.view.fragment.signup;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -29,6 +31,15 @@ public class SignInFragment extends Fragment {
 
     private FragmentSignInBinding mBinding;
     private FirebaseAuth mAuth;
+    private LoadingListener mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof LoadingListener) {
+            mListener = (LoadingListener) context;
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,10 +129,17 @@ public class SignInFragment extends Fragment {
     }
 
     private void requestSignIn() {
+        if(mBinding.signInEmailEditText.getText().toString().equals("") &&
+                mBinding.signInPasswordEditText.getText().toString().equals("")) {
+            Toast.makeText(getContext(), "input your e-mail and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mListener.onRequesting();
         mAuth.signInWithEmailAndPassword(mBinding.signInEmailEditText.getText().toString(), mBinding.signInPasswordEditText.getText().toString())
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
+                mListener.onRequestFinished();
                 mAuth.updateCurrentUser(authResult.getUser());
                 Intent goToMain = new Intent(getContext(), TabBarMainActivity.class);
                 startActivity(goToMain);
@@ -130,6 +148,7 @@ public class SignInFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                mListener.onRequestFinished();
                 Toast.makeText(getContext(), "Check Your E-Mail and Password", Toast.LENGTH_SHORT).show();
             }
         });

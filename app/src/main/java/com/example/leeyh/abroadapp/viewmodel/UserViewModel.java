@@ -18,6 +18,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.leeyh.abroadapp.helper.Cache;
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.repository.QueryFinishedListener;
 import com.example.leeyh.abroadapp.repository.UserRepository;
@@ -27,6 +28,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static com.example.leeyh.abroadapp.constants.StaticString.LOAD_IMAGE_FAILED;
@@ -38,10 +40,12 @@ public class UserViewModel extends AndroidViewModel {
     private FirebaseAuth mAuth;
     private UserRepository mRepository;
     private FusedLocationProviderClient mLocationProvider;
+    private ArrayList<UserModel> mUserList;
+    private MutableLiveData<double[]> mMutableLocation;
     private MutableLiveData<String> mStatus;
     private MutableLiveData<Bitmap> mProfileBitmap;
-    private ArrayList<UserModel> userList;
-    public MutableLiveData<UserModel> mMutableUser;
+    public MutableLiveData<ArrayList<UserModel>> mMutableUserList;
+    public MutableLiveData<UserModel> currentDetailUser;
 
     public UserViewModel(@NonNull Application application, UserRepository repository) {
         super(application);
@@ -50,18 +54,21 @@ public class UserViewModel extends AndroidViewModel {
         this.mRepository = repository;
         this.mLocationProvider = LocationServices.getFusedLocationProviderClient(application);
 
-        this.userList = new ArrayList<>();
+        this.mUserList = new ArrayList<>();
+        this.mMutableUserList = new MutableLiveData<>();
+        this.mMutableLocation = new MutableLiveData<>();
         this.mProfileBitmap = new MutableLiveData<>();
-        this.mMutableUser = new MutableLiveData<>();
         this.mStatus = new MutableLiveData<>();
+        this.currentDetailUser = new MutableLiveData<>();
 
         mRepository.setQueryListener(new QueryFinishedListener() {
             @Override
             public void onQueryFinished(UserModel userModel) {
-                if(userModel != null) {
+                if (userModel != null) {
                     if (!mAuth.getCurrentUser().getUid().equals(userModel.getUid())) {
-                        mMutableUser.setValue(userModel);
-                        userList.add(userModel);
+                        mUserList.add(userModel);
+                        mMutableUserList.setValue(mUserList);
+//                        mMutableUser.setValue(userModel);
                         mStatus.setValue(mRepository.getStatus());
                     }
                 }
@@ -76,6 +83,8 @@ public class UserViewModel extends AndroidViewModel {
             public void onSuccess(Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
+                double[] userLocate = {latitude, longitude};
+                mMutableLocation.setValue(userLocate);
                 mRepository.saveLocationQuery(latitude, longitude, 5);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -87,8 +96,9 @@ public class UserViewModel extends AndroidViewModel {
 
     }
 
-    public void getProfileBitmap(UserModel userModel) {
-        if(userModel.getUserImageUrl() != null) {
+    public void requestProfileBitmap(final UserModel userModel) {
+        currentDetailUser.setValue(userModel);
+        if (userModel.getUserImageUrl() != null) {
             Glide.with(mApplication)
                     .asBitmap()
                     .load(userModel.getUserImageUrl())
@@ -101,12 +111,12 @@ public class UserViewModel extends AndroidViewModel {
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            Cache.getCache().put(userModel.getUid(), resource);
                             mProfileBitmap.setValue(resource);
                             return false;
                         }
                     }).submit();
         }
-
     }
 
     public static class UserViewModelFactory extends ViewModelProvider.NewInstanceFactory {
@@ -130,13 +140,20 @@ public class UserViewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<UserModel> getUser() {
-        return mMutableUser;
+    public LiveData<ArrayList<UserModel>> getUserList() {
+        return mMutableUserList;
     }
 
-    public MutableLiveData<String> getStatus() {
+    public LiveData<String> getStatus() {
         return mStatus;
     }
 
+    public LiveData<Bitmap> getProfileBitmap() {
+        return mProfileBitmap;
+    }
+
+    public LiveData<double[]> getLocation() {
+        return mMutableLocation;
+    }
 
 }

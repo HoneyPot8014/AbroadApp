@@ -1,12 +1,13 @@
 package com.example.leeyh.abroadapp.view.fragment.main;
 
 
+import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -14,19 +15,16 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.databinding.FragmentMemberDetailBinding;
+import com.example.leeyh.abroadapp.helper.Cache;
 import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
 
@@ -39,12 +37,13 @@ public class MemberDetailFragment extends Fragment {
     private FragmentMemberDetailBinding mBinding;
     private Bitmap mBitmap;
     private UserModel user;
+    private UserViewModel mViewModel;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(getArguments() != null) {
-            if(getArguments().getParcelable(MODEL) != null) {
+        if (getArguments() != null) {
+            if (getArguments().getParcelable(MODEL) != null) {
                 user = getArguments().getParcelable(MODEL);
             }
         }
@@ -53,43 +52,36 @@ public class MemberDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_member_detail, container, false);
-        UserViewModel viewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
-        mBinding.setHandler(viewModel);
-
-        Glide.with(getContext())
-                .asBitmap()
-                .load("https://firebasestorage.googleapis.com/v0/b/abroadapp-22417.appspot.com/o/userProfileImage%2FA1iuG0SDo0W7v2pIDrK6jeA1S5p2.jpg?alt=media&token=bef1012a-4e5d-43d6-9832-36e8ed468545")
-                .addListener(new RequestListener<Bitmap>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                        Toast.makeText(getContext(), "Failed To load Profile", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        mBitmap = resource;
-                        mBinding.detailMemberProfileImageView.setImageBitmap(resource);
-                        BITMAP_ORIGINAL_HEIGHT = mBinding.detailMemberProfileImageView.getLayoutParams().height;
-                        return false;
-                    }
-                }).into(mBinding.detailMemberProfileImageView);
+        mViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        mBinding.setHandler(mViewModel);
+        getProfile();
 
         return mBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mBinding.detailMemberProfileImageView.setOnTouchListener(new View.OnTouchListener() {
-            float oldY;
-            float newY;
+
+        mBinding.detailMemberBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        mBinding.getRoot().setOnTouchListener(new View.OnTouchListener() {
+            int oldY;
+            int newY;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (mBitmap == null) {
+                    return false;
+                }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        oldY = event.getY();
-                        newY = event.getY();
+                        oldY = (int) event.getY();
+                        newY = (int) event.getY();
                         break;
 
                     case MotionEvent.ACTION_MOVE:
@@ -98,7 +90,7 @@ public class MemberDetailFragment extends Fragment {
                                 newY = (int) event.getY();
                                 mBinding.detailMemberProfileImageView.setImageBitmap(createBlurBitmap(mBitmap, mResizeFlag));
                                 ViewGroup.LayoutParams params = mBinding.detailMemberProfileImageView.getLayoutParams();
-                                params.height += 10;
+                                params.height += Math.sqrt(newY - oldY);
                                 mBinding.detailMemberProfileImageView.setLayoutParams(params);
                                 mResizeFlag += 2;
                             }
@@ -106,7 +98,7 @@ public class MemberDetailFragment extends Fragment {
                             if (mResizeFlag > 1) {
                                 mBinding.detailMemberProfileImageView.setImageBitmap(createBlurBitmap(mBitmap, mResizeFlag));
                                 ViewGroup.LayoutParams params = mBinding.detailMemberProfileImageView.getLayoutParams();
-                                params.height -= 10;
+                                params.height -= Math.sqrt(newY - oldY);
                                 mBinding.detailMemberProfileImageView.setLayoutParams(params);
                                 mResizeFlag -= 2;
                             }
@@ -121,13 +113,82 @@ public class MemberDetailFragment extends Fragment {
                         mResizeFlag = 0;
                         break;
                 }
-                return true;
+                return false;
             }
         });
+
+//        mBinding.detailMemberProfileImageView.setOnTouchListener(new View.OnTouchListener() {
+//            float oldY;
+//            float newY;
+//            @SuppressLint("ClickableViewAccessibility")
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (mBitmap == null) {
+//                    return false;
+//                }
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        oldY = event.getY();
+//                        newY = event.getY();
+//                        break;
+//
+//                    case MotionEvent.ACTION_MOVE:
+//                        if (newY < event.getY()) {
+//                            if (mResizeFlag <= 50) {
+//                                newY = (int) event.getY();
+//                                mBinding.detailMemberProfileImageView.setImageBitmap(createBlurBitmap(mBitmap, mResizeFlag));
+//                                ViewGroup.LayoutParams params = mBinding.detailMemberProfileImageView.getLayoutParams();
+//                                params.height += 15;
+//                                mBinding.detailMemberProfileImageView.setLayoutParams(params);
+//                                mResizeFlag += 2;
+//                            }
+//                        } else {
+//                            if (mResizeFlag > 1) {
+//                                mBinding.detailMemberProfileImageView.setImageBitmap(createBlurBitmap(mBitmap, mResizeFlag));
+//                                ViewGroup.LayoutParams params = mBinding.detailMemberProfileImageView.getLayoutParams();
+//                                params.height -= 15;
+//                                mBinding.detailMemberProfileImageView.setLayoutParams(params);
+//                                mResizeFlag -= 2;
+//                            }
+//                        }
+//                        break;
+//
+//                    case MotionEvent.ACTION_UP:
+//                        mBinding.detailMemberProfileImageView.setImageBitmap(createBlurBitmap(mBitmap, 0));
+//                        ViewGroup.LayoutParams params = mBinding.detailMemberProfileImageView.getLayoutParams();
+//                        params.height = BITMAP_ORIGINAL_HEIGHT;
+//                        mBinding.detailMemberProfileImageView.setLayoutParams(params);
+//                        mResizeFlag = 0;
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+    }
+
+    private void getProfile() {
+        if (user.getUserImageUrl() == null || user.getUserImageUrl().equals("")) {
+            mBinding.detailMemberProfileImageView.setImageResource(R.drawable.empty_profile);
+            return;
+        }
+        if (Cache.getCache().get(user.getUid()) == null) {
+            mViewModel.requestProfileBitmap(user);
+            mViewModel.getProfileBitmap().observe(this, new Observer<Bitmap>() {
+                @Override
+                public void onChanged(@Nullable Bitmap bitmap) {
+                    mBitmap = bitmap;
+                    mBinding.detailMemberProfileImageView.setImageBitmap(mBitmap);
+                    BITMAP_ORIGINAL_HEIGHT = mBitmap.getHeight();
+                }
+            });
+        } else {
+            mBitmap = Cache.getCache().get(user.getUid());
+            mBinding.detailMemberProfileImageView.setImageBitmap(mBitmap);
+
+        }
     }
 
     public static MemberDetailFragment newInstance(UserModel userModel) {
-
         Bundle data = new Bundle();
         data.putParcelable(MODEL, userModel);
         MemberDetailFragment fragment = new MemberDetailFragment();

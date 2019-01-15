@@ -18,6 +18,7 @@ public class StaticString {
     public static final String E_MAIL = "e_mail";
     public static final int GOOGLE_SIGN_IN = 9999;
     public static final int FACEBOOK_SIGN_IN = 9998;
+    public static final int CACHE_SIZE = 1024 * 1024 * 4;
 
     public static final String LOCATION_FAILED = "locationFailed";
 
@@ -59,7 +60,7 @@ public class StaticString {
     public static final int SIGN_UP_CODE = 1112;
     public static final int LOCATION_CODE = 1113;
     public static final int MAX_MEMORY = (int) (Runtime.getRuntime().maxMemory() / 1024);
-    public static final int CACHE_SIZE = MAX_MEMORY / 6;
+//    public static final int CACHE_SIZE = MAX_MEMORY / 6;
 
     public static final long MIN_DISTANCE_FOR_UPDATE = 1000;
     public static final long MIN_TIME_FOR_UPDATE = 1000 * 60 * 10;

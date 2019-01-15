@@ -24,7 +24,6 @@ public class UserRepository {
     private GeoFire mGeoFire;
     private DatabaseReference mUserDB;
     private QueryFinishedListener mQueryListener;
-    private RepositoryListener mRepositoryListener;
 
     public UserRepository() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -45,12 +44,17 @@ public class UserRepository {
                     GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(latitude, longitude), distance);
                     geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                         @Override
-                        public void onKeyEntered(String key, GeoLocation location) {
+                        public void onKeyEntered(String key, final GeoLocation location) {
                             mUserDB.child(key).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     mStatus = SUCCESS;
-                                    mQueryListener.onQueryFinished(dataSnapshot.getValue(UserModel.class));
+                                    UserModel user = dataSnapshot.getValue(UserModel.class);
+                                    if(user != null) {
+                                        user.setLatitude(location.latitude);
+                                        user.setLongitude(location.longitude);
+                                        mQueryListener.onQueryFinished(user);
+                                    }
                                 }
 
                                 @Override
@@ -88,10 +92,6 @@ public class UserRepository {
 
     public void setQueryListener(QueryFinishedListener listener) {
         this.mQueryListener = listener;
-    }
-
-    public void setRepositoryListener(RepositoryListener listener) {
-        this.mRepositoryListener = listener;
     }
 
 }

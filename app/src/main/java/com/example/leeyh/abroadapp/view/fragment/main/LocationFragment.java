@@ -1,5 +1,6 @@
 package com.example.leeyh.abroadapp.view.fragment.main;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.leeyh.abroadapp.R;
 import com.example.leeyh.abroadapp.adapters.DividerDecorator;
@@ -24,18 +26,22 @@ import com.example.leeyh.abroadapp.adapters.LocationUserAdapter;
 import com.example.leeyh.abroadapp.adapters.OnItemClickedListener;
 import com.example.leeyh.abroadapp.databinding.BottomDialogBinding;
 import com.example.leeyh.abroadapp.databinding.FragmentLocationBinding;
+import com.example.leeyh.abroadapp.model.UserModel;
 import com.example.leeyh.abroadapp.viewmodel.UserViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     private FragmentLocationBinding mBinding;
     private UserViewModel mViewModel;
-    private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyD3q4iAopnm9lr3CHbGXpfBFfnhBAY4w2c";
+    private GoogleMap mGoogleMap;
+    private double mLatitude;
+    private double mLongitude;
 
     @Override
     public void onAttach(Context context) {
@@ -56,59 +62,73 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         mViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         mBinding.setHandler(mViewModel);
 
+        mViewModel.getLocation().observe(this, new Observer<double[]>() {
+            @Override
+            public void onChanged(@Nullable double[] doubles) {
+                mLatitude = doubles[0];
+                mLongitude = doubles[1];
+
+                if (mGoogleMap != null) {
+                    LatLng ny = new LatLng(mLatitude, mLongitude);
+                    mGoogleMap.addMarker(new MarkerOptions().position(ny)
+                            .title("I'm here!"));
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(ny));
+                }
+            }
+        });
+
         mBinding.locationFragmentMapView.onCreate(savedInstanceState);
-        mBinding.locationToolBar.inflateMenu(R.menu.location_menu);
+        mBinding.locationFragmentMapView.onResume();
+        mBinding.locationFragmentMapView.getMapAsync(this);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init(savedInstanceState);
+        init();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        GoogleMap gmap = googleMap;
-        gmap.setMinZoomPreference(12);
-        LatLng ny = new LatLng(37.56, 126.97);
-        googleMap.addMarker(new MarkerOptions().position(ny)
-                .title("Marker in Korea"));
-        gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
+        mGoogleMap = googleMap;
+        if (mLatitude != 0 && mLongitude != 0) {
+            LatLng ny = new LatLng(mLatitude, mLongitude);
+            googleMap.addMarker(new MarkerOptions().position(ny)
+                    .title("I'm here!"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(ny));
+        }
     }
 
-    private void init(Bundle savedInstanceState) {
+    private void init() {
         DividerDecorator decorator = new DividerDecorator(3);
         final LocationUserAdapter adapter = new LocationUserAdapter();
         mBinding.fragmentLocationRecyclerView.setAdapter(adapter);
         mBinding.fragmentLocationRecyclerView.addItemDecoration(decorator);
         mBinding.fragmentLocationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false));
-        adapter.notifyDataSetChanged();
 
         adapter.setListener(new OnItemClickedListener() {
             @Override
             public void onItemClicked(int position, Object binding) {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main_activity_container, MemberDetailFragment.newInstance(adapter.getItemModel(position)))
+                        .replace(R.id.member_detail_container, MemberDetailFragment.newInstance(adapter.getItemModel(position)))
                         .addToBackStack(null)
                         .commit();
             }
         });
 
-        mBinding.locationFragmentMapView.onCreate(savedInstanceState);
-        mBinding.locationFragmentMapView.getMapAsync(this);
 
         BottomDialogBinding dialogBinding = BottomDialogBinding.inflate(getActivity().getLayoutInflater());
         dialogBinding.setHandler(mViewModel);
 
         final BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         dialog.setContentView(dialogBinding.getRoot());
-        mBinding.locationToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+
+        mBinding.fragmentLocationSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+            public void onClick(View v) {
                 dialog.show();
-                return true;
             }
         });
     }
@@ -117,17 +137,34 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
-        if (mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
-        }
-        mBinding.locationFragmentMapView.onSaveInstanceState(mapViewBundle);
+        mBinding.locationFragmentMapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBinding.locationFragmentMapView.onResume();
+    }
 
-//    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onPause() {
+        super.onPause();
+        mBinding.locationFragmentMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBinding.locationFragmentMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mBinding.locationFragmentMapView.onLowMemory();
+    }
+
+    //    @RequiresApi(api = Build.VERSION_CODES.M)
 //    public void getLocationPermission() {
 //        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext()
 //                , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
